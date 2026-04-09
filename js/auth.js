@@ -529,7 +529,10 @@ async function registerWithEmail() {
 
   const { data, error } = await window.supabaseClient.auth.signUp({
     email, password: pass,
-    options: { data: { full_name: name } }
+    options: { 
+      data: { full_name: name },
+      emailRedirectTo: window.location.origin 
+    }
   });
 
   btn.textContent = 'Crear cuenta'; btn.disabled = false;

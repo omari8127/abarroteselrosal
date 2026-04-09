@@ -212,10 +212,72 @@ function confirmOrder() {
   document.getElementById('ck-modal').classList.add('open');
 }
 
+// ── SUPABASE INTEGRATION ──────────────────────────────────────────
+async function saveOrderToSupabase(order) {
+  try {
+    // Obtener user_id si hay sesión activa
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
+    const userId = session?.user?.id || null;
+
+    const { data: orderData, error: orderError } = await window.supabaseClient
+      .from('orders')
+      .insert([{
+        customer_name: order.nombre,
+        phone: order.tel,
+        delivery_type: ckDelivery,
+        address: ckDelivery === 'domicilio' ? order.entregaLabel : null,
+        payment_method: ckPayment,
+        subtotal: order.subtotal,
+        savings: order.savings,
+        total: order.total,
+        notes: order.notas,
+        status: 'pending',
+        user_id: userId
+      }])
+      .select();
+
+
+    if (orderError) throw orderError;
+
+    const orderId = orderData[0].id;
+
+    // Save items
+    const itemsToInsert = order.items.map(i => ({
+      order_id: orderId,
+      product_id: i.id,
+      product_name: i.name,
+      quantity: i.qty,
+      unit_price: i.price,
+      total_price: i.price * i.qty
+    }));
+
+    const { error: itemsError } = await window.supabaseClient
+      .from('order_items')
+      .insert(itemsToInsert);
+
+    if (itemsError) throw itemsError;
+
+    console.log('Pedido guardado en Supabase con ID:', orderId);
+    return true;
+  } catch (err) {
+    console.error('Error al guardar en Supabase:', err);
+    return false;
+  }
+}
+
 // ── WHATSAPP FINAL ───────────────────────────────────────────────
-function sendWAFinal() {
+async function sendWAFinal() {
   const o = window._ckOrder;
   if (!o) return;
+
+  const btn = document.getElementById('modal-wa-btn');
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span>Procesando...</span>';
+
+  // Guardar en Supabase (Opcional: puedes esperar a que termine o no)
+  // Aquí esperamos para asegurar que se guardó antes de redirigir
+  await saveOrderToSupabase({ ...o, subtotal: o.items.reduce((s, i) => s + (i.oldPrice || i.price) * i.qty, 0) });
 
   let msg = `🛒 *Pedido – Abarrotes El Rosal*\n\n`;
   msg += `👤 *Cliente:* ${o.nombre}\n`;
@@ -241,8 +303,16 @@ function sendWAFinal() {
 
   if (o.notas) msg += `\n📝 *Notas:* ${o.notas}`;
 
-  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+  // Restaurar botón después de un momento
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+    // Limpiar carrito tras éxito
+    localStorage.removeItem('cart');
+    window.location.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  }, 1000);
 }
+
 
 // ── MODAL CONTROLS ────────────────────────────────────────────────
 function closeModal() {

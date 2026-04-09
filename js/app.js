@@ -677,17 +677,90 @@ function _animateFloatCart() {
   btn.addEventListener('animationend', () => btn.classList.remove('bounce'), { once: true });
 }
 
-function sendWA() {
+async function sendWA() {
   const items = Object.values(cart);
-  if (!items.length) return;
-  const total = items.reduce((a, i) => a + i.price * i.qty, 0);
-  let msg = 'Hola! Quiero hacer un pedido en *Abarrotes El Rosal*:\n\n';
-  items.forEach(i => {
-    msg += `• ${i.name} x${i.qty} = $${(i.price * i.qty).toFixed(2)}\n`;
-  });
-  msg += `\n*TOTAL: $${total.toFixed(2)}*\n\nPor favor confirmar disponibilidad. Gracias!`;
-  window.open('https://wa.me/526643944760?text=' + encodeURIComponent(msg), '_blank');
+  if (!items.length) {
+    alert('Tu carrito está vacío.');
+    return;
+  }
+
+  // 1. Verificar sesión activa
+  const { data: { session } } = await window.supabaseClient.auth.getSession();
+
+  if (session?.user) {
+    // 2. Si hay sesión, buscar perfil
+    try {
+      const { data: perfil, error } = await window.supabaseClient
+        .from('perfiles')
+        .select('nombre, direccion')
+        .eq('id', session.user.id)
+        .single();
+
+      if (perfil && perfil.nombre && perfil.direccion) {
+        // Tomar datos automáticamente y enviar
+        _executeWAFinal(perfil.nombre, perfil.direccion);
+      } else {
+        // Si el perfil no está completo, pedir los datos (o usar metadata del nombre como fallback)
+        const nameFallback = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
+        openGuestModal((data) => {
+          _executeWAFinal(data.nombre, data.direccion);
+        });
+      }
+    } catch (err) {
+      console.error('Error al obtener perfil:', err);
+      // Fallback a modal de invitado si falla la DB
+      openGuestModal((data) => {
+        _executeWAFinal(data.nombre, data.direccion);
+      });
+    }
+  } else {
+    // 3. Si no hay sesión, abrir modal de invitado
+    if (typeof openGuestModal === 'function') {
+      openGuestModal((data) => {
+        _executeWAFinal(data.nombre, data.direccion);
+      });
+    } else {
+      // Fallback básico si auth.js no cargó
+      const nombre = prompt('Ingresa tu nombre para el pedido:');
+      const direccion = prompt('Ingresa tu dirección de entrega:');
+      if (nombre && direccion) {
+        _executeWAFinal(nombre, direccion);
+      }
+    }
+  }
 }
+
+function _executeWAFinal(nombre, direccion) {
+  const items = Object.values(cart);
+  const total = items.reduce((a, i) => a + i.price * i.qty, 0);
+  
+  // Formato de fecha: DD/MM/YYYY HH:mm
+  const now = new Date();
+  const d = now.getDate().toString().padStart(2, '0');
+  const m = (now.getMonth() + 1).toString().padStart(2, '0');
+  const y = now.getFullYear();
+  const h = now.getHours().toString().padStart(2, '0');
+  const min = now.getMinutes().toString().padStart(2, '0');
+  const fechaStr = `${d}/${m}/${y} ${h}:${min}`;
+
+  let msg = `🛒 *Nuevo pedido - Abarrotes el Rosal*\n\n`;
+  msg += `👤 Cliente: ${nombre}\n`;
+  msg += `📍 Dirección: ${direccion}\n\n`;
+  msg += `🧾 Pedido:\n`;
+  
+  items.forEach(i => {
+    const subtotal = (i.price * i.qty).toFixed(2);
+    msg += `• ${i.qty} x ${i.name} — $${subtotal}\n`;
+  });
+  
+  msg += `\n💰 *Total: $${total.toFixed(2)}*\n\n`;
+  msg += `🕐 Fecha: ${fechaStr}\n\n`;
+  msg += `Por favor, confirmar disponibilidad. ¡Gracias!`;
+
+  const waUrl = `https://wa.me/526643944760?text=${encodeURIComponent(msg)}`;
+  window.open(waUrl, '_blank');
+}
+
 
 function searchProducts(q, forceDetail = false) {
   const main = document.getElementById('main-content') ||

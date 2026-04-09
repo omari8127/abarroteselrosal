@@ -550,3 +550,185 @@ footer strong{color:#fff}
   text-transform: lowercase;
   letter-spacing: 0.5px;
 }
+
+/* ================================================================
+   RESPONSIVE — MOBILE FRIENDLY
+   Solo media queries, sin modificar HTML ni JS
+   ================================================================ */
+
+/* ── 1. HEADER (≤768px) ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Altura reducida */
+  .header-inner {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 8px 1rem;
+    gap: 0.6rem;
+    row-gap: 6px;
+  }
+
+  /* Logo: ocultar texto, dejar solo emoji */
+  .brand {
+    font-size: 1.5rem;
+    gap: 0;
+    flex: 0 0 auto;
+  }
+  .brand .brand-icon {
+    font-size: 1.7rem;
+  }
+  /* Ocultar el texto de "Abarrotes El Rosal" (el nodo de texto va separado del emoji)
+     Se logra colapsando el tamaño de fuente del text node usando un truco de font-size:0
+     en el anchor y revelando solo el span */
+  .brand {
+    font-size: 0;           /* colapsa el texto plano */
+  }
+  .brand .brand-icon {
+    font-size: 1.8rem;      /* el emoji sigue visible */
+  }
+
+  /* Acciones del header: sin textos, solo iconos */
+  .header-action span:not(.icon):not(.auth-avatar):not(.auth-username):not(.auth-chevron) {
+    display: none;
+  }
+  .header-action {
+    gap: 0;
+    font-size: 0;
+  }
+  .header-action .icon {
+    font-size: 1.5rem;
+  }
+
+  /* Search bar: ocupa la segunda línea completa */
+  .header-actions {
+    gap: 1rem;
+    margin-left: auto;
+  }
+  .search-bar {
+    order: 10;         /* baja a la segunda línea */
+    flex: 1 1 100%;    /* ancho completo */
+    max-width: 100%;
+  }
+}
+
+/* ── 2. NAV (≤768px) ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  nav {
+    top: 56px; /* ajustar sticky offset */
+  }
+  .nav-sucursal {
+    display: none; /* ocultar sucursal en móvil */
+  }
+  .nav-inner {
+    padding: 0 0.5rem;
+  }
+  .nav-link {
+    padding: 0 12px;
+    font-size: 0.85rem;
+  }
+}
+
+/* ── 3. HERO CAROUSEL (≤768px) ───────────────────────────────── */
+@media (max-width: 768px) {
+  .hero-carousel {
+    height: 200px;
+  }
+
+  /* Anulamos el height inline que está en el HTML con !important */
+  .carousel-slide img {
+    height: 200px !important;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  /* Botones prev/next más pequeños */
+  .carousel-prev,
+  .carousel-next {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  .carousel-prev { left: 8px; }
+  .carousel-next { right: 8px; }
+
+  /* Dots más abajo y más pequeños */
+  .carousel-dots {
+    bottom: 10px;
+    gap: 8px;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* ── 4. TICKER (≤768px) ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .ticker {
+    font-size: 0.75rem;
+    padding: 6px 1rem;
+  }
+}
+
+/* ── 5. PRODUCTS GRID (≤480px) ───────────────────────────────── */
+@media (max-width: 480px) {
+  .products-grid,
+  #featured-products {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* ── 6. PROD-CARD (≤480px) ───────────────────────────────────── */
+@media (max-width: 480px) {
+  .prod-card {
+    min-height: auto;
+    padding: 0.85rem;
+  }
+  .prod-img-wrap {
+    height: 130px;
+    margin-bottom: 0.75rem;
+  }
+  .prod-name {
+    font-size: 0.82rem;
+    height: 36px;
+    margin-bottom: 0.5rem;
+  }
+  .prod-price {
+    font-size: 1.15rem;
+    margin-bottom: 0.75rem;
+  }
+  .add-btn {
+    padding: 9px;
+    font-size: 0.78rem;
+  }
+}
+
+/* ── 7. FLOAT CART (≤768px) ─────────────────────────────────── */
+@media (max-width: 768px) {
+  .float-cart {
+    bottom: 16px;
+    right: 16px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    gap: 6px;
+  }
+}
+
+/* ── 8. CART DRAWER (≤768px) ─────────────────────────────────── */
+@media (max-width: 768px) {
+  .cart-drawer {
+    width: 100vw;
+  }
+}
+
+/* ── 9. SECTION WRAP padding (≤768px) ────────────────────────── */
+@media (max-width: 768px) {
+  .section-wrap {
+    padding: 1rem 1rem 0;
+  }
+  .ecommerce-layout {
+    padding: 0 1rem;
+    margin: 1rem auto;
+  }
+}
+

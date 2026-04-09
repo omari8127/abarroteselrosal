@@ -1,117 +1,129 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Detalle de Producto - Abarrotes El Rosal</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle de Producto - Abarrotes El Rosal</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body class="page-detalle">
 
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="brand">
-      <span class="brand-icon">🛒</span> Abarrotes El Rosal
-    </a>
-    <div class="search-bar">
-      <input type="text" id="search-input" placeholder="Busca tus productos aquí" oninput="searchProducts(this.value)">
-      <button onclick="searchProducts(document.getElementById('search-input').value, true)">🔍</button>
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-icon">🛒</span> Abarrotes El Rosal
+      </a>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Busca tus productos aquí"
+          oninput="searchProducts(this.value)">
+        <button onclick="searchProducts(document.getElementById('search-input').value, true)">🔍</button>
+      </div>
+      <div class="header-actions">
+        <div class="header-action">
+          <span class="icon">📋</span>
+          <span>Mis Pedidos</span>
+        </div>
+        <div class="header-action">
+          <span class="icon">👤</span>
+          <span>Mi Cuenta</span>
+        </div>
+        <div class="cart-action" onclick="toggleCart()">
+          <span class="cart-badge" id="hdr-count">0</span>
+          <span class="cart-icon">🛒</span>
+          <span id="hdr-total">$0.00</span>
+        </div>
+      </div>
     </div>
-    <div class="header-actions">
-      <div class="header-action">
-        <span class="icon">📋</span>
-        <span>Mis Pedidos</span>
+  </header>
+
+  <nav>
+    <div class="nav-inner">
+      <div class="dropdown">
+        <div class="nav-link dept" id="dept-trigger">Departamentos</div>
+        <div class="dropdown-menu" id="dept-menu">
+          <a href="javascript:void(0)" onclick="selectCategory('all')" class="dropdown-item">Todos los Productos</a>
+          <a href="javascript:void(0)" onclick="selectCategory('cerveza')" class="dropdown-item">Cerveza</a>
+          <a href="javascript:void(0)" onclick="selectCategory('frutas')" class="dropdown-item">Frutas y Verduras</a>
+          <a href="javascript:void(0)" onclick="selectCategory('lacteos')" class="dropdown-item">Lácteos y Huevos</a>
+          <a href="javascript:void(0)" onclick="selectCategory('despensa')" class="dropdown-item">Despensa</a>
+          <a href="javascript:void(0)" onclick="selectCategory('bebidas')" class="dropdown-item">Bebidas y Jugos</a>
+          <a href="javascript:void(0)" onclick="selectCategory('limpieza')" class="dropdown-item">Limpieza y Hogar</a>
+          <a href="javascript:void(0)" onclick="selectCategory('botanas')" class="dropdown-item">Botanas</a>
+          <a href="javascript:void(0)" onclick="selectCategory('panaderia')" class="dropdown-item">Panadería</a>
+          <a href="javascript:void(0)" onclick="selectCategory('mascotas')" class="dropdown-item">Mascotas</a>
+        </div>
       </div>
-      <div class="header-action">
-        <span class="icon">👤</span>
-        <span>Mi Cuenta</span>
-      </div>
-      <div class="cart-action" onclick="toggleCart()">
-        <span class="cart-badge" id="hdr-count">0</span>
-        <span class="cart-icon">🛒</span>
-        <span id="hdr-total">$0.00</span>
+
+      <a href="promociones.html" class="nav-link promo-link">Promociones</a>
+
+      <div class="nav-sucursal">
+        <span class="icon">📍</span>
+        <span>Sucursal: <strong>Anexa 20 de Noviembre</strong></span>
       </div>
     </div>
+  </nav>
+
+  <div id="detalle-content">
+    <div class="loading" style="padding:4rem;text-align:center">Cargando producto...</div>
   </div>
-</header>
 
-<nav>
-  <div class="nav-inner">
-    <div class="dropdown">
-      <div class="nav-link dept" id="dept-trigger">Departamentos</div>
-      <div class="dropdown-menu" id="dept-menu">
-        <a href="javascript:void(0)" onclick="selectCategory('all')" class="dropdown-item">Todos los Productos</a>
-        <a href="javascript:void(0)" onclick="selectCategory('cerveza')" class="dropdown-item">Cerveza</a>
-        <a href="javascript:void(0)" onclick="selectCategory('frutas')" class="dropdown-item">Frutas y Verduras</a>
-        <a href="javascript:void(0)" onclick="selectCategory('lacteos')" class="dropdown-item">Lácteos y Huevos</a>
-        <a href="javascript:void(0)" onclick="selectCategory('despensa')" class="dropdown-item">Despensa</a>
-        <a href="javascript:void(0)" onclick="selectCategory('bebidas')" class="dropdown-item">Bebidas y Jugos</a>
-        <a href="javascript:void(0)" onclick="selectCategory('limpieza')" class="dropdown-item">Limpieza y Hogar</a>
-        <a href="javascript:void(0)" onclick="selectCategory('botanas')" class="dropdown-item">Botanas</a>
-        <a href="javascript:void(0)" onclick="selectCategory('panaderia')" class="dropdown-item">Panadería</a>
-      </div>
-    </div>
-    
-    <a href="promociones.html" class="nav-link promo-link">Promociones</a>
-    
-    <div class="nav-sucursal">
-      <span class="icon">📍</span>
-      <span>Sucursal: <strong>Anexa 20 de noviembre</strong></span>
-    </div>
-  </div>
-</nav>
-
-<div id="detalle-content">
-  <div class="loading" style="padding:4rem;text-align:center">Cargando producto...</div>
-</div>
-
-<div class="section-wrap related-section">
-  <div class="section-title-bar">
-    <div class="section-title-line"></div>
-    <div class="section-title-badge" style="background:var(--blue)">También te puede interesar</div>
-    <div class="section-title-line"></div>
-  </div>
-  <div class="products-grid" id="related-grid" style="grid-template-columns: repeat(6, 1fr); gap: 10px;"></div>
-</div>
-
-<div id="search-results" style="display:none">
-  <div class="section-wrap">
+  <div class="section-wrap related-section">
     <div class="section-title-bar">
       <div class="section-title-line"></div>
-      <div class="section-title-badge" style="background:var(--blue)">Resultados de búsqueda</div>
+      <div class="section-title-badge" style="background:var(--blue)">También te puede interesar</div>
       <div class="section-title-line"></div>
     </div>
-    <div class="products-grid" id="search-grid"></div>
+    <div class="products-grid" id="related-grid" style="grid-template-columns: repeat(6, 1fr); gap: 10px;"></div>
   </div>
-</div>
 
-<button class="float-cart" onclick="toggleCart()">🛒 Mi carrito <div class="float-badge" id="float-count">0</div></button>
-
-<div class="cart-overlay" id="cart-overlay" onclick="outsideClose(event)">
-  <div class="cart-drawer">
-    <div class="cart-header"><h2>🛒 Mi Carrito</h2><button class="cart-close" onclick="toggleCart()">✕</button></div>
-    <div class="cart-body" id="cart-body"><div class="cart-empty">Tu carrito está vacío</div></div>
-    <div class="cart-footer" id="cart-footer" style="display:none">
-      <div class="cart-total-row"><span>Total</span><span id="drawer-total">$0.00</span></div>
-      <button class="wa-order-btn" onclick="sendWA()">Pedir por WhatsApp</button>
+  <div id="search-results" style="display:none">
+    <div class="section-wrap">
+      <div class="section-title-bar">
+        <div class="section-title-line"></div>
+        <div class="section-title-badge" style="background:var(--blue)">Resultados de búsqueda</div>
+        <div class="section-title-line"></div>
+      </div>
+      <div class="products-grid" id="search-grid"></div>
     </div>
   </div>
-</div>
 
-<footer><strong>Abarrotes El Rosal</strong> · WhatsApp: <strong>664-394-4760</strong></footer>
+  <button class="float-cart" onclick="toggleCart()">🛒 Mi carrito <div class="float-badge" id="float-count">0</div>
+    </button>
 
-<script src="data/productos.js"></script>
-<script src="js/app.js"></script>
-<script>
-  // Script específico para cargar el detalle
-  document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    const id = parseInt(params.get('id'));
-    if (id) {
-       renderDetalle(id);
-    }
-  });
-</script>
+  <div class="cart-overlay" id="cart-overlay" onclick="outsideClose(event)">
+    <div class="cart-drawer">
+      <div class="cart-header">
+        <h2>🛒 Mi Carrito</h2><button class="cart-close" onclick="toggleCart()">✕</button>
+      </div>
+      <div class="cart-body" id="cart-body">
+        <div class="cart-empty">Tu carrito está vacío</div>
+      </div>
+      <div class="cart-footer" id="cart-footer" style="display:none">
+        <div class="cart-total-row"><span>Total</span><span id="drawer-total">$0.00</span></div>
+        <button class="wa-order-btn" onclick="sendWA()">Pedir por WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <footer><strong>Abarrotes El Rosal</strong> · WhatsApp: <strong>664-394-4760</strong></footer>
+
+  <script src="data/productos.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Script específico para cargar el detalle
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const id = parseInt(params.get('id'));
+      if (id) {
+        renderDetalle(id);
+      }
+    });
+  </script>
 </body>
+
 </html>

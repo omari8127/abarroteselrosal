@@ -230,6 +230,8 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 
 .add-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:4px;padding:12px;font-size:0.85rem;font-weight:800;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:background 0.2s}
 .add-btn:hover{background:var(--blue-dark)}
+.add-btn.added{background:var(--green);transition:background 0.25s}
+.add-btn.added:hover{background:#155f24}
 .page-promociones .prod-price { color: var(--green); }
 .page-promociones .prod-img-wrap { height: 220px; } /* Mas grande para promociones */
 .page-promociones .prod-card { min-height: 520px; }
@@ -731,4 +733,10 @@ footer strong{color:#fff}
     margin: 1rem auto;
   }
 }
+
+
+.add-btn.added {
+  background: var(--green) !important;
+}
+
 

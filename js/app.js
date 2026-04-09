@@ -250,6 +250,9 @@ function updateFilters(isPromoPage = false) {
     container.innerHTML = filtered.map(p => cardHTML(p)).join('');
     if (noRes) noRes.style.display = 'none';
   }
+
+  // Refresh button states after re-render
+  if (typeof refreshAllAddBtns === 'function') refreshAllAddBtns();
 }
 
 function resetFilters() {
@@ -302,6 +305,7 @@ function renderFeatured(limit) {
   if (!container) return;
   const filtered = allProducts.filter(p => p.badge).slice(0, limit);
   container.innerHTML = filtered.map(p => cardHTML(p)).join('');
+  if (typeof refreshAllAddBtns === 'function') refreshAllAddBtns();
 }
 
 function cardHTML(p) {
@@ -629,16 +633,7 @@ function addToCart(id) {
   saveCart();
   updateCartUI();
   _animateFloatCart();   // 🎯 bounce animation
-
-  const btn = document.getElementById('abtn-' + id);
-  if (btn) {
-    btn.classList.add('added');
-    btn.textContent = '✓ Agregado';
-    setTimeout(() => {
-      btn.classList.remove('added');
-      btn.textContent = 'AGREGAR';
-    }, 1500);
-  }
+  refreshAllAddBtns();
 }
 
 function cartQty(id, delta) {
@@ -651,10 +646,30 @@ function cartQty(id, delta) {
   }
   saveCart();
   updateCartUI();
+  refreshAllAddBtns();
 }
 
 function saveCart() {
   localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+/* ── Refresca el estado visual de todos los botones "Agregar" ─── */
+function refreshAllAddBtns() {
+  document.querySelectorAll('[id^="abtn-"]').forEach(btn => {
+    const id = parseInt(btn.id.replace('abtn-', ''), 10);
+    // Un producto está en el carrito si existe cart[id]
+    // Para frutas, el key incluye sufijo (_kg/_unit), chequeamos ambos
+    const inCart = cart[id] ||
+                   cart[id + '_kg'] ||
+                   cart[id + '_unit'];
+    if (inCart) {
+      btn.classList.add('added');
+      btn.textContent = '✓ Agregado';
+    } else {
+      btn.classList.remove('added');
+      btn.textContent = 'AGREGAR';
+    }
+  });
 }
 
 function toggleCart() {

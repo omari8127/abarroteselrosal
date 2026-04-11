@@ -114,6 +114,7 @@ function _injectAuthModal() {
         <div class="auth-field">
           <label for="login-pass">Contraseña</label>
           <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+          <a href="#" class="auth-forgot-link" onclick="showForgotPanel(event)">¿Olvidaste tu contraseña?</a>
         </div>
         <button class="auth-btn-primary" onclick="loginWithEmail()">Entrar</button>
         <div class="auth-divider"><span>o</span></div>
@@ -152,6 +153,23 @@ function _injectAuthModal() {
         <div id="reg-success" class="auth-success" style="display:none">
           ✅ ¡Cuenta creada! Revisa tu correo para verificar tu cuenta.
         </div>
+      </div>
+
+      <!-- ═══ PANEL OLVIDÉ CONTRASEÑA ═══ -->
+      <div id="panel-forgot" class="auth-panel">
+        <div class="auth-forgot-header">
+          <button class="auth-forgot-back" onclick="hideForgotPanel()">← Volver al inicio de sesión</button>
+        </div>
+        <p class="auth-forgot-desc">Ingresa tu correo y te enviaremos un link para restablecer tu contraseña.</p>
+        <div class="auth-field">
+          <label for="forgot-email">Correo electrónico</label>
+          <input type="email" id="forgot-email" placeholder="tucorreo@email.com" autocomplete="email">
+        </div>
+        <button class="auth-btn-primary" id="btn-send-reset" onclick="sendResetEmail()">Enviar link</button>
+        <div id="forgot-success" class="auth-success" style="display:none">
+          ✅ Revisa tu correo, te enviamos el link para restablecer tu contraseña.
+        </div>
+        <div id="forgot-error" class="auth-error" style="display:none"></div>
       </div>
     </div>
   `;
@@ -392,6 +410,29 @@ function _injectAuthStyles() {
       font-size: 0.88rem;
     }
 
+    /* ── Forgot password link & panel ─────────────────── */
+    .auth-forgot-link {
+      font-size: 0.78rem;
+      color: #999;
+      text-decoration: none;
+      text-align: right;
+      align-self: flex-end;
+      margin-top: 2px;
+      transition: color 0.15s;
+    }
+    .auth-forgot-link:hover { color: var(--auth-red); text-decoration: underline; }
+    .auth-forgot-header { margin-bottom: 0.25rem; }
+    .auth-forgot-back {
+      background: none; border: none; cursor: pointer;
+      color: var(--auth-red); font-size: 0.85rem; font-weight: 600;
+      padding: 0; transition: opacity 0.15s;
+    }
+    .auth-forgot-back:hover { opacity: 0.75; }
+    .auth-forgot-desc {
+      font-size: 0.88rem; color: #666;
+      line-height: 1.5; margin-bottom: 0.25rem;
+    }
+
     /* ── Header account button ────────────────────────── */
     .header-action { cursor: pointer; }
     .auth-avatar {
@@ -472,11 +513,75 @@ function closeAuthModal() {
 
 /* ── Cambiar pestaña ─────────────────────────────────────────── */
 function switchTab(tab) {
+  // Ocultar panel de forgot si está visible
+  hideForgotPanel();
   document.getElementById('tab-login').classList.toggle('active', tab === 'login');
   document.getElementById('tab-register').classList.toggle('active', tab === 'register');
   document.getElementById('panel-login').classList.toggle('active', tab === 'login');
   document.getElementById('panel-register').classList.toggle('active', tab === 'register');
   clearAuthError();
+}
+
+/* ── Mostrar panel de contraseña olvidada ────────────────────── */
+function showForgotPanel(e) {
+  e.preventDefault();
+  // Ocultar pestañas y paneles normales
+  document.getElementById('auth-tabs') && (document.getElementById('auth-tabs').style.display = 'none');
+  document.querySelector('.auth-tabs').style.display = 'none';
+  document.getElementById('panel-login').classList.remove('active');
+  document.getElementById('panel-register').classList.remove('active');
+  document.getElementById('auth-error').style.display = 'none';
+  // Mostrar panel forgot
+  document.getElementById('panel-forgot').classList.add('active');
+  // Pre-llenar email si ya fue ingresado
+  const loginEmail = document.getElementById('login-email').value.trim();
+  if (loginEmail) document.getElementById('forgot-email').value = loginEmail;
+  // Reset mensajes
+  document.getElementById('forgot-success').style.display = 'none';
+  document.getElementById('forgot-error').style.display = 'none';
+  setTimeout(() => document.getElementById('forgot-email')?.focus(), 100);
+}
+
+/* ── Ocultar panel de contraseña olvidada ────────────────────── */
+function hideForgotPanel() {
+  document.querySelector('.auth-tabs').style.display = '';
+  document.getElementById('panel-forgot').classList.remove('active');
+  document.getElementById('panel-login').classList.add('active');
+  document.getElementById('tab-login').classList.add('active');
+  document.getElementById('tab-register').classList.remove('active');
+}
+
+/* ── Enviar email de restablecimiento ────────────────────────── */
+async function sendResetEmail() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const successEl = document.getElementById('forgot-success');
+  const errorEl   = document.getElementById('forgot-error');
+  const btn       = document.getElementById('btn-send-reset');
+
+  successEl.style.display = 'none';
+  errorEl.style.display   = 'none';
+
+  if (!email) {
+    errorEl.textContent = 'Por favor ingresa tu correo electrónico.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  btn.textContent = 'Enviando...'; btn.disabled = true;
+
+  const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://abarroteselrosal.vercel.app/reset-password.html'
+  });
+
+  btn.textContent = 'Enviar link'; btn.disabled = false;
+
+  if (error) {
+    errorEl.textContent = error.message || 'Error al enviar el correo. Inténtalo de nuevo.';
+    errorEl.style.display = 'block';
+  } else {
+    successEl.style.display = 'block';
+    btn.style.display = 'none';
+  }
 }
 
 /* ── Mostrar / limpiar error ─────────────────────────────────── */

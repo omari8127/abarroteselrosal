@@ -443,6 +443,36 @@ function _updateFrutaDisplay(id) {
   if (sfxEl) sfxEl.textContent = fm.mode === 'kg' ? 'kg' : 'pzas';
 }
 
+function renderFeatured(limit) {
+  const container = document.getElementById('featured-products');
+  if (!container) return;
+  const filtered = allProducts.filter(p => p.badge).slice(0, limit);
+  container.innerHTML = filtered.map(p => cardHTML(p)).join('');
+}
+
+function cardHTML(p) {
+  const badge = p.badge ? `<div class="prod-badge" style="background:${/^-\d/.test(p.badge) ? '#CC1F1F' : p.badge === 'Fresco' ? '#1a7a2e' : '#1A4FA0'}">${p.badge}</div>` : '';
+  const imgPart = p.img
+    ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="prod-emoji" style="display:none">${p.emoji}</span>`
+    : `<span class="prod-emoji">${p.emoji}</span>`;
+    
+  return `
+    <div class="prod-card">
+      ${badge}
+      <a href="producto-detalle.html?id=${p.id}" class="prod-img-wrap">${imgPart}</a>
+      <a href="producto-detalle.html?id=${p.id}" class="prod-name">${p.name}</a>
+      <div class="prod-unit">${p.unit}</div>
+      ${p.oldPrice ? `<div class="prod-price-old">$${p.oldPrice.toFixed(2)}</div>` : ''}
+      <div class="prod-price">$${p.price.toFixed(2)}</div>
+      <div class="prod-qty">
+        <button onclick="changeQty(${p.id},-1)">-</button>
+        <span id="qty-${p.id}">${qtys[p.id] || 1}</span>
+        <button onclick="changeQty(${p.id},1)">+</button>
+      </div>
+      <button class="add-btn${cart[p.id] ? ' added' : ''}" id="abtn-${p.id}" onclick="addToCart(${p.id})">${cart[p.id] ? '✓ Agregado' : 'AGREGAR'}</button>
+    </div>`;
+}
+
 // --- PRODUCT DETAIL LOGIC ---
 function renderDetalle(id) {
   const p = allProducts.find(x => x.id === id);

@@ -1,5 +1,5 @@
 // ================================================================
-//  ABARROTES EL ROSAL - Lógica General
+//  ABARROTES EL ROSAL - L├│gica General
 // ================================================================
 
 let cart = JSON.parse(localStorage.getItem('cart')) || {};
@@ -13,14 +13,14 @@ let activeFilters = {
   sort: 'relevance'
 };
 
-// INICIALIZACIÓN
+// INICIALIZACI├ôN
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof allProducts !== 'undefined') {
     allProducts.forEach(p => { if (!qtys[p.id]) qtys[p.id] = 1; });
     initDropdown();
     updateCartUI();
 
-    // Identificar en qué página estamos
+    // Identificar en qu├® p├ígina estamos
     if (document.querySelector('.page-home')) initHome();
     if (document.querySelector('.page-productos')) initProductos();
     if (document.querySelector('.page-detalle')) initDetalle();
@@ -51,7 +51,7 @@ function closeDropdown() {
   if (menu) menu.classList.remove('active');
 }
 
-// Nueva función unificada para departamentos
+// Nueva funci├│n unificada para departamentos
 function selectCategory(id) {
   closeDropdown();
 
@@ -65,7 +65,7 @@ function selectCategory(id) {
     const newUrl = id === 'all' ? 'productos.html' : `productos.html?cat=${id}`;
     window.history.pushState({ cat: id }, '', newUrl);
   } else {
-    // Si estamos en otra página, navegamos a productos con el parámetro
+    // Si estamos en otra p├ígina, navegamos a productos con el par├ímetro
     window.location.href = id === 'all' ? 'productos.html' : `productos.html?cat=${id}`;
   }
 }
@@ -269,7 +269,7 @@ function resetFilters() {
 function buildCatStrip(containerId) {
   const s = document.getElementById(containerId);
   if (!s) return;
-  let h = `<div class="cat-chip active" id="chip-all" style="background:#333" onclick="selectCategory('all')"><span class="ico">🏪</span><span class="lbl">Todos</span></div>`;
+  let h = `<div class="cat-chip active" id="chip-all" style="background:#333" onclick="selectCategory('all')"><span class="ico">­ƒÅ¬</span><span class="lbl">Todos</span></div>`;
   h += categories.map(c => `<div class="cat-chip" id="chip-${c.id}" style="background:${c.color}" onclick="selectCategory('${c.id}')"><span class="ico">${c.emoji}</span><span class="lbl">${c.label}</span></div>`).join('');
   s.innerHTML = h;
 }
@@ -330,7 +330,7 @@ function cardHTML(p) {
     ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="prod-emoji" style="display:none">${p.emoji}</span>`
     : `<span class="prod-emoji">${p.emoji}</span>`;
 
-  // ── Frutas y Verduras: segmented control de Kg/Unidades ──
+  // ÔöÇÔöÇ Frutas y Verduras: segmented control de Kg/Unidades ÔöÇÔöÇ
   if (p.cat === 'frutas') {
     if (!frutaModes[p.id]) frutaModes[p.id] = { mode: 'kg', val: 0.5 };
     const fm = frutaModes[p.id];
@@ -342,7 +342,7 @@ function cardHTML(p) {
       <a href="producto-detalle.html?id=${p.id}" class="prod-img-wrap">${imgPart}</a>
       
       <div class="frutas-qty-row">
-        <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},-1)">−</button>
+        <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},-1)">ÔêÆ</button>
         <span class="frutas-qty-val" id="frutas-qty-${p.id}">${displayVal}</span>
         <span class="frutas-qty-sfx" id="frutas-sfx-${p.id}">${suffix}</span>
         <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},1)">+</button>
@@ -364,7 +364,7 @@ function cardHTML(p) {
     </div>`;
   }
 
-  // ── Resto de categorías (comportamiento original) ──
+  // ÔöÇÔöÇ Resto de categor├¡as (comportamiento original) ÔöÇÔöÇ
   return `
     <div class="prod-card">
       ${badge}
@@ -395,16 +395,16 @@ function setUnitType(id, type, el) {
   el.classList.add('active');
 }
 
-// ── FRUTAS Y VERDURAS: segmented control logic ──────────────────────
+// ÔöÇÔöÇ FRUTAS Y VERDURAS: segmented control logic ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
 function setFrutaMode(id, mode) {
   if (!frutaModes[id]) frutaModes[id] = { mode: 'kg', val: 0.5 };
   const prev = frutaModes[id];
 
   if (mode === 'kg' && prev.mode === 'unit') {
-    // Convert units → kg (1 pza ≈ 0.1 kg, minimum 0.1)
+    // Convert units ÔåÆ kg (1 pza Ôëê 0.1 kg, minimum 0.1)
     frutaModes[id] = { mode: 'kg', val: Math.max(0.1, Math.round(prev.val * 0.1 * 10) / 10) };
   } else if (mode === 'unit' && prev.mode === 'kg') {
-    // Convert kg → units (round, minimum 1)
+    // Convert kg ÔåÆ units (round, minimum 1)
     frutaModes[id] = { mode: 'unit', val: Math.max(1, Math.round(prev.val * 10)) };
   } else {
     frutaModes[id].mode = mode;
@@ -441,36 +441,6 @@ function _updateFrutaDisplay(id) {
   const sfxEl = document.getElementById('frutas-sfx-' + id);
   if (valEl) valEl.textContent = fm.mode === 'kg' ? fm.val.toFixed(1) : fm.val;
   if (sfxEl) sfxEl.textContent = fm.mode === 'kg' ? 'kg' : 'pzas';
-}
-
-function renderFeatured(limit) {
-  const container = document.getElementById('featured-products');
-  if (!container) return;
-  const filtered = allProducts.filter(p => p.badge).slice(0, limit);
-  container.innerHTML = filtered.map(p => cardHTML(p)).join('');
-}
-
-function cardHTML(p) {
-  const badge = p.badge ? `<div class="prod-badge" style="background:${/^-\d/.test(p.badge) ? '#CC1F1F' : p.badge === 'Fresco' ? '#1a7a2e' : '#1A4FA0'}">${p.badge}</div>` : '';
-  const imgPart = p.img
-    ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="prod-emoji" style="display:none">${p.emoji}</span>`
-    : `<span class="prod-emoji">${p.emoji}</span>`;
-    
-  return `
-    <div class="prod-card">
-      ${badge}
-      <a href="producto-detalle.html?id=${p.id}" class="prod-img-wrap">${imgPart}</a>
-      <a href="producto-detalle.html?id=${p.id}" class="prod-name">${p.name}</a>
-      <div class="prod-unit">${p.unit}</div>
-      ${p.oldPrice ? `<div class="prod-price-old">$${p.oldPrice.toFixed(2)}</div>` : ''}
-      <div class="prod-price">$${p.price.toFixed(2)}</div>
-      <div class="prod-qty">
-        <button onclick="changeQty(${p.id},-1)">-</button>
-        <span id="qty-${p.id}">${qtys[p.id] || 1}</span>
-        <button onclick="changeQty(${p.id},1)">+</button>
-      </div>
-      <button class="add-btn${cart[p.id] ? ' added' : ''}" id="abtn-${p.id}" onclick="addToCart(${p.id})">${cart[p.id] ? '✓ Agregado' : 'AGREGAR'}</button>
-    </div>`;
 }
 
 // --- PRODUCT DETAIL LOGIC ---
@@ -590,7 +560,6 @@ function renderDetalle(id) {
     const main = document.getElementById('detalle-main-img');
     if (main) main.src = src;
   };
-  };
 }
 
 // Delivery Modal functions
@@ -665,7 +634,7 @@ function updateCartUI() {
   if (!cb) return;
 
   if (!items.length) {
-    cb.innerHTML = '<div class="cart-empty">Tu carrito está vacío 🛒</div>';
+    cb.innerHTML = '<div class="cart-empty">Tu carrito est├í vac├¡o ­ƒøÆ</div>';
     if (cf) cf.style.display = 'none';
     return;
   }
@@ -676,7 +645,7 @@ function updateCartUI() {
     const brand = extractBrand(i.name);
     const imgHtml = i.img
       ? `<img src="${i.img}" alt="${i.name}" onerror="this.style.display='none'">`
-      : `<span style="font-size:2rem">${i.emoji || '📦'}</span>`;
+      : `<span style="font-size:2rem">${i.emoji || '­ƒôª'}</span>`;
     const oldPriceHtml = i.oldPrice
       ? `<span class="cr-old-price">$${(i.oldPrice * i.qty).toFixed(2)}</span>` : '';
     return `
@@ -686,7 +655,7 @@ function updateCartUI() {
         <div class="cr-brand">${brand}</div>
         <div class="cr-name">${i.name}</div>
         <div class="cr-qty-row">
-          <button class="cr-qty-btn" onclick="cartQty('${i.id}',-1)">−</button>
+          <button class="cr-qty-btn" onclick="cartQty('${i.id}',-1)">ÔêÆ</button>
           <span class="cr-qty-val">${qtyLabel}</span>
           <button class="cr-qty-btn" onclick="cartQty('${i.id}',1)">+</button>
         </div>
@@ -760,7 +729,7 @@ function addToCart(id) {
 
   saveCart();
   updateCartUI();
-  _animateFloatCart();   // 🎯 bounce animation
+  _animateFloatCart();   // ­ƒÄ» bounce animation
   refreshAllAddBtns();
 }
 
@@ -781,11 +750,11 @@ function saveCart() {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-/* ── Refresca el estado visual de todos los botones "Agregar" ─── */
+/* ÔöÇÔöÇ Refresca el estado visual de todos los botones "Agregar" ÔöÇÔöÇÔöÇ */
 function refreshAllAddBtns() {
   document.querySelectorAll('[id^="abtn-"]').forEach(btn => {
     const id = parseInt(btn.id.replace('abtn-', ''), 10);
-    // Un producto está en el carrito si existe cart[id]
+    // Un producto est├í en el carrito si existe cart[id]
     // Para frutas, el key incluye sufijo (_kg/_unit), chequeamos ambos
     const inCart = cart[id] ||
       cart[id + '_kg'] ||
@@ -823,15 +792,15 @@ function _animateFloatCart() {
 async function sendWA() {
   const items = Object.values(cart);
   if (!items.length) {
-    alert('Tu carrito está vacío.');
+    alert('Tu carrito est├í vac├¡o.');
     return;
   }
 
-  // 1. Verificar sesión activa
+  // 1. Verificar sesi├│n activa
   const { data: { session } } = await window.supabaseClient.auth.getSession();
 
   if (session?.user) {
-    // 2. Si hay sesión, buscar perfil
+    // 2. Si hay sesi├│n, buscar perfil
     try {
       const { data: perfil, error } = await window.supabaseClient
         .from('perfiles')
@@ -840,10 +809,10 @@ async function sendWA() {
         .single();
 
       if (perfil && perfil.nombre && perfil.direccion) {
-        // Tomar datos automáticamente y enviar
+        // Tomar datos autom├íticamente y enviar
         _executeWAFinal(perfil.nombre, perfil.direccion);
       } else {
-        // Si el perfil no está completo, pedir los datos (o usar metadata del nombre como fallback)
+        // Si el perfil no est├í completo, pedir los datos (o usar metadata del nombre como fallback)
         const nameFallback = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
         openGuestModal((data) => {
           _executeWAFinal(data.nombre, data.direccion);
@@ -857,15 +826,15 @@ async function sendWA() {
       });
     }
   } else {
-    // 3. Si no hay sesión, abrir modal de invitado
+    // 3. Si no hay sesi├│n, abrir modal de invitado
     if (typeof openGuestModal === 'function') {
       openGuestModal((data) => {
         _executeWAFinal(data.nombre, data.direccion);
       });
     } else {
-      // Fallback básico si auth.js no cargó
+      // Fallback b├ísico si auth.js no carg├│
       const nombre = prompt('Ingresa tu nombre para el pedido:');
-      const direccion = prompt('Ingresa tu dirección de entrega:');
+      const direccion = prompt('Ingresa tu direcci├│n de entrega:');
       if (nombre && direccion) {
         _executeWAFinal(nombre, direccion);
       }
@@ -886,19 +855,19 @@ function _executeWAFinal(nombre, direccion) {
   const min = now.getMinutes().toString().padStart(2, '0');
   const fechaStr = `${d}/${m}/${y} ${h}:${min}`;
 
-  let msg = `🛒 *Nuevo pedido - Abarrotes el Rosal*\n\n`;
-  msg += `👤 Cliente: ${nombre}\n`;
-  msg += `📍 Dirección: ${direccion}\n\n`;
-  msg += `🧾 Pedido:\n`;
+  let msg = `­ƒøÆ *Nuevo pedido - Abarrotes el Rosal*\n\n`;
+  msg += `­ƒæñ Cliente: ${nombre}\n`;
+  msg += `­ƒôì Direcci├│n: ${direccion}\n\n`;
+  msg += `­ƒº¥ Pedido:\n`;
 
   items.forEach(i => {
     const subtotal = (i.price * i.qty).toFixed(2);
-    msg += `• ${i.qty} x ${i.name} — $${subtotal}\n`;
+    msg += `ÔÇó ${i.qty} x ${i.name} ÔÇö $${subtotal}\n`;
   });
 
-  msg += `\n💰 *Total: $${total.toFixed(2)}*\n\n`;
-  msg += `🕐 Fecha: ${fechaStr}\n\n`;
-  msg += `Por favor, confirmar disponibilidad. ¡Gracias!`;
+  msg += `\n­ƒÆ░ *Total: $${total.toFixed(2)}*\n\n`;
+  msg += `­ƒòÉ Fecha: ${fechaStr}\n\n`;
+  msg += `Por favor, confirmar disponibilidad. ┬íGracias!`;
 
   const waUrl = `https://wa.me/526643944760?text=${encodeURIComponent(msg)}`;
   window.open(waUrl, '_blank');

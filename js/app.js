@@ -74,7 +74,7 @@ function selectCategory(id) {
 function initHome() {
   buildCatStrip('cat-strip-home');
   renderFeatured(8);
-  renderRecientes(6);
+  renderRecientes(5);
   initHeroCarousel();
 }
 

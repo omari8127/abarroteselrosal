@@ -74,6 +74,7 @@ function selectCategory(id) {
 function initHome() {
   buildCatStrip('cat-strip-home');
   renderFeatured(8);
+  renderRecientes(6);
   initHeroCarousel();
 }
 
@@ -305,6 +306,18 @@ function renderFeatured(limit) {
   if (!container) return;
   const filtered = allProducts.filter(p => p.badge).slice(0, limit);
   container.innerHTML = filtered.map(p => cardHTML(p)).join('');
+  if (typeof refreshAllAddBtns === 'function') refreshAllAddBtns();
+}
+
+function renderRecientes(limit) {
+  const container = document.getElementById('recientes-products');
+  if (!container) return;
+  // Show recently added: products without badge (not on sale), shuffled for variety
+  const nonSale = allProducts.filter(p => !p.badge);
+  // Pick a spread of categories for variety
+  const picks = nonSale.slice(0, limit * 4);
+  const shuffled = picks.sort(() => Math.random() - 0.5).slice(0, limit);
+  container.innerHTML = shuffled.map(p => cardHTML(p)).join('');
   if (typeof refreshAllAddBtns === 'function') refreshAllAddBtns();
 }
 

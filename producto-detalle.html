@@ -22,20 +22,20 @@
       <div class="search-bar">
         <input type="text" id="search-input" placeholder="Busca tus productos aquí"
           oninput="searchProducts(this.value)">
-        <button onclick="searchProducts(document.getElementById('search-input').value, true)">🔍</button>
+        <button onclick="searchProducts(document.getElementById('search-input').value, true)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
       </div>
       <div class="header-actions">
-        <div class="header-action">
-          <span class="icon">📋</span>
+        <div class="header-action" onclick="handleMisPedidosClick()">
+          <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="11" y2="16"/></svg></span>
           <span>Mis Pedidos</span>
         </div>
-        <div class="header-action">
-          <span class="icon">👤</span>
+        <div class="header-action" id="account-btn">
+          <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
           <span>Mi Cuenta</span>
         </div>
         <div class="cart-action" onclick="toggleCart()">
           <span class="cart-badge" id="hdr-count">0</span>
-          <span class="cart-icon">🛒</span>
+          <span class="cart-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></span>
           <span id="hdr-total">$0.00</span>
         </div>
       </div>
@@ -94,20 +94,25 @@
     </div>
   </div>
 
-  <button class="float-cart" onclick="toggleCart()">🛒 Mi carrito <div class="float-badge" id="float-count">0</div>
+  <button class="float-cart" onclick="toggleCart()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg> Mi carrito <div class="float-badge" id="float-count">0</div>
     </button>
 
   <div class="cart-overlay" id="cart-overlay" onclick="outsideClose(event)">
     <div class="cart-drawer">
       <div class="cart-header">
-        <h2>🛒 Mi Carrito</h2><button class="cart-close" onclick="toggleCart()">✕</button>
+        <h2><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg> Mi Carrito</h2><button class="cart-close" onclick="toggleCart()">✕</button>
       </div>
       <div class="cart-body" id="cart-body">
         <div class="cart-empty">Tu carrito está vacío</div>
       </div>
       <div class="cart-footer" id="cart-footer" style="display:none">
-        <div class="cart-total-row"><span>Total</span><span id="drawer-total">$0.00</span></div>
-        <button class="wa-order-btn" onclick="sendWA()">Pedir por WhatsApp</button>
+        <div class="cf-row cf-total">
+          <span>Total</span>
+          <span id="cart-total-val">$0.00</span>
+        </div>
+        <a href="checkout.html" class="ck-go-btn" id="btn-checkout">
+          ✅ Finalizar pedido
+        </a>
       </div>
     </div>
   </div>

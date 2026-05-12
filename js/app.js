@@ -322,7 +322,7 @@ function cardHTML(p) {
     if (!frutaModes[p.id]) frutaModes[p.id] = { mode: 'kg', val: 0.5 };
     const fm = frutaModes[p.id];
     const displayVal = fm.mode === 'kg' ? fm.val.toFixed(1) : fm.val;
-    const suffix    = fm.mode === 'kg' ? 'kg' : 'pzas';
+    const suffix = fm.mode === 'kg' ? 'kg' : 'pzas';
     return `
     <div class="prod-card">
       ${badge}
@@ -335,7 +335,7 @@ function cardHTML(p) {
       </div>
 
       <div class="frutas-seg-ctrl" id="seg-${p.id}">
-        <button class="seg-btn${fm.mode === 'kg'   ? ' seg-active' : ''}" onclick="setFrutaMode(${p.id},'kg')">Kilogramos</button>
+        <button class="seg-btn${fm.mode === 'kg' ? ' seg-active' : ''}" onclick="setFrutaMode(${p.id},'kg')">Kilogramos</button>
         <button class="seg-btn${fm.mode === 'unit' ? ' seg-active' : ''}" onclick="setFrutaMode(${p.id},'unit')">Unidades</button>
       </div>
 
@@ -519,8 +519,8 @@ function updateCartUI() {
   const items = Object.values(cart);
   const count = items.reduce((sum, item) => sum + item.qty, 0);
   const subtotal = items.reduce((sum, item) => sum + (item.oldPrice || item.price) * item.qty, 0);
-  const total    = items.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const savings  = subtotal - total;
+  const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const savings = subtotal - total;
 
   const countEl = document.getElementById('hdr-count');
   if (countEl) countEl.innerText = count;
@@ -543,10 +543,10 @@ function updateCartUI() {
   }
 
   cb.innerHTML = items.map(i => {
-    const isFruta    = i.unitLabel !== undefined;
-    const qtyLabel   = isFruta ? `${i.qty} ${i.unitLabel}` : i.qty;
-    const brand      = extractBrand(i.name);
-    const imgHtml    = i.img
+    const isFruta = i.unitLabel !== undefined;
+    const qtyLabel = isFruta ? `${i.qty} ${i.unitLabel}` : i.qty;
+    const brand = extractBrand(i.name);
+    const imgHtml = i.img
       ? `<img src="${i.img}" alt="${i.name}" onerror="this.style.display='none'">`
       : `<span style="font-size:2rem">${i.emoji || '📦'}</span>`;
     const oldPriceHtml = i.oldPrice
@@ -612,9 +612,9 @@ function addToCart(id) {
     // Use frutas segmented-control state
     if (!frutaModes[id]) frutaModes[id] = { mode: 'kg', val: 0.5 };
     const fm = frutaModes[id];
-    const qty    = fm.val;
+    const qty = fm.val;
     const suffix = fm.mode === 'kg' ? 'kg' : 'pzas';
-    const key    = id + '_' + fm.mode;   // separate cart slot per mode
+    const key = id + '_' + fm.mode;   // separate cart slot per mode
 
     if (cart[key]) {
       cart[key].qty = Math.round((cart[key].qty + qty) * 10) / 10;
@@ -660,8 +660,8 @@ function refreshAllAddBtns() {
     // Un producto está en el carrito si existe cart[id]
     // Para frutas, el key incluye sufijo (_kg/_unit), chequeamos ambos
     const inCart = cart[id] ||
-                   cart[id + '_kg'] ||
-                   cart[id + '_unit'];
+      cart[id + '_kg'] ||
+      cart[id + '_unit'];
     if (inCart) {
       btn.classList.add('added');
       btn.textContent = '✓ Agregado';
@@ -748,7 +748,7 @@ async function sendWA() {
 function _executeWAFinal(nombre, direccion) {
   const items = Object.values(cart);
   const total = items.reduce((a, i) => a + i.price * i.qty, 0);
-  
+
   // Formato de fecha: DD/MM/YYYY HH:mm
   const now = new Date();
   const d = now.getDate().toString().padStart(2, '0');
@@ -762,12 +762,12 @@ function _executeWAFinal(nombre, direccion) {
   msg += `👤 Cliente: ${nombre}\n`;
   msg += `📍 Dirección: ${direccion}\n\n`;
   msg += `🧾 Pedido:\n`;
-  
+
   items.forEach(i => {
     const subtotal = (i.price * i.qty).toFixed(2);
     msg += `• ${i.qty} x ${i.name} — $${subtotal}\n`;
   });
-  
+
   msg += `\n💰 *Total: $${total.toFixed(2)}*\n\n`;
   msg += `🕐 Fecha: ${fechaStr}\n\n`;
   msg += `Por favor, confirmar disponibilidad. ¡Gracias!`;

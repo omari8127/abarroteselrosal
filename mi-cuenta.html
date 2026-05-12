@@ -206,16 +206,16 @@
       <div class="search-bar">
         <input type="search" id="search-input" placeholder="Busca tus productos aquí"
           oninput="searchProducts && searchProducts(this.value)">
-        <button onclick="searchProducts && searchProducts(document.getElementById('search-input').value, true)">🔍</button>
+        <button onclick="searchProducts && searchProducts(document.getElementById('search-input').value, true)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
       </div>
       <div class="header-actions">
         <div class="header-action" id="account-btn">
-          <span class="icon">👤</span>
+          <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
           <span>Mi Cuenta</span>
         </div>
         <div class="cart-action" onclick="toggleCart && toggleCart()">
           <span class="cart-badge" id="hdr-count">0</span>
-          <span class="cart-icon">🛒</span>
+          <span class="cart-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></span>
           <span id="hdr-total">$0.00</span>
         </div>
       </div>

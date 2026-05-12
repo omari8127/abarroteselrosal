@@ -45,7 +45,7 @@ function _updateAccountBtn(user) {
     `;
     btn.onclick = _toggleUserDropdown;
   } else {
-    btn.innerHTML = `<span class="icon">👤</span><span>Mi Cuenta</span>`;
+    btn.innerHTML = `<span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span>Mi Cuenta</span>`;
     btn.onclick = openAuthModal;
   }
 }
@@ -570,7 +570,7 @@ async function sendResetEmail() {
   btn.textContent = 'Enviando...'; btn.disabled = true;
 
   const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://abarroteselrosal.vercel.app/reset-password.html'
+    redirectTo: window.location.origin + '/reset-password.html'
   });
 
   btn.textContent = 'Enviar link'; btn.disabled = false;
@@ -681,3 +681,12 @@ async function signOut() {
 function getCurrentUser() {
   return _currentUser;
 }
+
+/* ── Click en Mis Pedidos ────────────────────────────────────── */
+window.handleMisPedidosClick = function() {
+  if (getCurrentUser()) {
+    window.location.href = 'mi-cuenta.html#pedidos';
+  } else {
+    openAuthModal();
+  }
+};

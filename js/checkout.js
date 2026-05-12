@@ -3,6 +3,7 @@
 // ================================================================
 
 const WA_NUMBER = '526645187312';
+const SHIPPING_FEE = 10.00;
 
 let ckCart = {};
 let ckDelivery = 'domicilio'; // 'domicilio' | 'tienda'
@@ -42,7 +43,7 @@ function renderSummary() {
   }
 
   const subtotal = items.reduce((s, i) => s + (i.oldPrice || i.price) * i.qty, 0);
-  const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+  let total = items.reduce((s, i) => s + i.price * i.qty, 0);
   const savings = subtotal - total;
 
   container.innerHTML = items.map(i => {
@@ -63,6 +64,18 @@ function renderSummary() {
 
   if (totals) {
     totals.style.display = 'block';
+    
+    // Shipping logic
+    const shippingRow = document.getElementById('ck-shipping-row');
+    const shippingEl = document.getElementById('ck-shipping');
+    if (ckDelivery === 'domicilio') {
+      total += SHIPPING_FEE;
+      if (shippingRow) shippingRow.style.display = 'flex';
+      if (shippingEl) shippingEl.textContent = `$${SHIPPING_FEE.toFixed(2)}`;
+    } else {
+      if (shippingRow) shippingRow.style.display = 'none';
+    }
+
     document.getElementById('ck-subtotal').textContent = `$${subtotal.toFixed(2)}`;
     document.getElementById('ck-total').textContent = `$${total.toFixed(2)}`;
     const savRow = document.getElementById('ck-savings-row');
@@ -98,6 +111,7 @@ function setDelivery(mode) {
     // Clear address errors when hiding
     ['field-calle', 'field-num', 'field-colonia'].forEach(f => clearError(f));
   }
+  renderSummary();
 }
 
 // ── PAYMENT TOGGLE ───────────────────────────────────────────────
@@ -176,8 +190,14 @@ function confirmOrder() {
   const tel = getVal('inp-tel');
   const notas = getVal('inp-notas');
   const subtotal = items.reduce((s, i) => s + (i.oldPrice || i.price) * i.qty, 0);
-  const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+  let total = items.reduce((s, i) => s + i.price * i.qty, 0);
   const savings = subtotal - total;
+
+  let shippingLine = '';
+  if (ckDelivery === 'domicilio') {
+    total += SHIPPING_FEE;
+    shippingLine = `• Pedido: $${SHIPPING_FEE.toFixed(2)}<br>`;
+  }
 
   let entregaLabel = 'Recoger en tienda';
   if (ckDelivery === 'domicilio') {
@@ -201,12 +221,13 @@ function confirmOrder() {
     ? '🏪 Recoger en tienda'
     : `🚚 ${entregaLabel}`;
   document.getElementById('modal-pago').textContent = pagoLabel;
-  document.getElementById('modal-items').innerHTML = itemsLines
+  document.getElementById('modal-items').innerHTML = itemsLines 
+    + (shippingLine ? '<br>' + shippingLine : '')
     + (savings > 0 ? `<br><span style="color:#1a7a2e;font-weight:700">Ahorros: -$${savings.toFixed(2)}</span>` : '');
   document.getElementById('modal-total').textContent = `$${total.toFixed(2)}`;
 
   // Store for WA
-  window._ckOrder = { nombre, tel, notas, entregaLabel, pagoLabel, items, total, savings };
+  window._ckOrder = { nombre, tel, notas, entregaLabel, pagoLabel, items, total, savings, subtotal, hasShipping: (ckDelivery === 'domicilio') };
 
   // Open modal
   document.getElementById('ck-modal').classList.add('open');
@@ -297,6 +318,8 @@ async function sendWAFinal() {
     const qty = i.unitLabel ? `${i.qty} ${i.unitLabel}` : `x${i.qty}`;
     msg += `• ${i.name} ${qty} — $${(i.price * i.qty).toFixed(2)}\n`;
   });
+
+  if (o.hasShipping) msg += `• Pedido: $${SHIPPING_FEE.toFixed(2)}\n`;
 
   if (o.savings > 0) msg += `\n🎉 *Ahorros: -$${o.savings.toFixed(2)}*\n`;
   msg += `\n✅ *TOTAL: $${o.total.toFixed(2)}*\n`;

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tienda | El Rosal en linea</title>
+  <title>Preguntas Frecuentes | El Rosal</title>
   <link rel="icon" type="image/png" href="img/favicon.png">
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
@@ -74,51 +74,355 @@
     </div>
   </nav>
 
-  <div id="featured-section">
-    <div class="hero-carousel">
-      <div class="carousel-container">
-        <div class="carousel-slide active">
-          <img src="img/hero/hero2.png"
-            style="width: 100%; height: 500px; object-fit: cover; object-position: center top;">
-        </div>
-        <div class="carousel-slide">
-          <img src="img/hero/hero3.png"
-            style="width: 100%; height: 500px; object-fit: cover; object-position: center top;">
-        </div>
-        <div class="carousel-slide">
-          <img src="img/hero/hero1.png"
-            style="width: 100%; height: 500px; object-fit: cover; object-position: center top;">
-        </div>
-      </div>
+  
+  <style>
+    /* ==========================================================================
+       PREMIUM INTERNAL PAGES STYLE
+       ========================================================================== */
+    .page-hero {
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
+      color: #fff;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 10%, transparent 10%),
+                  radial-gradient(circle, rgba(255,255,255,0.05) 10%, transparent 10%);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      z-index: 1;
+      opacity: 0.5;
+      animation: heroPatternMove 30s linear infinite;
+    }
+    @keyframes heroPatternMove {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-30px); }
+    }
+    .page-hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .page-hero-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .page-hero-subtitle {
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.6;
+    }
 
-      <button class="carousel-prev" onclick="moveSlide(-1)">❮</button>
-      <button class="carousel-next" onclick="moveSlide(1)">❯</button>
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
 
-      <div class="carousel-dots">
-        <span class="dot active" onclick="currentSlide(0)"></span>
-        <span class="dot" onclick="currentSlide(1)"></span>
-        <span class="dot" onclick="currentSlide(2)"></span>
-      </div>
-    </div>
+    /* ACERCA DE NOSOTROS */
+    .about-section { margin-bottom: 4rem; }
+    .about-text {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: #444;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 3rem;
+    }
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .value-card {
+      background: #fff;
+      padding: 2.5rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid #f0f0f0;
+      border-bottom: 4px solid var(--red);
+    }
+    .value-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    }
+    .value-icon {
+      width: 70px;
+      height: 70px;
+      background: rgba(236,29,37,0.1);
+      color: var(--red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+    .value-icon svg { width: 34px; height: 34px; stroke-width: 2; }
+    .value-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--blue);
+      margin-bottom: 1rem;
+    }
+    .value-desc { color: #666; line-height: 1.6; }
 
-    <div class="ticker">Envío a domicilio dentro de 18 cuadras de la Anexa 20 de Noviembre · Horario de atención: 9:00
-      am a 9:00 pm · Entregas rápidas el mismo día</div>
+    /* COMO COMPRAR */
+    .steps-timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto 4rem;
+      padding-left: 2rem;
+    }
+    .steps-timeline::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 34px; width: 4px; height: 100%;
+      background: #f0f0f0;
+      border-radius: 4px;
+    }
+    .step-item {
+      position: relative;
+      margin-bottom: 3rem;
+      padding-left: 5rem;
+    }
+    .step-number {
+      position: absolute;
+      left: 0; top: 0;
+      width: 40px; height: 40px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      box-shadow: 0 0 0 8px #fff, 0 4px 15px rgba(0,0,0,0.1);
+      z-index: 2;
+    }
+    .step-content {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.04);
+      border: 1px solid #eee;
+    }
+    .step-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--blue);
+      margin-bottom: 0.8rem;
+    }
+    .step-desc { color: #555; line-height: 1.6; font-size: 1.05rem; }
 
+    /* FAQ ACCORDION */
+    .faq-container { max-width: 800px; margin: 0 auto 4rem; }
+    .faq-item {
+      margin-bottom: 1rem;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      border: 1px solid #eee;
+      overflow: hidden;
+    }
+    .faq-item details { width: 100%; }
+    .faq-item summary {
+      padding: 1.5rem;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--blue-dark);
+      cursor: pointer;
+      list-style: none;
+      position: relative;
+      transition: background 0.2s;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after {
+      content: '+';
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--red);
+      transition: transform 0.3s;
+    }
+    .faq-item details[open] summary::after { content: '−'; }
+    .faq-item details[open] summary { background: #fdfdfd; border-bottom: 1px solid #eee; }
+    .faq-answer {
+      padding: 1.5rem;
+      color: #555;
+      line-height: 1.7;
+      background: #fff;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    <div class="section-wrap">
-      <div class="section-title-bar">
-        <div class="section-title-line"></div>
-        <div class="section-title-badge" style="background:var(--red)">¡Ofertas de Hoy!</div>
-        <div class="section-title-line"></div>
-      </div>
-      <div class="products-grid" id="featured-products"></div>
-      <div style="text-align: center; margin: 2rem 0;">
-        <a href="productos.html" class="btn-more">Ver todos los productos</a>
-      </div>
+    /* CONTACTO */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+    .contact-info-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      border: 1px solid #f0f0f0;
+      border-top: 4px solid var(--blue);
+    }
+    .contact-method {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    .contact-method:last-child { margin-bottom: 0; }
+    .cm-icon {
+      width: 45px; height: 45px;
+      background: rgba(0,103,177,0.1);
+      color: var(--blue);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex: 0 0 auto;
+    }
+    .cm-content h4 { font-size: 1.1rem; color: #333; margin-bottom: 0.4rem; }
+    .cm-content p, .cm-content a { color: #666; line-height: 1.5; text-decoration: none; }
+    .cm-content a:hover { color: var(--red); }
+    
+    .contact-form-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      border: 1px solid #f0f0f0;
+    }
+    .cf-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 2rem;
+      color: var(--blue);
+      margin-bottom: 1.5rem;
+    }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-control {
+      width: 100%;
+      padding: 14px;
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 1rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--blue);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0,103,177,0.1);
+    }
+    textarea.form-control { min-height: 140px; resize: vertical; }
+    .btn-brand {
+      background: var(--red);
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      width: 100%;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 4px 12px rgba(236,29,37,0.2);
+    }
+    .btn-brand:hover { background: var(--red-dark); transform: translateY(-2px); }
+
+    .wa-float-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 800;
+      box-shadow: 0 4px 15px rgba(37,211,102,0.3);
+      transition: transform 0.2s;
+      margin-top: 1rem;
+    }
+    .wa-float-btn:hover { transform: scale(1.05); }
+
+    @media(max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; }
+      .steps-timeline { padding-left: 0; }
+      .steps-timeline::before { display: none; }
+      .step-item { padding-left: 0; }
+      .step-number { position: relative; margin: 0 auto 1rem; }
+      .page-hero-title { font-size: 2.5rem; }
+    }
+  </style>
+
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <h1 class="page-hero-title">Preguntas Frecuentes</h1>
+      <p class="page-hero-subtitle">Resolvemos todas tus dudas rápidamente. Si no encuentras tu respuesta, no dudes en contactarnos.</p>
     </div>
   </div>
-
-  <div id="search-results" style="display:none">
+  <div class="container faq-container">
+    <div class="faq-item">
+      <details>
+        <summary>¿Cuál es el área de entrega a domicilio?</summary>
+        <div class="faq-answer">Por el momento, realizamos entregas exclusivamente dentro de un radio de <strong>18 cuadras</strong> a la redonda de nuestra sucursal ubicada en la colonia Anexa 20 de Noviembre, Tijuana. Esto nos permite garantizar entregas rápidas y productos frescos.</div>
+      </details>
+    </div>
+    <div class="faq-item">
+      <details>
+        <summary>¿Cuáles son los horarios de atención y entrega?</summary>
+        <div class="faq-answer">Estamos abiertos y procesando pedidos de <strong>Lunes a Domingo, en un horario de 9:00 AM a 9:00 PM</strong>. Los pedidos recibidos fuera de este horario se programan para el día siguiente a primera hora.</div>
+      </details>
+    </div>
+    <div class="faq-item">
+      <details>
+        <summary>¿Cuáles son los métodos de pago aceptados?</summary>
+        <div class="faq-answer">Actualmente aceptamos pago en <strong>efectivo contra entrega</strong>. También puedes pagar mediante <strong>transferencia bancaria</strong> (solicitando los datos por WhatsApp) o <strong>pago con tarjeta</strong> directamente con el repartidor.</div>
+      </details>
+    </div>
+    <div class="faq-item">
+      <details>
+        <summary>¿Hay un costo extra por el servicio a domicilio?</summary>
+        <div class="faq-answer">El envío a domicilio es <strong>gratuito</strong> en zonas muy cercanas (menos de 5 cuadras). Para distancias mayores dentro de nuestra área de cobertura, aplicamos una tarifa mínima de servicio que se te informará al confirmar tu pedido.</div>
+      </details>
+    </div>
+    <div class="faq-item">
+      <details>
+        <summary>¿Qué hago si mi pedido llega incompleto o con error?</summary>
+        <div class="faq-answer">Tu satisfacción es nuestra prioridad. Si llegara a ocurrir algún inconveniente con tu pedido, por favor <strong>comunícate inmediatamente con nosotros al WhatsApp 664 518 7312</strong> y lo resolveremos a la brevedad, ya sea con un reemplazo o reembolso.</div>
+      </details>
+    </div>
+  </div>
+<div id="search-results" style="display:none">
     <div class="section-wrap">
       <div class="section-title-bar">
         <div class="section-title-line"></div>

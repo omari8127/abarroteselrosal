@@ -450,102 +450,116 @@ function renderDetalle(id) {
   if (!container) return;
 
   if (!p) {
-    container.innerHTML = `<div class="section-wrap"><p style="padding:2rem;text-align:center;color:#666">Producto no encontrado. <a href="productos.html" style="color:var(--blue);text-decoration:underline">Ver catálogo</a></p></div>`;
+    container.innerHTML = `<div style="padding:4rem;text-align:center;color:#666">Producto no encontrado. <a href="productos.html" style="color:var(--blue);text-decoration:underline">Ver catálogo</a></div>`;
     return;
   }
 
   const catRaw = categories.find(c => c.id === p.cat);
+  const sku = 777000 + p.id;
+  const hasPromo = p.badge && p.oldPrice;
+  const promoText = hasPromo ? `${p.badge} — ${p.unit || '1 pza'} por $${p.oldPrice.toFixed(2)}` : null;
 
   container.innerHTML = `
-    <div class="breadcrumb-nav">
-      <a href="index.html">Inicio</a> <span>/</span> 
-      <a href="productos.html?cat=${p.cat}">${catRaw ? catRaw.label : 'Productos'}</a> <span>/</span> 
-      <span class="curr">${p.name}</span>
-    </div>
-    
-    <div class="detalle-grid">
-      <div class="detalle-left">
-        <div class="detalle-img-card">
-          ${p.img ? `<img src="${p.img}" alt="${p.name}">` : `<span class="prod-emoji" style="font-size:10rem">${p.emoji}</span>`}
+    <div class="detalle-wrapper">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb-nav">
+        <a href="index.html">Inicio</a>
+        <span class="bc-sep">&rsaquo;</span>
+        <a href="productos.html?cat=${p.cat}">${catRaw ? catRaw.label : 'Productos'}</a>
+        <span class="bc-sep">&rsaquo;</span>
+        <span class="curr">${p.name}</span>
+      </nav>
+
+      <!-- Main product grid -->
+      <div class="detalle-grid">
+
+        <!-- LEFT: thumb strip + main image -->
+        <div class="detalle-left">
+          <!-- Vertical thumbnail strip -->
+          <div class="detalle-thumbstrip">
+            <button class="thumb-arrow" id="thumb-up" onclick="scrollThumbs(-1)">&#8679;</button>
+            <img src="${p.img || ''}" alt="${p.name}" class="detalle-thumb-img active" id="thumb-0"
+              onclick="switchImg(this, '${p.img || ''}')"
+              onerror="this.style.display='none'">
+            <button class="thumb-arrow" id="thumb-down" onclick="scrollThumbs(1)">&#8681;</button>
+          </div>
+
+          <!-- Main image -->
+          <div class="detalle-img-main" id="detalle-img-main">
+            ${p.img
+              ? `<img src="${p.img}" alt="${p.name}" id="detalle-main-img">`
+              : `<span style="font-size:9rem;line-height:1">${p.emoji}</span>`
+            }
+            <button class="detalle-zoom-btn" title="Ampliar imagen">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </button>
+          </div>
         </div>
-        <div class="detalle-thumbs">
-          <img src="${p.img || ''}" class="active" onerror="this.style.display='none'">
-          <div class="thumb-placeholder" style="font-size:2rem; color:#eee">🖼️</div>
-          <div class="thumb-placeholder" style="font-size:2rem; color:#eee">🖼️</div>
+
+        <!-- RIGHT: product info -->
+        <div class="detalle-right">
+          <h1 class="detalle-title">${p.name}</h1>
+          <div class="detalle-sku">SKU: ${sku}</div>
+
+          ${hasPromo ? `<div class="detalle-promo-badge">${promoText}</div>` : ''}
+
+          <div class="detalle-main-price">$${p.price.toFixed(2)}</div>
+
+          <button class="btn-agregar" onclick="addToCart(${p.id})">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Agregar
+          </button>
+
+          <hr class="detalle-divider">
+
+          ${p.oldPrice ? `
+          <div class="detalle-promos-label">Promociones</div>
+          <div class="detalle-promo-box">
+            ${p.name.toUpperCase().substring(0, 40)}${p.name.length > 40 ? '...' : ''} ${p.badge || ''}
+            <div class="promo-qty">${qtys[p.id] || 1}</div>
+          </div>` : ''}
         </div>
       </div>
-      
-      <div class="detalle-right">
-        <div class="detalle-cat-tag">${catRaw ? catRaw.label : 'General'}</div>
-        <h1 class="detalle-title">${p.name}</h1>
-        <div class="detalle-unit-info">${p.unit || 'Pieza'}</div>
-        
-        <div class="detalle-main-price">$${p.price.toFixed(2)}</div>
-        
-        <div class="detalle-sucursal-info">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <span>Recibe en: <strong>Anexa 20 de Noviembre</strong></span>
-        </div>
 
-        <div class="detalle-actions">
-          <div class="detalle-qty">
-            <button onclick="changeQty(${p.id},-1,true)">-</button>
-            <span id="det-qty-${p.id}">${qtys[p.id] || 1}</span>
-            <button onclick="changeQty(${p.id},1,true)">+</button>
+      <!-- Productos similares horizontal scroll -->
+      <div class="similares-section">
+        <div class="similares-header">
+          <h2>Productos similares</h2>
+          <div class="similares-nav">
+            <button class="similares-arrow" onclick="scrollSimilares(-1)">&#8249;</button>
+            <button class="similares-arrow" onclick="scrollSimilares(1)">&#8250;</button>
+            <a href="productos.html?cat=${p.cat}" class="ver-todos-link">Ver todos &rsaquo;</a>
           </div>
-          <button class="btn-buy-now" onclick="addToCart(${p.id})">AGREGAR</button>
         </div>
-
-        <div class="detalle-info-section">
-          <h3>Detalles del producto</h3>
-          <table class="detalle-info-table">
-            <tr>
-              <td>Código</td>
-              <td>${777000 + p.id}</td>
-            </tr>
-            <tr>
-              <td>Categoría</td>
-              <td>${catRaw ? catRaw.label : 'Abarrotes'}</td>
-            </tr>
-            <tr>
-              <td>Contenido</td>
-              <td>${p.unit || '1 pza'}</td>
-            </tr>
-            ${p.desc ? `<tr><td>Descripción</td><td>${p.desc}</td></tr>` : ''}
-          </table>
-        </div>
-
-        <div class="detalle-replacement">
-          <h3>Alternativas recomendadas</h3>
-          <div class="replacement-grid" id="replacement-grid"></div>
-        </div>
+        <div class="similares-scroll" id="similares-scroll"></div>
       </div>
     </div>
   `;
 
-  // Similar products for replacements & related
+  // Populate similar products horizontal scroll
   const similar = allProducts.filter(x => x.cat === p.cat && x.id !== p.id);
-
-  // Replacements (first 2)
-  const replGrid = document.getElementById('replacement-grid');
-  if (replGrid) {
-    replGrid.innerHTML = similar.slice(0, 2).map(x => `
-      <div class="repl-item" onclick="window.location.href='producto-detalle.html?id=${x.id}'">
-        ${x.badge ? `<div class="repl-badge">${x.badge}</div>` : ''}
-        <img src="${x.img}" alt="${x.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-        <span class="repl-emoji" style="display:none">${x.emoji}</span>
-        <div class="repl-item-info">
-          <div class="repl-name">${x.name}</div>
-          <div class="repl-price">$${x.price.toFixed(2)}</div>
-        </div>
-      </div>
+  const similScroll = document.getElementById('similares-scroll');
+  if (similScroll) {
+    similScroll.innerHTML = similar.slice(0, 10).map(x => `
+      <a class="similar-card" href="producto-detalle.html?id=${x.id}">
+        <img src="${x.img || ''}" alt="${x.name}" onerror="this.style.display='none'">
+        <div class="similar-card-name">${x.name}</div>
+        <div class="similar-card-price">$${x.price.toFixed(2)}</div>
+      </a>
     `).join('');
   }
-  // Related products bottom
-  const relatedGrid = document.getElementById('related-grid');
-  if (relatedGrid) {
-    relatedGrid.innerHTML = similar.slice(0, 6).map(x => cardHTML(x)).join('');
-  }
+
+  // Scroll helpers
+  window.scrollSimilares = (dir) => {
+    const el = document.getElementById('similares-scroll');
+    if (el) el.scrollBy({ left: dir * 600, behavior: 'smooth' });
+  };
+  window.switchImg = (thumb, src) => {
+    document.querySelectorAll('.detalle-thumb-img').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+    const main = document.getElementById('detalle-main-img');
+    if (main) main.src = src;
+  };
 }
 
 function updateCartUI() {

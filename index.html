@@ -343,9 +343,10 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 14px; /* Match title margin */
-      padding-bottom: 8px; /* Match title padding + border */
-      border-bottom: 2px solid transparent; /* Align with title borders */
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+      min-height: 34px; /* Align with titles */
     }
 
     .sf-brand-icon {
@@ -402,10 +403,11 @@
       font-weight: 800;
       color: #fff;
       margin: 0 0 14px;
-      padding-bottom: 6px;
+      padding-bottom: 8px;
       border-bottom: 2px solid rgba(255, 255, 255, 0.25);
       display: inline-block;
       letter-spacing: 0;
+      min-height: 34px; /* Ensure same height */
     }
 
     /* ── Links list ───────────────────────────────────────── */

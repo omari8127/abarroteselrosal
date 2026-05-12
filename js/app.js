@@ -458,47 +458,65 @@ function renderDetalle(id) {
 
   container.innerHTML = `
     <div class="breadcrumb-nav">
-      <a href="index.html">Inicio</a> <span>›</span> 
-      <a href="productos.html?cat=${p.cat}">${catRaw ? catRaw.label : 'Productos'}</a> <span>›</span> 
+      <a href="index.html">Inicio</a> <span>/</span> 
+      <a href="productos.html?cat=${p.cat}">${catRaw ? catRaw.label : 'Productos'}</a> <span>/</span> 
       <span class="curr">${p.name}</span>
     </div>
     
     <div class="detalle-grid">
       <div class="detalle-left">
         <div class="detalle-img-card">
-          ${p.img ? `<img src="${p.img}" alt="${p.name}">` : `<span class="prod-emoji">${p.emoji}</span>`}
-          <div class="carousel-nav">
-            <button class="c-prev">❮</button>
-            <div class="c-dots"><span class="c-dot active"></span><span class="c-dot"></span><span class="c-dot"></span></div>
-            <button class="c-next">❯</button>
-          </div>
+          ${p.img ? `<img src="${p.img}" alt="${p.name}">` : `<span class="prod-emoji" style="font-size:10rem">${p.emoji}</span>`}
         </div>
         <div class="detalle-thumbs">
           <img src="${p.img || ''}" class="active" onerror="this.style.display='none'">
-          <div class="thumb-placeholder">📊</div>
-          <div class="thumb-placeholder">🥗</div>
+          <div class="thumb-placeholder" style="font-size:2rem; color:#eee">🖼️</div>
+          <div class="thumb-placeholder" style="font-size:2rem; color:#eee">🖼️</div>
         </div>
       </div>
       
       <div class="detalle-right">
-        <div class="detalle-ref">Referencia: ${777000 + p.id}</div>
+        <div class="detalle-cat-tag">${catRaw ? catRaw.label : 'General'}</div>
         <h1 class="detalle-title">${p.name}</h1>
+        <div class="detalle-unit-info">${p.unit || 'Pieza'}</div>
+        
         <div class="detalle-main-price">$${p.price.toFixed(2)}</div>
         
+        <div class="detalle-sucursal-info">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span>Recibe en: <strong>Anexa 20 de Noviembre</strong></span>
+        </div>
+
         <div class="detalle-actions">
-          <div class="detalle-qty-wrap">
-            <div class="detalle-qty">
-              <button onclick="changeQty(${p.id},-1,true)">-</button>
-              <span id="det-qty-${p.id}">${qtys[p.id] || 1}</span>
-              <button onclick="changeQty(${p.id},1,true)">+</button>
-            </div>
-            ${p.cat === 'frutas' ? '<div style="display: flex; align-items: center; font-size: 0.85rem; color: #666; font-weight: 700; margin-left:10px;">KILOGRAMOS/UNIDADES</div>' : ''}
+          <div class="detalle-qty">
+            <button onclick="changeQty(${p.id},-1,true)">-</button>
+            <span id="det-qty-${p.id}">${qtys[p.id] || 1}</span>
+            <button onclick="changeQty(${p.id},1,true)">+</button>
           </div>
           <button class="btn-buy-now" onclick="addToCart(${p.id})">AGREGAR</button>
         </div>
 
+        <div class="detalle-info-section">
+          <h3>Detalles del producto</h3>
+          <table class="detalle-info-table">
+            <tr>
+              <td>Código</td>
+              <td>${777000 + p.id}</td>
+            </tr>
+            <tr>
+              <td>Categoría</td>
+              <td>${catRaw ? catRaw.label : 'Abarrotes'}</td>
+            </tr>
+            <tr>
+              <td>Contenido</td>
+              <td>${p.unit || '1 pza'}</td>
+            </tr>
+            ${p.desc ? `<tr><td>Descripción</td><td>${p.desc}</td></tr>` : ''}
+          </table>
+        </div>
+
         <div class="detalle-replacement">
-          <h3>Si no está en stock, remplázalo por:</h3>
+          <h3>Alternativas recomendadas</h3>
           <div class="replacement-grid" id="replacement-grid"></div>
         </div>
       </div>

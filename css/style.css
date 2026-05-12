@@ -30,22 +30,21 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 .nav-extra{display:flex;align-items:center;height:100%;gap:5px}
 .nav-sucursal{
   margin-left:auto;
-  background:var(--blue);
-  color:#fff;
-  padding:0 24px;
+  background:transparent;
+  color:var(--text);
+  padding:0;
   height:100%;
   display:flex;
   align-items:center;
-  gap:10px;
-  font-size:0.95rem;
-  font-weight:700;
+  gap:4px;
+  font-size:0.85rem;
+  font-weight:600;
   cursor:pointer;
   flex:0 0 auto;
-  transition:background 0.2s;
 }
-.nav-sucursal:hover{background:var(--blue-dark)}
-.nav-sucursal .icon{font-size:1.2rem;display:flex;align-items:center}
-.nav-sucursal strong{color:var(--yellow);font-weight:800}
+.nav-sucursal:hover strong {color:var(--blue-dark)}
+.nav-sucursal strong{color:var(--blue);font-weight:700;transition:color 0.2s}
+.nav-sucursal svg{color:var(--blue);transition:color 0.2s}
 
 /* DROPDOWN MENU */
 .dropdown{position:relative;height:100%}
@@ -109,7 +108,7 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 .hero-carousel {
   position: relative;
   width: 100%;
-  max-width: 1300px;
+  max-width: 1440px;
   margin: 1.5rem auto;
   height: 350px;
   overflow: hidden;
@@ -472,7 +471,7 @@ footer strong{color:#fff}
 
 /* ── DETALLE PRODUCTO — ESTILO CALIMAX ─────────────────────────── */
 .page-detalle { background: #fff; }
-.detalle-wrapper { max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
+.detalle-wrapper { max-width: 1400px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
 
 /* Breadcrumb */
 .breadcrumb-nav { font-size: 0.8rem; color: #999; margin-bottom: 2rem; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.3px; font-weight: 600; }

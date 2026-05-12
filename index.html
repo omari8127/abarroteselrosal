@@ -16,6 +16,9 @@
 
   <header>
     <div class="header-inner">
+      <a href="index.html" class="brand">
+        <img src="img/logo.png" alt="Abarrotes El Rosal" class="brand-logo">
+      </a>
       <div class="search-bar">
         <input type="search" id="search-input" placeholder="Busca tus productos aquí"
           oninput="searchProducts(this.value)">
@@ -45,9 +48,6 @@
 
   <nav>
     <div class="nav-inner">
-      <a href="index.html" class="brand">
-        <img src="img/logo.png" alt="Abarrotes El Rosal" class="brand-logo">
-      </a>
       <div class="dropdown">
         <div class="nav-link dept" id="dept-trigger">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -104,9 +104,9 @@
       <a href="promociones.html" class="nav-link promo-link">Promociones</a>
       <a href="#" class="nav-link ofertas-link">Ofertas</a>
 
-      <div class="nav-sucursal">
-        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
-        <span>Sucursal: <strong>Anexa 20 de Noviembre</strong></span>
+      <div class="nav-sucursal" onclick="openDeliveryModal()">
+        <span>Entrega: <strong>Pickup | Anexa 20 de Noviembre</strong></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </div>
     </div>
   </nav>
@@ -526,6 +526,40 @@
     }
   </style>
 
+
+  <!-- DELIVERY MODAL -->
+  <div id="delivery-modal" class="modal-overlay" style="display:none; align-items:center; justify-content:center; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999;">
+    <div class="modal-content delivery-modal-content">
+      <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; padding:1.5rem; border-bottom:1px solid transparent;">
+        <h2 style="font-size:1.25rem; margin:0; color:#111;">¿Cómo quieres recibir tu pedido?</h2>
+        <button class="modal-close" onclick="closeDeliveryModal()" style="background:none;border:none;cursor:pointer;color:#555;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="delivery-tabs" style="display:flex; background:#f0f4f8; border-bottom:1px solid #e0e0e0;">
+        <button class="delivery-tab" onclick="switchDeliveryTab('pickup')" style="flex:1; padding:12px 0; text-align:center; border:none; background:transparent; font-size:0.95rem; font-weight:600; color:#666; cursor:pointer; position:relative;">Pickup</button>
+        <button class="delivery-tab active" onclick="switchDeliveryTab('domicilio')" style="flex:1; padding:12px 0; text-align:center; border:none; background:#e6f0fa; font-size:0.95rem; font-weight:600; color:var(--blue); cursor:pointer; position:relative;">
+          Domicilio
+          <div style="position:absolute; bottom:0; left:20%; right:20%; height:3px; background:var(--blue); border-radius:3px 3px 0 0;"></div>
+        </button>
+      </div>
+      <div class="delivery-tab-content" id="delivery-tab-domicilio" style="padding:2rem 1.5rem; min-height:200px;">
+        <h3 class="delivery-subtitle" style="color:var(--blue); font-size:1.05rem; font-weight:600; margin-bottom:0.5rem; margin-top:0;">Elige tu dirección</h3>
+        <p class="delivery-desc" style="font-size:0.9rem; color:#666; line-height:1.4; margin:0;">Parece que aún no tienes ninguna dirección guardada. Agrega una para comenzar.</p>
+      </div>
+      <div class="delivery-tab-content" id="delivery-tab-pickup" style="display:none; padding:2rem 1.5rem; min-height:200px;">
+        <h3 class="delivery-subtitle" style="color:var(--blue); font-size:1.05rem; font-weight:600; margin-bottom:0.5rem; margin-top:0;">Elige tu sucursal</h3>
+        <p class="delivery-desc" style="font-size:0.9rem; color:#666; line-height:1.4; margin:0;">Selecciona la sucursal donde deseas recoger tu pedido.</p>
+        <div style="margin-top:1rem; padding:1rem; border:1px solid #eee; border-radius:8px; cursor:pointer;" onclick="closeDeliveryModal()">
+          <strong style="color:var(--blue);">Anexa 20 de Noviembre</strong><br>
+          <small style="color:#666;">Blvd. Díaz Ordaz, Tijuana B.C.</small>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding:1.5rem; background:#fff; border-top:1px solid #eee;">
+        <button class="btn-primary" style="width: 100%; background:var(--blue); color:#fff; border:none; padding:12px; border-radius:24px; font-weight:700; font-size:1rem; cursor:pointer;" onclick="window.location.href='login.html'">Iniciar sesión</button>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>

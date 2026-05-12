@@ -560,7 +560,52 @@ function renderDetalle(id) {
     const main = document.getElementById('detalle-main-img');
     if (main) main.src = src;
   };
+  };
 }
+
+// Delivery Modal functions
+window.openDeliveryModal = () => {
+  const modal = document.getElementById('delivery-modal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+};
+
+window.closeDeliveryModal = () => {
+  const modal = document.getElementById('delivery-modal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+};
+
+window.switchDeliveryTab = (tab) => {
+  document.querySelectorAll('.delivery-tab').forEach(t => {
+    t.classList.remove('active');
+    t.style.color = '#666';
+    t.style.background = 'transparent';
+    const indicator = t.querySelector('div');
+    if (indicator) indicator.remove();
+  });
+  
+  document.querySelectorAll('.delivery-tab-content').forEach(c => c.style.display = 'none');
+  
+  const tabs = document.querySelectorAll('.delivery-tab');
+  if (tab === 'domicilio') {
+    tabs[1].classList.add('active');
+    tabs[1].style.color = 'var(--blue)';
+    tabs[1].style.background = '#e6f0fa';
+    tabs[1].innerHTML += '<div style="position:absolute; bottom:0; left:20%; right:20%; height:3px; background:var(--blue); border-radius:3px 3px 0 0;"></div>';
+    document.getElementById('delivery-tab-domicilio').style.display = 'block';
+  } else {
+    tabs[0].classList.add('active');
+    tabs[0].style.color = 'var(--blue)';
+    tabs[0].style.background = '#e6f0fa';
+    tabs[0].innerHTML += '<div style="position:absolute; bottom:0; left:20%; right:20%; height:3px; background:var(--blue); border-radius:3px 3px 0 0;"></div>';
+    document.getElementById('delivery-tab-pickup').style.display = 'block';
+  }
+};
 
 function updateCartUI() {
   const items = Object.values(cart);

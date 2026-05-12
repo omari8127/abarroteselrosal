@@ -538,13 +538,19 @@ function updateCartUI() {
   const savings = subtotal - total;
 
   const countEl = document.getElementById('hdr-count');
-  if (countEl) countEl.innerText = count;
+  if (countEl) {
+    countEl.innerText = count;
+    countEl.style.display = count > 0 ? 'flex' : 'none';
+  }
 
   const totalEl = document.getElementById('hdr-total');
   if (totalEl) totalEl.innerText = `$${total.toFixed(2)}`;
 
   const floatCountEl = document.getElementById('float-count');
-  if (floatCountEl) floatCountEl.innerText = count;
+  if (floatCountEl) {
+    floatCountEl.innerText = count;
+    floatCountEl.style.display = count > 0 ? 'flex' : 'none';
+  }
 
   const cb = document.getElementById('cart-body');
   const cf = document.getElementById('cart-footer');

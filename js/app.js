@@ -327,18 +327,7 @@ function cardHTML(p) {
     <div class="prod-card">
       ${badge}
       <a href="producto-detalle.html?id=${p.id}" class="prod-img-wrap">${imgPart}</a>
-      <a href="producto-detalle.html?id=${p.id}" class="prod-name">${p.name}</a>
-
-      <div class="prod-price-area">
-        ${p.oldPrice ? `<div class="prod-price-old">$${p.oldPrice.toFixed(2)}</div>` : '<div class="prod-price-old" style="visibility:hidden">$0.00</div>'}
-        <div class="prod-price">$${p.price.toFixed(2)}</div>
-      </div>
-
-      <div class="frutas-seg-ctrl" id="seg-${p.id}">
-        <button class="seg-btn${fm.mode === 'kg' ? ' seg-active' : ''}" onclick="setFrutaMode(${p.id},'kg')">Kilogramos</button>
-        <button class="seg-btn${fm.mode === 'unit' ? ' seg-active' : ''}" onclick="setFrutaMode(${p.id},'unit')">Unidades</button>
-      </div>
-
+      
       <div class="frutas-qty-row">
         <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},-1)">−</button>
         <span class="frutas-qty-val" id="frutas-qty-${p.id}">${displayVal}</span>
@@ -346,7 +335,19 @@ function cardHTML(p) {
         <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},1)">+</button>
       </div>
 
-      <button class="add-btn${cart[p.id] ? ' added' : ''}" id="abtn-${p.id}" onclick="addToCart(${p.id})">${cart[p.id] ? '✓ Agregado' : 'AGREGAR'}</button>
+      <button class="add-btn${cart[p.id] ? ' added' : ''}" id="abtn-${p.id}" onclick="addToCart(${p.id})"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> ${cart[p.id] ? 'Agregado' : 'Agregar'}</button>
+      
+      <div class="frutas-seg-ctrl" id="seg-${p.id}">
+        <button class="seg-btn${fm.mode === 'kg' ? ' seg-active' : ''}" onclick="setFrutaMode(${p.id},'kg')">Kilogramos</button>
+        <button class="seg-btn${fm.mode === 'unit' ? ' seg-active' : ''}" onclick="setFrutaMode(${p.id},'unit')">Unidades</button>
+      </div>
+
+      <a href="producto-detalle.html?id=${p.id}" class="prod-name">${p.name}</a>
+
+      <div class="prod-price-area">
+        ${p.oldPrice ? `<div class="prod-price-old">$${p.oldPrice.toFixed(2)}</div>` : '<div class="prod-price-old" style="visibility:hidden">$0.00</div>'}
+        <div class="prod-price">$${p.price.toFixed(2)}</div>
+      </div>
     </div>`;
   }
 
@@ -355,13 +356,7 @@ function cardHTML(p) {
     <div class="prod-card">
       ${badge}
       <a href="producto-detalle.html?id=${p.id}" class="prod-img-wrap">${imgPart}</a>
-      <a href="producto-detalle.html?id=${p.id}" class="prod-name">${p.name}</a>
       
-      <div class="prod-price-area">
-        ${p.oldPrice ? `<div class="prod-price-old">$${p.oldPrice.toFixed(2)}</div>` : '<div class="prod-price-old" style="visibility:hidden">$0.00</div>'}
-        <div class="prod-price">$${p.price.toFixed(2)}</div>
-      </div>
-
       <div class="prod-qty-row">
         <div class="prod-qty-ctrl">
           <button onclick="changeQty(${p.id},-1)">-</button>
@@ -370,7 +365,14 @@ function cardHTML(p) {
         </div>
       </div>
 
-      <button class="add-btn${cart[p.id] ? ' added' : ''}" id="abtn-${p.id}" onclick="addToCart(${p.id})">${cart[p.id] ? '✓ Agregado' : 'AGREGAR'}</button>
+      <button class="add-btn${cart[p.id] ? ' added' : ''}" id="abtn-${p.id}" onclick="addToCart(${p.id})"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> ${cart[p.id] ? 'Agregado' : 'Agregar'}</button>
+
+      <a href="producto-detalle.html?id=${p.id}" class="prod-name">${p.name}</a>
+      
+      <div class="prod-price-area">
+        ${p.oldPrice ? `<div class="prod-price-old">$${p.oldPrice.toFixed(2)}</div>` : '<div class="prod-price-old" style="visibility:hidden">$0.00</div>'}
+        <div class="prod-price">$${p.price.toFixed(2)}</div>
+      </div>
     </div>`;
 }
 
@@ -664,10 +666,10 @@ function refreshAllAddBtns() {
       cart[id + '_unit'];
     if (inCart) {
       btn.classList.add('added');
-      btn.textContent = '✓ Agregado';
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Agregado';
     } else {
       btn.classList.remove('added');
-      btn.textContent = 'AGREGAR';
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Agregar';
     }
   });
 }

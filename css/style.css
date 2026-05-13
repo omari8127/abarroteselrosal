@@ -110,15 +110,15 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
   width: 98%;
   max-width: 1800px;
   margin: 0.2rem auto;
-  aspect-ratio: 21 / 7;
+  aspect-ratio: 21 / 8.5;
   height: auto;
   overflow: hidden;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 12px 12px 0 0;
 }
 @media(max-width: 768px) {
   .hero-carousel {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16 / 9.5;
     border-radius: 0;
     margin: 0 auto;
     width: 100%;
@@ -209,7 +209,18 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 
 
 
-.ticker{background:var(--yellow);padding:8px 2rem;text-align:center;font-size:0.82rem;font-weight:500;color:#333}
+.ticker {
+  background: var(--yellow);
+  padding: 8px 2rem;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #333;
+  width: 98%;
+  max-width: 1800px;
+  margin: 0 auto 1.5rem;
+  border-radius: 0 0 12px 12px;
+}
 
 .cat-strip{background:#fff;border-bottom:1px solid #eee}
 .cat-strip-inner{max-width:1400px;margin:0 auto;padding:1rem 2rem}
@@ -851,12 +862,13 @@ footer strong{color:#fff}
 /* ── 3. HERO CAROUSEL (≤768px) ───────────────────────────────── */
 @media (max-width: 768px) {
   .hero-carousel {
-    height: 200px;
+    height: auto;
   }
 
   /* Anulamos el height inline que está en el HTML con !important */
   .carousel-slide img {
-    height: 200px !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9.5;
     object-fit: cover;
     object-position: center center;
   }

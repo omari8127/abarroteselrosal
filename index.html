@@ -17,28 +17,50 @@
   <header>
     <div class="header-inner">
       <a href="index.html" class="brand" style="margin-right: 2rem; display: flex; align-items: center;">
-        <img src="img/logo.png" alt="Abarrotes El Rosal" class="brand-logo" style="height: 60px; width: auto; object-fit: contain;">
+        <img src="img/logo.png" alt="Abarrotes El Rosal" class="brand-logo"
+          style="height: 60px; width: auto; object-fit: contain;">
       </a>
       <div class="search-bar">
         <input type="search" id="search-input" placeholder="Busca tus productos aquí"
           oninput="searchProducts(this.value)">
-        <button onclick="searchProducts(document.getElementById('search-input').value, true)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+        <button onclick="searchProducts(document.getElementById('search-input').value, true)"><svg width="20"
+            height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" style="vertical-align: middle;">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg></button>
       </div>
       <div class="header-actions">
         <div class="header-action" onclick="handleMisPedidosClick()">
           <span class="icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="11" y2="16"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+              <rect x="9" y="3" width="6" height="4" rx="1" />
+              <line x1="9" y1="12" x2="15" y2="12" />
+              <line x1="9" y1="16" x2="11" y2="16" />
+            </svg>
           </span>
           <span>Mis Pedidos</span>
         </div>
         <div class="header-action" id="account-btn">
           <span class="icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
           </span>
           <span>Mi Cuenta</span>
         </div>
         <div class="cart-action" onclick="toggleCart()">
-          <span class="cart-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></span>
+          <span class="cart-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              style="vertical-align: text-bottom; margin-right: 4px;">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg></span>
           <span id="hdr-total" style="font-weight: 700;">$0.00</span>
         </div>
       </div>
@@ -49,53 +71,92 @@
     <div class="nav-inner">
       <div class="dropdown">
         <div class="nav-link dept" id="dept-trigger">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
           Categorías
         </div>
         <div class="dropdown-menu" id="dept-menu">
           <a href="javascript:void(0)" onclick="selectCategory('all')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon">🛒</div>Todos los Productos</div>
-            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="di-left">Todos los Productos</div>
+            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('cerveza')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon">🍻</div>Cerveza, Vinos y Licores</div>
-            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="di-left">Cerveza, Vinos y Licores</div>
+            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('frutas')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon">🍎</div>Frutas y Verduras</div>
-            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="di-left">Frutas y Verduras</div>
+            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('lacteos')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon">🥚</div>Lácteos y Huevos</div>
-            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="di-left">Lácteos y Huevos</div>
+            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('despensa')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon">🥫</div>Despensa</div>
-            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="di-left">Despensa</div>
+            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('bebidas')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon">🥤</div>Bebidas y Jugos</div>
-            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="di-left">Bebidas y Jugos</div>
+            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('limpieza')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon">🧼</div>Limpieza y Hogar</div>
-            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="di-left">Limpieza y Hogar</div>
+            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('botanas')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon">🍿</div>Botanas</div>
-            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="di-left">Botanas</div>
+            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('panaderia')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon">🍞</div>Panadería</div>
-            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="di-left">Panadería</div>
+            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('mascotas')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon">🐶</div>Mascotas</div>
-            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="di-left">Mascotas</div>
+            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('dulces')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon">🍬</div>Dulces</div>
-            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <div class="di-left">Dulces</div>
+            <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </a>
         </div>
       </div>
@@ -105,7 +166,10 @@
 
       <div class="nav-sucursal" onclick="openDeliveryModal()">
         <span>Entrega: <strong>Pickup | Anexa 20 de Noviembre</strong></span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px;">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
       </div>
     </div>
   </nav>
@@ -137,30 +201,297 @@
     <div class="ticker">Envío a domicilio dentro de 18 cuadras de la Anexa 20 de Noviembre · Horario de atención: 9:00
       am a 9:00 pm · Entregas rápidas el mismo día</div>
 
+    <!-- ── EXPLORA LAS CATEGORÍAS (estilo Calimax) ── -->
+    <div class="cat-explorer">
+      <div class="cat-explorer-header">
+        <h2 class="cat-explorer-title">Explora las categorías</h2>
+        <a href="productos.html" class="cat-explorer-link">Ver todos &rarr;</a>
+      </div>
+      <div class="cat-explorer-track-wrap">
+        <button class="cat-explorer-arrow cat-explorer-arrow--left" onclick="scrollCatExplorer(-1)"
+          aria-label="Anterior">&#8249;</button>
+        <div class="cat-explorer-track" id="cat-explorer-track">
+
+          <a href="productos.html?cat=lacteos" class="cat-explorer-item">
+            <div class="cat-explorer-circle">
+              <img src="img/cat_lacteos.png" alt="Lácteos">
+            </div>
+            <span class="cat-explorer-label">Lácteos</span>
+          </a>
+
+          <a href="productos.html?cat=bebidas" class="cat-explorer-item">
+            <div class="cat-explorer-circle">
+              <img src="img/cat_bebidas.png" alt="Bebidas y Jugos">
+            </div>
+            <span class="cat-explorer-label">Bebidas y Jugos</span>
+          </a>
+
+          <a href="productos.html?cat=cerveza" class="cat-explorer-item">
+            <div class="cat-explorer-circle">
+              <img src="img/cat_cerveza.png" alt="Cerveza">
+            </div>
+            <span class="cat-explorer-label">Cerveza</span>
+          </a>
+
+          <a href="productos.html?cat=despensa" class="cat-explorer-item">
+            <div class="cat-explorer-circle">
+              <img src="img/cat_despensa.png" alt="Despensa">
+            </div>
+            <span class="cat-explorer-label">Despensa</span>
+          </a>
+
+          <a href="productos.html?cat=frutas" class="cat-explorer-item">
+            <div class="cat-explorer-circle">
+              <img src="img/cat_frutas.png" alt="Frutas y Verduras">
+            </div>
+            <span class="cat-explorer-label">Frutas y Verduras</span>
+          </a>
+
+          <a href="productos.html?cat=limpieza" class="cat-explorer-item">
+            <div class="cat-explorer-circle">
+              <img src="img/cat_limpieza.png" alt="Limpieza y Hogar">
+            </div>
+            <span class="cat-explorer-label">Limpieza y Hogar</span>
+          </a>
+
+          <a href="productos.html?cat=botanas" class="cat-explorer-item">
+            <div class="cat-explorer-circle">
+              <img src="img/cat_botanas.png" alt="Botanas">
+            </div>
+            <span class="cat-explorer-label">Botanas</span>
+          </a>
+
+          <a href="productos.html?cat=panaderia" class="cat-explorer-item">
+            <div class="cat-explorer-circle">
+              <img src="img/cat_panaderia.png" alt="Galletas y Panadería">
+            </div>
+            <span class="cat-explorer-label">Galletas y Panadería</span>
+          </a>
+
+          <a href="productos.html?cat=mascotas" class="cat-explorer-item">
+            <div class="cat-explorer-circle">
+              <img src="img/cat_mascotas.png" alt="Mascotas">
+            </div>
+            <span class="cat-explorer-label">Mascotas</span>
+          </a>
+
+          <a href="productos.html?cat=dulces" class="cat-explorer-item">
+            <div class="cat-explorer-circle">
+              <img src="img/cat_dulces.png" alt="Dulces">
+            </div>
+            <span class="cat-explorer-label">Dulces</span>
+          </a>
+
+        </div>
+        <button class="cat-explorer-arrow cat-explorer-arrow--right" onclick="scrollCatExplorer(1)"
+          aria-label="Siguiente">&#8250;</button>
+      </div>
+    </div>
+
+    <style>
+      .cat-explorer {
+        max-width: 1400px;
+        margin: 0 auto 0.5rem;
+        padding: 1.5rem 1.5rem 0.75rem;
+      }
+
+      .cat-explorer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
+        position: relative;
+      }
+
+      .cat-explorer-header::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 24px;
+        background: var(--blue);
+        border-radius: 2px;
+      }
+
+      .cat-explorer-title {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 900;
+        color: var(--text);
+        margin: 0;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+      }
+
+      .cat-explorer-link {
+        font-size: 0.85rem;
+        font-weight: 800;
+        color: var(--blue);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid transparent;
+      }
+
+      .cat-explorer-link:hover {
+        color: var(--blue-dark);
+        border-bottom-color: var(--blue-dark);
+      }
+
+      .cat-explorer-track-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .cat-explorer-track {
+        display: flex;
+        gap: 1.5rem;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        padding: 0.5rem 1rem 1rem;
+        justify-content: center;
+      }
+
+      .cat-explorer-track::-webkit-scrollbar {
+        display: none;
+      }
+
+      .cat-explorer-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+        text-decoration: none;
+        flex-shrink: 0;
+        width: 100px;
+        transition: transform 0.2s;
+      }
+
+      .cat-explorer-item:hover {
+        transform: translateY(-4px);
+      }
+
+      .cat-explorer-circle {
+        width: 88px;
+        height: 88px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        border: 3px solid #fff;
+        transition: box-shadow 0.2s, transform 0.2s;
+        background: #eee;
+      }
+
+      .cat-explorer-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.3s ease;
+      }
+
+      .cat-explorer-item:hover .cat-explorer-circle {
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.20);
+        transform: scale(1.07);
+      }
+
+      .cat-explorer-item:hover .cat-explorer-circle img {
+        transform: scale(1.08);
+      }
+
+      .cat-explorer-label {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: #222;
+        text-align: center;
+        line-height: 1.2;
+        font-family: 'Barlow', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        max-width: 90px;
+      }
+
+      .cat-explorer-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-60%);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1.5px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        font-size: 1.4rem;
+        color: #444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+        line-height: 1;
+      }
+
+      .cat-explorer-arrow:hover {
+        background: var(--blue);
+        color: #fff;
+        border-color: var(--blue);
+      }
+
+      .cat-explorer-arrow--left {
+        left: -18px;
+      }
+
+      .cat-explorer-arrow--right {
+        right: -18px;
+      }
+
+      @media (max-width: 600px) {
+        .cat-explorer {
+          padding: 1rem 1rem 0.5rem;
+        }
+
+        .cat-explorer-circle {
+          width: 70px;
+          height: 70px;
+        }
+
+        .cat-explorer-item {
+          width: 80px;
+        }
+
+        .cat-explorer-arrow {
+          display: none;
+        }
+      }
+    </style>
 
     <div class="section-wrap">
-      <div class="section-title-bar">
-        <div class="section-title-line"></div>
-        <div class="section-title-badge" style="background:var(--red)">¡Ofertas de Hoy!</div>
-        <div class="section-title-line"></div>
+      <div class="cat-explorer-header">
+        <h2 class="cat-explorer-title">¡Ofertas de Hoy!</h2>
+        <a href="productos.html" class="cat-explorer-link">Ver todas &rarr;</a>
       </div>
       <div class="products-grid" id="featured-products"></div>
       <div style="text-align: center; margin: 2rem 0;">
-        <a href="productos.html" class="btn-more">Ver todos los productos</a>
+
       </div>
     </div>
   </div>
 
-  
+
 
   <!-- ── SECCION: RECIEN AGREGADOS ── -->
   <div class="section-wrap" id="recientes-section">
-    <div class="section-title-bar">
-      <div class="section-title-line"></div>
-      <div class="section-title-badge" style="background:var(--blue)">Recién Agregados</div>
-      <div class="section-title-line"></div>
+    <div class="cat-explorer-header">
+      <h2 class="cat-explorer-title">Recién Agregados</h2>
+      <a href="productos.html" class="cat-explorer-link">Ver todos &rarr;</a>
     </div>
-
     <div class="products-grid" id="recientes-products"></div>
   </div>
 
@@ -175,13 +506,24 @@
     </div>
   </div>
 
-  <button class="float-cart" onclick="toggleCart()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg> Mi carrito
+  <button class="float-cart" onclick="toggleCart()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      style="vertical-align: text-bottom; margin-right: 4px;">
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="20" cy="21" r="1"></circle>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+    </svg> Mi carrito
   </button>
 
   <div class="cart-overlay" id="cart-overlay" onclick="outsideClose(event)">
     <div class="cart-drawer">
       <div class="cart-header">
-        <h2><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg> Mi Carrito</h2><button class="cart-close" onclick="toggleCart()">✕</button>
+        <h2><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg> Mi Carrito</h2><button class="cart-close" onclick="toggleCart()">✕</button>
       </div>
       <div class="cart-body" id="cart-body">
         <div class="cart-empty">Tu carrito está vacío</div>
@@ -201,7 +543,7 @@
           <span id="cart-total-val">$0.00</span>
         </div>
         <a href="checkout.html" class="ck-go-btn" id="btn-checkout">
-          ✅ Finalizar pedido
+          Finalizar pedido
         </a>
       </div>
     </div>
@@ -210,18 +552,24 @@
   <!-- ═══════════════════════════════════════════════════════════
        FOOTER — index.html ONLY  (layout estilo Calimax)
        ═══════════════════════════════════════════════════════════ -->
+
+
+
+
   <footer class="site-footer">
-
-    <!-- ── Columnas principales ───────────────────────────── -->
     <div class="sf-inner">
-
-      <!-- Col 0: Marca -->
       <div class="sf-col sf-col--brand">
         <div class="sf-brand">
-          <span class="sf-brand-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></span>
+          <span class="sf-brand-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              style="vertical-align: text-bottom; margin-right: 4px;">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg></span>
           <span class="sf-brand-name">Abarrotes El Rosal</span>
         </div>
-        <p class="sf-tagline">Tu tienda de confianza<br>para pedidos en línea.</p>
+        <p class="sf-tagline">Calidad y frescura en cada pedido.<br>Tu supermercado de confianza en línea.</p>
         <ul class="sf-info-list">
           <li>
             <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -233,328 +581,283 @@
         </ul>
       </div>
 
-      <!-- Col 1: Centro de Ayuda -->
       <div class="sf-col">
         <h3 class="sf-col-title">Centro de Ayuda</h3>
         <ul class="sf-links">
-          <li><a href="acerca.html">Acerca de nosotros</a></li>
-          <li><a href="como-comprar.html">¿Cómo comprar?</a></li>
-          <li><a href="faq.html">Preguntas Frecuentes</a></li>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="promociones.html">Promociones</a></li>
         </ul>
       </div>
 
-      <!-- Col 2: Servicio al cliente -->
       <div class="sf-col">
         <h3 class="sf-col-title">Servicio al cliente</h3>
         <ul class="sf-links">
-          <li><a href="contacto.html">Contáctanos</a></li>
           <li class="sf-link-text">Horario de Atención</li>
-          <li class="sf-link-text sf-schedule">Lunes a Domingo<br>9:00 AM a 8:00 PM</li>
+          <li class="sf-link-text sf-schedule">Lunes a Domingo<br>9:00 AM a 9:00 PM</li>
+          <li><a href="https://wa.me/526643944760" target="_blank">WhatsApp: 664-394-4760</a></li>
         </ul>
       </div>
 
-      <!-- Col 3: Síguenos -->
       <div class="sf-col sf-col--social">
-        <h3 class="sf-col-title">Síguenos:</h3>
+        <h3 class="sf-col-title">Síguenos</h3>
         <div class="sf-social-row">
-          <!-- Facebook -->
-          <a href="#" class="sf-soc" aria-label="Facebook" title="Facebook">
-            <svg viewBox="0 0 24 24" fill="currentColor">
+          <a href="#" class="sf-soc" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor">
               <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
-            </svg>
-          </a>
-          <!-- Instagram -->
-          <a href="#" class="sf-soc" aria-label="Instagram" title="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            </svg></a>
+          <a href="#" class="sf-soc" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
               <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
               <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
               <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-            </svg>
-          </a>
-          <!-- WhatsApp -->
-          <a href="https://wa.me/526645187312" target="_blank" rel="noopener" class="sf-soc" aria-label="WhatsApp"
-            title="WhatsApp">
-            <svg viewBox="0 0 24 24" fill="currentColor">
+            </svg></a>
+          <a href="https://wa.me/526643944760" target="_blank" class="sf-soc" aria-label="WhatsApp"><svg
+              viewBox="0 0 24 24" fill="currentColor">
               <path
                 d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-            </svg>
-          </a>
-          <!-- TikTok -->
-          <a href="#" class="sf-soc" aria-label="TikTok" title="TikTok">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.02a8.19 8.19 0 004.79 1.53V7.12a4.85 4.85 0 01-1.02-.43z" />
-            </svg>
-          </a>
+            </svg></a>
         </div>
       </div>
-
-    </div><!-- /.sf-inner -->
-
-    <!-- ── Sub-footer ──────────────────────────────────────── -->
+    </div>
     <div class="sf-sub">
       <span class="sf-copy">© 2026 Abarrotes El Rosal. Todos los derechos reservados.</span>
-      <span class="sf-address">Anexa 20 de Noviembre, Tijuana, Baja California.</span>
+      <span class="sf-address">Tijuana, Baja California, México.</span>
     </div>
 
+    <style>
+      .site-footer {
+        background: #111;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 4rem;
+        font-family: 'Barlow', sans-serif;
+      }
+
+      .sf-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 4rem 2rem 3rem;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr 1.2fr 1fr;
+        gap: 3rem;
+        align-items: start;
+      }
+
+      .sf-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .sf-brand-name {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: 0.5px;
+      }
+
+      .sf-tagline {
+        font-size: 0.88rem;
+        color: rgba(255, 255, 255, 0.5);
+        line-height: 1.6;
+        margin-bottom: 18px;
+      }
+
+      .sf-info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .sf-info-list li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .sf-icon {
+        width: 18px;
+        height: 18px;
+        opacity: 0.5;
+        color: var(--blue);
+      }
+
+      .sf-col-title {
+        font-size: 1rem;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid var(--blue);
+        display: inline-block;
+        padding-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .sf-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .sf-links a,
+      .sf-link-text {
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: none;
+        font-size: 0.92rem;
+        transition: all 0.2s;
+      }
+
+      .sf-links a:hover {
+        color: #fff;
+        transform: translateX(5px);
+      }
+
+      .sf-schedule {
+        line-height: 1.5;
+        font-weight: 500;
+      }
+
+      .sf-social-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 0.5rem;
+      }
+
+      .sf-soc {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .sf-soc svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .sf-soc:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        color: #fff;
+        border-color: transparent;
+      }
+
+      .sf-soc[aria-label="Facebook"]:hover {
+        background: #1877F2;
+      }
+
+      .sf-soc[aria-label="Instagram"]:hover {
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      }
+
+      .sf-soc[aria-label="WhatsApp"]:hover {
+        background: #25D366;
+      }
+
+      .sf-sub {
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 1rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      @media (max-width: 800px) {
+        .sf-inner {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .sf-inner {
+          grid-template-columns: 1fr;
+        }
+
+        .sf-sub {
+          flex-direction: column;
+          gap: 10px;
+          text-align: center;
+        }
+      }
+    </style>
   </footer>
 
-  <style>
-    /* ── SITE FOOTER — index.html only ─────────────────────────── */
-    .site-footer {
-      background: var(--red);
-      color: rgba(255, 255, 255, 0.88);
-      margin-top: 4rem;
-      font-family: 'Barlow', sans-serif;
-    }
 
 
-    /* 4-column grid: brand | ayuda | servicio | siguenos */
-    .sf-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 3rem 2rem 2rem;
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1.2fr 1fr;
-      gap: 2.5rem 3rem;
-      align-items: start;
-    }
 
-    @media (max-width: 900px) {
-      .sf-inner {
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-      }
-    }
 
-    @media (max-width: 520px) {
-      .sf-inner {
-        grid-template-columns: 1fr;
-        padding: 2rem 1.25rem 1.5rem;
-        gap: 1.8rem;
-      }
-    }
 
-    /* ── Brand column ─────────────────────────────────────── */
-    .sf-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.25);
-      min-height: 34px; /* Align with titles */
-    }
-
-    .sf-brand-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .sf-brand-name {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.25rem;
-      font-weight: 900;
-      color: #fff;
-      letter-spacing: -0.3px;
-      line-height: 1;
-    }
-
-    .sf-tagline {
-      font-size: 0.82rem;
-      color: rgba(255, 255, 255, 0.65);
-      line-height: 1.55;
-      margin: 0 0 12px;
-    }
-
-    .sf-info-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .sf-info-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 7px;
-      font-size: 0.82rem;
-      color: rgba(255, 255, 255, 0.72);
-      line-height: 1.4;
-    }
-
-    .sf-icon {
-      width: 14px;
-      height: 14px;
-      flex: 0 0 14px;
-      margin-top: 2px;
-      opacity: 0.7;
-    }
-
-    /* ── Column headings — bold white with underline accent ── */
-    .sf-col-title {
-      font-size: 0.97rem;
-      font-weight: 800;
-      color: #fff;
-      margin: 0 0 14px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.25);
-      display: inline-block;
-      letter-spacing: 0;
-      min-height: 34px; /* Ensure same height */
-    }
-
-    /* ── Links list ───────────────────────────────────────── */
-    .sf-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-    }
-
-    .sf-links a {
-      color: rgba(255, 255, 255, 0.78);
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 400;
-      transition: color 0.18s;
-      display: inline-block;
-    }
-
-    .sf-links a:hover {
-      color: #fff;
-      text-decoration: underline;
-    }
-
-    /* Plain text items (non-link) */
-    .sf-link-text {
-      font-size: 0.88rem;
-      color: rgba(255, 255, 255, 0.78);
-    }
-
-    .sf-schedule {
-      font-size: 0.83rem;
-      color: rgba(255, 255, 255, 0.60);
-      line-height: 1.55;
-    }
-
-    /* ── Social icons row (like Calimax pill group) ───────── */
-    .sf-social-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .sf-soc {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.22s;
-    }
-
-    .sf-soc svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    .sf-soc:hover {
-      transform: translateY(-3px) scale(1.1);
-    }
-
-    /* Per-network hover colors */
-    .sf-soc:nth-child(1):hover {
-      background: #1877f2;
-    }
-
-    /* FB */
-    .sf-soc:nth-child(2):hover {
-      background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
-    }
-
-    /* IG */
-    .sf-soc:nth-child(3):hover {
-      background: #25D366;
-    }
-
-    /* WA */
-    .sf-soc:nth-child(4):hover {
-      background: #111;
-    }
-
-    /* TK */
-
-    /* ── Sub-footer ───────────────────────────────────────── */
-    .sf-sub {
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 1rem 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .sf-copy,
-    .sf-address {
-      font-size: 0.78rem;
-      color: rgba(255, 255, 255, 0.45);
-      line-height: 1.4;
-    }
-
-    @media (max-width: 600px) {
-      .sf-sub {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1rem 1.25rem;
-      }
-    .cart-badge { display: none !important; }
-    .float-cart .cart-badge { display: none !important; }
-  </style>
 
 
   <!-- DELIVERY MODAL -->
-  <div id="delivery-modal" class="modal-overlay" style="display:none; align-items:center; justify-content:center; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999;">
+  <div id="delivery-modal" class="modal-overlay"
+    style="display:none; align-items:center; justify-content:center; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999;">
     <div class="modal-content delivery-modal-content">
-      <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; padding:1.5rem; border-bottom:1px solid transparent;">
+      <div class="modal-header"
+        style="display:flex; justify-content:space-between; align-items:center; padding:1.5rem; border-bottom:1px solid transparent;">
         <h2 style="font-size:1.25rem; margin:0; color:#111;">¿Cómo quieres recibir tu pedido?</h2>
-        <button class="modal-close" onclick="closeDeliveryModal()" style="background:none;border:none;cursor:pointer;color:#555;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <button class="modal-close" onclick="closeDeliveryModal()"
+          style="background:none;border:none;cursor:pointer;color:#555;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </button>
       </div>
       <div class="delivery-tabs" style="display:flex; background:#f0f4f8; border-bottom:1px solid #e0e0e0;">
-        <button class="delivery-tab" onclick="switchDeliveryTab('pickup')" style="flex:1; padding:12px 0; text-align:center; border:none; background:transparent; font-size:0.95rem; font-weight:600; color:#666; cursor:pointer; position:relative;">Pickup</button>
-        <button class="delivery-tab active" onclick="switchDeliveryTab('domicilio')" style="flex:1; padding:12px 0; text-align:center; border:none; background:#e6f0fa; font-size:0.95rem; font-weight:600; color:var(--blue); cursor:pointer; position:relative;">
+        <button class="delivery-tab" onclick="switchDeliveryTab('pickup')"
+          style="flex:1; padding:12px 0; text-align:center; border:none; background:transparent; font-size:0.95rem; font-weight:600; color:#666; cursor:pointer; position:relative;">Pickup</button>
+        <button class="delivery-tab active" onclick="switchDeliveryTab('domicilio')"
+          style="flex:1; padding:12px 0; text-align:center; border:none; background:#e6f0fa; font-size:0.95rem; font-weight:600; color:var(--blue); cursor:pointer; position:relative;">
           Domicilio
-          <div style="position:absolute; bottom:0; left:20%; right:20%; height:3px; background:var(--blue); border-radius:3px 3px 0 0;"></div>
+          <div
+            style="position:absolute; bottom:0; left:20%; right:20%; height:3px; background:var(--blue); border-radius:3px 3px 0 0;">
+          </div>
         </button>
       </div>
       <div class="delivery-tab-content" id="delivery-tab-domicilio" style="padding:2rem 1.5rem; min-height:200px;">
-        <h3 class="delivery-subtitle" style="color:var(--blue); font-size:1.05rem; font-weight:600; margin-bottom:0.5rem; margin-top:0;">Elige tu dirección</h3>
-        <p class="delivery-desc" style="font-size:0.9rem; color:#666; line-height:1.4; margin:0;">Parece que aún no tienes ninguna dirección guardada. Agrega una para comenzar.</p>
+        <h3 class="delivery-subtitle"
+          style="color:var(--blue); font-size:1.05rem; font-weight:600; margin-bottom:0.5rem; margin-top:0;">Elige tu
+          dirección</h3>
+        <p class="delivery-desc" style="font-size:0.9rem; color:#666; line-height:1.4; margin:0;">Parece que aún no
+          tienes ninguna dirección guardada. Agrega una para comenzar.</p>
       </div>
-      <div class="delivery-tab-content" id="delivery-tab-pickup" style="display:none; padding:2rem 1.5rem; min-height:200px;">
-        <h3 class="delivery-subtitle" style="color:var(--blue); font-size:1.05rem; font-weight:600; margin-bottom:0.5rem; margin-top:0;">Elige tu sucursal</h3>
-        <p class="delivery-desc" style="font-size:0.9rem; color:#666; line-height:1.4; margin:0;">Selecciona la sucursal donde deseas recoger tu pedido.</p>
-        <div style="margin-top:1rem; padding:1rem; border:1px solid #eee; border-radius:8px; cursor:pointer;" onclick="closeDeliveryModal()">
+      <div class="delivery-tab-content" id="delivery-tab-pickup"
+        style="display:none; padding:2rem 1.5rem; min-height:200px;">
+        <h3 class="delivery-subtitle"
+          style="color:var(--blue); font-size:1.05rem; font-weight:600; margin-bottom:0.5rem; margin-top:0;">Elige tu
+          sucursal</h3>
+        <p class="delivery-desc" style="font-size:0.9rem; color:#666; line-height:1.4; margin:0;">Selecciona la sucursal
+          donde deseas recoger tu pedido.</p>
+        <div style="margin-top:1rem; padding:1rem; border:1px solid #eee; border-radius:8px; cursor:pointer;"
+          onclick="closeDeliveryModal()">
           <strong style="color:var(--blue);">Anexa 20 de Noviembre</strong><br>
           <small style="color:#666;">Blvd. Díaz Ordaz, Tijuana B.C.</small>
         </div>
       </div>
       <div class="modal-footer" style="padding:1.5rem; background:#fff; border-top:1px solid #eee;">
-        <button class="btn-primary" style="width: 100%; background:var(--blue); color:#fff; border:none; padding:12px; border-radius:24px; font-weight:700; font-size:1rem; cursor:pointer;" onclick="window.location.href='login.html'">Iniciar sesión</button>
+        <button class="btn-primary"
+          style="width: 100%; background:var(--blue); color:#fff; border:none; padding:12px; border-radius:24px; font-weight:700; font-size:1rem; cursor:pointer;"
+          onclick="window.location.href='login.html'">Iniciar sesión</button>
       </div>
     </div>
   </div>
@@ -569,6 +872,11 @@
       // Show only a few featured products
       renderFeatured(5);
     });
+
+    function scrollCatExplorer(dir) {
+      const track = document.getElementById('cat-explorer-track');
+      if (track) track.scrollBy({ left: dir * 320, behavior: 'smooth' });
+    }
   </script>
 </body>
 

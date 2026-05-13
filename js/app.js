@@ -342,7 +342,7 @@ function cardHTML(p) {
       <a href="producto-detalle.html?id=${p.id}" class="prod-img-wrap">${imgPart}</a>
       
       <div class="frutas-qty-row">
-        <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},-1)">ÔêÆ</button>
+        <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},-1)">-</button>
         <span class="frutas-qty-val" id="frutas-qty-${p.id}">${displayVal}</span>
         <span class="frutas-qty-sfx" id="frutas-sfx-${p.id}">${suffix}</span>
         <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},1)">+</button>
@@ -634,7 +634,7 @@ function updateCartUI() {
   if (!cb) return;
 
   if (!items.length) {
-    cb.innerHTML = '<div class="cart-empty">Tu carrito est├í vac├¡o ­ƒøÆ</div>';
+    cb.innerHTML = '<div class="cart-empty">Tu carrito está vacío 📦</div>';
     if (cf) cf.style.display = 'none';
     return;
   }
@@ -645,7 +645,7 @@ function updateCartUI() {
     const brand = extractBrand(i.name);
     const imgHtml = i.img
       ? `<img src="${i.img}" alt="${i.name}" onerror="this.style.display='none'">`
-      : `<span style="font-size:2rem">${i.emoji || '­ƒôª'}</span>`;
+      : `<span style="font-size:2rem">${i.emoji || '📦'}</span>`;
     const oldPriceHtml = i.oldPrice
       ? `<span class="cr-old-price">$${(i.oldPrice * i.qty).toFixed(2)}</span>` : '';
     return `
@@ -655,7 +655,7 @@ function updateCartUI() {
         <div class="cr-brand">${brand}</div>
         <div class="cr-name">${i.name}</div>
         <div class="cr-qty-row">
-          <button class="cr-qty-btn" onclick="cartQty('${i.id}',-1)">ÔêÆ</button>
+          <button class="cr-qty-btn" onclick="cartQty('${i.id}',-1)">-</button>
           <span class="cr-qty-val">${qtyLabel}</span>
           <button class="cr-qty-btn" onclick="cartQty('${i.id}',1)">+</button>
         </div>
@@ -792,15 +792,15 @@ function _animateFloatCart() {
 async function sendWA() {
   const items = Object.values(cart);
   if (!items.length) {
-    alert('Tu carrito est├í vac├¡o.');
+    alert('Tu carrito está vacío.');
     return;
   }
 
-  // 1. Verificar sesi├│n activa
+  // 1. Verificar sesión activa
   const { data: { session } } = await window.supabaseClient.auth.getSession();
 
   if (session?.user) {
-    // 2. Si hay sesi├│n, buscar perfil
+    // 2. Si hay sesión, buscar perfil
     try {
       const { data: perfil, error } = await window.supabaseClient
         .from('perfiles')
@@ -809,10 +809,10 @@ async function sendWA() {
         .single();
 
       if (perfil && perfil.nombre && perfil.direccion) {
-        // Tomar datos autom├íticamente y enviar
+        // Tomar datos automáticamente y enviar
         _executeWAFinal(perfil.nombre, perfil.direccion);
       } else {
-        // Si el perfil no est├í completo, pedir los datos (o usar metadata del nombre como fallback)
+        // Si el perfil no está completo, pedir los datos (o usar metadata del nombre como fallback)
         const nameFallback = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
         openGuestModal((data) => {
           _executeWAFinal(data.nombre, data.direccion);
@@ -826,15 +826,15 @@ async function sendWA() {
       });
     }
   } else {
-    // 3. Si no hay sesi├│n, abrir modal de invitado
+    // 3. Si no hay sesión, abrir modal de invitado
     if (typeof openGuestModal === 'function') {
       openGuestModal((data) => {
         _executeWAFinal(data.nombre, data.direccion);
       });
     } else {
-      // Fallback b├ísico si auth.js no carg├│
+      // Fallback básico si auth.js no cargó
       const nombre = prompt('Ingresa tu nombre para el pedido:');
-      const direccion = prompt('Ingresa tu direcci├│n de entrega:');
+      const direccion = prompt('Ingresa tu dirección de entrega:');
       if (nombre && direccion) {
         _executeWAFinal(nombre, direccion);
       }
@@ -855,19 +855,19 @@ function _executeWAFinal(nombre, direccion) {
   const min = now.getMinutes().toString().padStart(2, '0');
   const fechaStr = `${d}/${m}/${y} ${h}:${min}`;
 
-  let msg = `­ƒøÆ *Nuevo pedido - Abarrotes el Rosal*\n\n`;
-  msg += `­ƒæñ Cliente: ${nombre}\n`;
-  msg += `­ƒôì Direcci├│n: ${direccion}\n\n`;
-  msg += `­ƒº¥ Pedido:\n`;
+  let msg = `📦 *Nuevo pedido - Abarrotes el Rosal*\n\n`;
+  msg += `👤 Cliente: ${nombre}\n`;
+  msg += `📍 Dirección: ${direccion}\n\n`;
+  msg += `🛒 Pedido:\n`;
 
   items.forEach(i => {
     const subtotal = (i.price * i.qty).toFixed(2);
-    msg += `ÔÇó ${i.qty} x ${i.name} ÔÇö $${subtotal}\n`;
+    msg += `• ${i.qty} x ${i.name} — $${subtotal}\n`;
   });
 
-  msg += `\n­ƒÆ░ *Total: $${total.toFixed(2)}*\n\n`;
-  msg += `­ƒòÉ Fecha: ${fechaStr}\n\n`;
-  msg += `Por favor, confirmar disponibilidad. ┬íGracias!`;
+  msg += `\n💰 *Total: $${total.toFixed(2)}*\n\n`;
+  msg += `🕒 Fecha: ${fechaStr}\n\n`;
+  msg += `Por favor, confirmar disponibilidad. ¡Gracias!`;
 
   const waUrl = `https://wa.me/526643944760?text=${encodeURIComponent(msg)}`;
   window.open(waUrl, '_blank');

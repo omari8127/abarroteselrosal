@@ -25,7 +25,7 @@ header{background:#fff;padding:0 2rem;position:sticky;top:0;z-index:1000;box-sha
 nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,0,0,0.05);position:sticky;top:80px;z-index:999}
 .nav-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;height:48px;position:relative}
 .nav-link{padding:0 18px;height:100%;display:flex;align-items:center;gap:8px;font-size:1.05rem;font-weight:700;color:var(--text);border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;flex:0 0 auto;transition:all 0.2s}
-.nav-link:hover,.nav-link.active{color:var(--red);border-bottom-color:var(--red)}
+.nav-link:hover,.nav-link.active{color:var(--blue);border-bottom-color:var(--blue)}
 
 .nav-extra{display:flex;align-items:center;height:100%;gap:5px}
 .nav-sucursal{
@@ -64,7 +64,7 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 .di-chevron { color:#ccc; width:16px; height:16px; transition:color 0.2s; }
 .dropdown-item:hover .di-chevron { color:var(--blue); }
 
-.promo-link{color:var(--red) !important;font-weight:700 !important}
+.promo-link{color:var(--text) !important;font-weight:700 !important}
 .promo-link:hover{background:rgba(204,31,31,0.05)}
 
 .ofertas-link{color:var(--red) !important;font-weight:700 !important}
@@ -169,7 +169,7 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
   justify-content: center;
 }
 .carousel-prev:hover, .carousel-next:hover {
-  background: var(--red);
+  background: var(--blue);
   transform: translateY(-50%) scale(1.1);
 }
 .carousel-prev { left: 30px; }
@@ -219,7 +219,7 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 .cat-chip span.lbl{color:#fff;font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;text-align:center;padding:0 6px}
 .cat-chip span.ico{font-size:1.7rem}
 
-.promo-banner{background:var(--red);padding:12px 2rem}
+.promo-banner{background:var(--blue);padding:12px 2rem}
 .promo-banner-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center}
 .promo-item{flex:1;display:flex;align-items:center;gap:12px;padding:0 1.25rem;color:#fff}
 .promo-item+.promo-item{border-left:1px solid rgba(255,255,255,0.2)}
@@ -253,8 +253,8 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 @media(max-width:600px){.products-grid,#featured-products, #recientes-products{grid-template-columns:1fr}}
 
 .prod-card{border:1px solid #ddd;border-radius:4px;background:#fff;padding:1.25rem;transition:box-shadow 0.2s, border-color 0.2s;position:relative;display:flex;flex-direction:column;min-height:480px}
-.prod-card:hover{box-shadow:0 8px 24px rgba(0,0,0,0.08);border-color:var(--blue)}
-.prod-badge{position:absolute;top:12px;left:12px;background:var(--red);color:#fff;font-size:0.75rem;padding:4px 8px;border-radius:4px;font-weight:800;z-index:10}
+.prod-card:hover{box-shadow:0 12px 40px rgba(0,0,0,0.15), 0 0 0 1px var(--blue);border-color:var(--blue);transform:translateY(-2px)}
+.prod-badge{position:absolute;top:12px;left:12px;background:var(--red);color:#fff;font-size:0.75rem;padding:5px 10px;border-radius:4px;font-weight:900;z-index:10;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
 
 .prod-img-wrap{height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;padding:0.5rem}
 .prod-img-wrap img{max-height:100%;max-width:100%;object-fit:contain}
@@ -330,7 +330,7 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 .cart-row-name{font-weight:500;flex:1;line-height:1.3}
 .cart-row-price{font-weight:700;color:var(--green);white-space:nowrap}
 .cart-row-qty{display:flex;align-items:center;gap:5px}
-.cart-row-qty button{background:var(--red);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:0.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cart-row-qty button{background:var(--blue);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:0.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .cart-empty{text-align:center;color:var(--muted);padding:2rem;font-size:0.9rem}
 
 /* ── CART ITEM ROW (reference layout) ─────────────────────────── */
@@ -471,7 +471,7 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 }
 .ck-go-btn:hover { background: #004a80; transform: translateY(-1px); }
 
-footer{background:var(--red);color:rgba(255,255,255,0.85);text-align:center;padding:1.25rem 2rem;font-size:0.82rem;margin-top:4rem}
+footer{background:#111;color:rgba(255,255,255,0.6);text-align:center;padding:2rem;font-size:0.82rem;margin-top:4rem;border-top:1px solid #333}
 footer strong{color:#fff}
 
 /* ── DETALLE PRODUCTO — ESTILO CALIMAX ─────────────────────────── */
@@ -612,7 +612,7 @@ footer strong{color:#fff}
 .detalle-main-price {
   font-size: 2.4rem;
   font-weight: 800;
-  color: var(--red);
+  color: var(--blue);
   margin-bottom: 1.5rem;
   font-family: 'Barlow', sans-serif;
   line-height: 1;

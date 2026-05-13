@@ -60,14 +60,14 @@ function _toggleUserDropdown(e) {
     dd.className = 'user-dropdown';
     dd.innerHTML = `
       <a href="mi-cuenta.html#perfil" class="user-dd-item">
-        <span>✏️</span> Ver / Editar Perfil
+        <img src="img/icon_profile.png" style="width:18px; height:18px; object-fit:contain; mix-blend-mode:multiply;"> Ver / Editar Perfil
       </a>
       <a href="mi-cuenta.html#pedidos" class="user-dd-item">
-        <span>📦</span> Mis Pedidos
+        <img src="img/icon_orders.png" style="width:18px; height:18px; object-fit:contain; mix-blend-mode:multiply;"> Mis Pedidos
       </a>
       <div class="user-dd-divider"></div>
       <button class="user-dd-item user-dd-signout" onclick="signOut()">
-        <span>🚪</span> Cerrar Sesión
+        <img src="img/icon_logout.png" style="width:18px; height:18px; object-fit:contain; mix-blend-mode:multiply;"> Cerrar Sesión
       </button>
     `;
     document.getElementById('account-btn').parentElement.style.position = 'relative';
@@ -151,7 +151,7 @@ function _injectAuthModal() {
 
         <!-- Mensaje de éxito en registro -->
         <div id="reg-success" class="auth-success" style="display:none">
-          ✅ ¡Cuenta creada! Revisa tu correo para verificar tu cuenta.
+           ¡Cuenta creada! Revisa tu correo para verificar tu cuenta.
         </div>
       </div>
 
@@ -167,7 +167,7 @@ function _injectAuthModal() {
         </div>
         <button class="auth-btn-primary" id="btn-send-reset" onclick="sendResetEmail()">Enviar link</button>
         <div id="forgot-success" class="auth-success" style="display:none">
-          ✅ Revisa tu correo, te enviamos el link para restablecer tu contraseña.
+           Revisa tu correo, te enviamos el link para restablecer tu contraseña.
         </div>
         <div id="forgot-error" class="auth-error" style="display:none"></div>
       </div>
@@ -261,8 +261,9 @@ function _injectAuthStyles() {
   style.textContent = `
     /* ── Variables de color */
     :root {
-      --auth-red: #ec1d25;
-      --auth-red-dark: #c9181d;
+      --auth-blue: #0067b1;
+      --auth-blue-dark: #004a80;
+      --auth-red: #ec1d25; /* Keep for small accents if needed */
     }
 
     /* ── Backdrop ─────────────────────────────────────── */
@@ -324,8 +325,8 @@ function _injectAuthStyles() {
       transition: color 0.18s, border-color 0.18s;
     }
     .auth-tab.active {
-      color: var(--auth-red);
-      border-bottom-color: var(--auth-red);
+      color: var(--auth-blue);
+      border-bottom-color: var(--auth-blue);
     }
     .auth-tab:hover:not(.active) { color: #555; }
 
@@ -345,13 +346,13 @@ function _injectAuthStyles() {
       outline: none;
     }
     .auth-field input:focus {
-      border-color: var(--auth-red);
-      box-shadow: 0 0 0 3px rgba(236,29,37,0.12);
+      border-color: var(--auth-blue);
+      box-shadow: 0 0 0 3px rgba(0,103,177,0.12);
     }
 
     /* ── Primary button ───────────────────────────────── */
     .auth-btn-primary {
-      background: var(--auth-red);
+      background: var(--auth-blue);
       color: #fff;
       border: none;
       padding: 0.75rem;
@@ -362,7 +363,7 @@ function _injectAuthStyles() {
       width: 100%;
       margin-top: 0.25rem;
     }
-    .auth-btn-primary:hover { background: var(--auth-red-dark); transform: translateY(-1px); }
+    .auth-btn-primary:hover { background: var(--auth-blue-dark); transform: translateY(-1px); }
     .auth-btn-primary:active { transform: translateY(0); }
 
     /* ── Google button ────────────────────────────────── */
@@ -439,7 +440,7 @@ function _injectAuthStyles() {
       display: inline-flex; align-items: center; justify-content: center;
       width: 28px; height: 28px;
       border-radius: 50%;
-      background: var(--auth-red);
+      background: var(--auth-blue);
       color: #fff;
       font-size: 0.85rem; font-weight: 700;
     }

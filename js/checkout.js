@@ -22,7 +22,7 @@ function showEmptyPage() {
   if (!wrap) return;
   wrap.innerHTML = `
     <div class="ck-empty-page" style="grid-column:1/-1">
-      <div class="big-icon">🛒</div>
+      <div class="big-icon"></div>
       <h2>Tu carrito está vacío</h2>
       <p>Agrega productos antes de finalizar tu pedido.</p>
       <a href="productos.html">Ver catálogo</a>
@@ -50,7 +50,7 @@ function renderSummary() {
     const qtyLabel = i.unitLabel ? `${i.qty} ${i.unitLabel}` : `x${i.qty}`;
     const imgHtml = i.img
       ? `<img src="${i.img}" alt="${i.name}" onerror="this.style.display='none'">`
-      : `<span style="font-size:1.5rem">${i.emoji || '📦'}</span>`;
+      : `<span style="font-size:1.5rem">${i.emoji || ''}</span>`;
     return `
       <div class="ck-sum-item">
         <div class="ck-sum-img">${imgHtml}</div>
@@ -218,8 +218,8 @@ function confirmOrder() {
   // Fill modal
   document.getElementById('modal-cliente').textContent = `${nombre} · ${tel}`;
   document.getElementById('modal-entrega').textContent = ckDelivery === 'tienda'
-    ? '🏪 Recoger en tienda'
-    : `🚚 ${entregaLabel}`;
+    ? ' Recoger en tienda'
+    : ` ${entregaLabel}`;
   document.getElementById('modal-pago').textContent = pagoLabel;
   document.getElementById('modal-items').innerHTML = itemsLines 
     + (shippingLine ? '<br>' + shippingLine : '')
@@ -300,14 +300,14 @@ async function sendWAFinal() {
   // Aquí esperamos para asegurar que se guardó antes de redirigir
   await saveOrderToSupabase({ ...o, subtotal: o.items.reduce((s, i) => s + (i.oldPrice || i.price) * i.qty, 0) });
 
-  let msg = `🛒 *Pedido – Abarrotes El Rosal*\n\n`;
-  msg += `👤 *Cliente:* ${o.nombre}\n`;
+  let msg = ` *Pedido – Abarrotes El Rosal*\n\n`;
+  msg += ` *Cliente:* ${o.nombre}\n`;
   msg += `📞 *Teléfono:* ${o.tel}\n`;
 
   if (ckDelivery === 'domicilio') {
-    msg += `🚚 *Entrega:* ${o.entregaLabel}\n`;
+    msg += ` *Entrega:* ${o.entregaLabel}\n`;
   } else {
-    msg += `🏪 *Entrega:* Recoger en tienda\n`;
+    msg += ` *Entrega:* Recoger en tienda\n`;
   }
 
   msg += `💳 *Pago:* ${o.pagoLabel}\n\n`;
@@ -322,7 +322,7 @@ async function sendWAFinal() {
   if (o.hasShipping) msg += `• Pedido: $${SHIPPING_FEE.toFixed(2)}\n`;
 
   if (o.savings > 0) msg += `\n🎉 *Ahorros: -$${o.savings.toFixed(2)}*\n`;
-  msg += `\n✅ *TOTAL: $${o.total.toFixed(2)}*\n`;
+  msg += `\n *TOTAL: $${o.total.toFixed(2)}*\n`;
 
   if (o.notas) msg += `\n📝 *Notas:* ${o.notas}`;
 

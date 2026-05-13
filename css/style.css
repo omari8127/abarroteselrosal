@@ -110,10 +110,10 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
   width: 98%;
   max-width: 1800px;
   margin: 1.5rem auto;
-  aspect-ratio: 21 / 6;
+  aspect-ratio: 3 / 1;
   height: auto;
   overflow: hidden;
-  background: #f0f0f0;
+  background: #fff;
   border-radius: 12px;
 }
 @media(max-width: 768px) {
@@ -142,7 +142,7 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 .carousel-slide img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center center;
 }
 .carousel-slide.active {
@@ -852,7 +852,7 @@ footer strong{color:#fff}
   /* Anulamos el height inline que está en el HTML con !important */
   .carousel-slide img {
     height: 200px !important;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center center;
   }
 
@@ -951,6 +951,29 @@ footer strong{color:#fff}
 
 .add-btn.added {
   background: var(--green) !important;
+}
+
+/* Auth Avatar Styles */
+.auth-avatar {
+  background: var(--blue);
+  color: #fff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-right: 6px;
+}
+.auth-username {
+  font-weight: 500;
+  margin-right: 4px;
+}
+.auth-chevron {
+  font-size: 0.75rem;
+  color: #666;
 }
 
 

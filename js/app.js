@@ -616,7 +616,7 @@ function updateCartUI() {
   const countEl = document.getElementById('hdr-count');
   if (countEl) {
     countEl.innerText = count;
-    countEl.style.display = count > 0 ? 'flex' : 'none';
+    // countEl.style.display = count > 0 ? 'flex' : 'none'; // Removed as per user request
   }
 
   const totalEl = document.getElementById('hdr-total');
@@ -625,7 +625,7 @@ function updateCartUI() {
   const floatCountEl = document.getElementById('float-count');
   if (floatCountEl) {
     floatCountEl.innerText = count;
-    floatCountEl.style.display = count > 0 ? 'flex' : 'none';
+    // floatCountEl.style.display = count > 0 ? 'flex' : 'none'; // Removed as per user request
   }
 
   const cb = document.getElementById('cart-body');

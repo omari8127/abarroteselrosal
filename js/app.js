@@ -632,10 +632,17 @@ window.switchDeliveryTab = (tab) => {
   if (tab === 'domicilio') {
     btns[0].classList.add('active');
     content.innerHTML = `
+      <div class="delivery-search-box" style="margin-bottom: 1.5rem;">
+        <div style="position:relative">
+          <input type="text" placeholder="Ingresa tu dirección (Calle, número...)" 
+            style="width:100%; padding:12px 40px 12px 15px; border:1px solid #ddd; border-radius:8px; font-size:0.9rem;">
+          <span style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:var(--blue)">🔍</span>
+        </div>
+      </div>
       <div class="delivery-empty-state">
         <span class="delivery-empty-icon">📍</span>
-        <p>Parece que aún no tienes direcciones guardadas.</p>
-        <button class="btn-primary" style="margin-top:1rem; width:auto; padding:10px 20px" onclick="window.location.href='login.html'">Iniciar sesión para agregar</button>
+        <p>Inicia sesión para ver tus direcciones guardadas o busca una nueva arriba.</p>
+        <button class="btn-primary" style="margin-top:1rem; width:auto; padding:10px 20px" onclick="window.location.href='login.html'">Iniciar sesión</button>
       </div>
     `;
   } else {

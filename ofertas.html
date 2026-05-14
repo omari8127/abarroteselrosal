@@ -4,15 +4,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>¿Cómo comprar? | El Rosal</title>
+  <title>Ofertas - Abarrotes El Rosal</title>
   <link rel="icon" type="image/png" href="img/favicon.png">
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .page-ofertas .cat-explorer-header::before {
+      background: var(--red);
+    }
+    .page-ofertas .cat-explorer-title {
+      color: var(--red);
+    }
+  </style>
 </head>
 
-<body class="page-home">
+<body class="page-promociones page-ofertas">
 
   <header>
     <div class="header-inner">
@@ -20,19 +28,16 @@
         <img src="img/logo.png" alt="Abarrotes El Rosal" class="brand-logo">
       </a>
       <div class="search-bar">
-        <input type="search" id="search-input" placeholder="Busca tus productos aquí"
+        <input type="text" id="search-input" placeholder="Busca tus productos aquí"
           oninput="searchProducts(this.value)">
         <button onclick="searchProducts(document.getElementById('search-input').value, true)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
       </div>
       <div class="header-actions">
         <div class="header-action" id="account-btn">
-          <span class="icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </span>
+          <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
           <span>Mi Cuenta</span>
         </div>
         <div class="cart-action" onclick="toggleCart()">
-          <span class="cart-badge" id="hdr-count">0</span>
           <span class="cart-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></span>
           <span id="hdr-total">$0.00</span>
         </div>
@@ -49,424 +54,129 @@
         </div>
         <div class="dropdown-menu" id="dept-menu">
           <a href="javascript:void(0)" onclick="selectCategory('all')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon"></div>Todos los Productos</div>
+            <div class="di-left">Todos los Productos</div>
             <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('cerveza')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon"></div>Cerveza, Vinos y Licores</div>
+            <div class="di-left">Cerveza, Vinos y Licores</div>
             <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('frutas')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon"></div>Frutas y Verduras</div>
+            <div class="di-left">Frutas y Verduras</div>
             <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('lacteos')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon"></div>Lácteos y Huevos</div>
+            <div class="di-left">Lácteos y Huevos</div>
             <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('despensa')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon"></div>Despensa</div>
+            <div class="di-left">Despensa</div>
             <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('bebidas')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon"></div>Bebidas y Jugos</div>
+            <div class="di-left">Bebidas y Jugos</div>
             <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('limpieza')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon"></div>Limpieza y Hogar</div>
+            <div class="di-left">Limpieza y Hogar</div>
             <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('botanas')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon"></div>Botanas</div>
+            <div class="di-left">Botanas</div>
             <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('panaderia')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon"></div>Panadería</div>
+            <div class="di-left">Panadería</div>
             <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('mascotas')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon"></div>Mascotas</div>
+            <div class="di-left">Mascotas</div>
             <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
           <a href="javascript:void(0)" onclick="selectCategory('dulces')" class="dropdown-item">
-            <div class="di-left"><div class="di-icon"></div>Dulces</div>
+            <div class="di-left">Dulces</div>
             <svg class="di-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </a>
         </div>
       </div>
 
       <a href="promociones.html" class="nav-link promo-link">Promociones</a>
-      <a href="ofertas.html" class="nav-link ofertas-link">Ofertas</a>
-
-      <div class="nav-sucursal">
-        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
-        <span>Sucursal: <strong>Anexa 20 de Noviembre</strong></span>
+      <a href="ofertas.html" class="nav-link ofertas-link active">Ofertas</a>
+      <div class="nav-sucursal" onclick="openDeliveryModal()">
+        <span>Entrega: <strong>Pickup · Anexa 20 de Noviembre</strong></span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+          stroke-linecap="round" stroke-linejoin="round" style="margin-left: 4px; color: var(--blue);">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
       </div>
     </div>
   </nav>
 
-  
-  <style>
-    /* ==========================================================================
-       PREMIUM INTERNAL PAGES STYLE
-       ========================================================================== */
-    .page-hero {
-      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
-      color: #fff;
-      padding: 4rem 2rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 3rem;
-    }
-    .page-hero::before {
-      content: '';
-      position: absolute;
-      top: -50%; left: -50%; width: 200%; height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.08) 10%, transparent 10%),
-                  radial-gradient(circle, rgba(255,255,255,0.05) 10%, transparent 10%);
-      background-size: 30px 30px;
-      background-position: 0 0, 15px 15px;
-      z-index: 1;
-      opacity: 0.5;
-      animation: heroPatternMove 30s linear infinite;
-    }
-    @keyframes heroPatternMove {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-30px); }
-    }
-    .page-hero-inner {
-      position: relative;
-      z-index: 2;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .page-hero-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 3.5rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 1rem;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    .page-hero-subtitle {
-      font-size: 1.15rem;
-      color: rgba(255,255,255,0.9);
-      line-height: 1.6;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    /* ACERCA DE NOSOTROS */
-    .about-section { margin-bottom: 4rem; }
-    .about-text {
-      font-size: 1.15rem;
-      line-height: 1.8;
-      color: #444;
-      text-align: center;
-      max-width: 800px;
-      margin: 0 auto 3rem;
-    }
-    .values-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
-    }
-    .value-card {
-      background: #fff;
-      padding: 2.5rem 2rem;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      border: 1px solid #f0f0f0;
-      border-bottom: 4px solid var(--red);
-    }
-    .value-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-    }
-    .value-icon {
-      width: 70px;
-      height: 70px;
-      background: rgba(236,29,37,0.1);
-      color: var(--blue);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1.5rem;
-    }
-    .value-icon svg { width: 34px; height: 34px; stroke-width: 2; }
-    .value-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--blue);
-      margin-bottom: 1rem;
-    }
-    .value-desc { color: #666; line-height: 1.6; }
-
-    /* COMO COMPRAR */
-    .steps-timeline {
-      position: relative;
-      max-width: 800px;
-      margin: 0 auto 4rem;
-      padding-left: 2rem;
-    }
-    .steps-timeline::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 34px; width: 4px; height: 100%;
-      background: #f0f0f0;
-      border-radius: 4px;
-    }
-    .step-item {
-      position: relative;
-      margin-bottom: 3rem;
-      padding-left: 5rem;
-    }
-    .step-number {
-      position: absolute;
-      left: 0; top: 0;
-      width: 40px; height: 40px;
-      background: var(--blue);
-      color: #fff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 900;
-      box-shadow: 0 0 0 8px #fff, 0 4px 15px rgba(0,0,0,0.1);
-      z-index: 2;
-    }
-    .step-content {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.04);
-      border: 1px solid #eee;
-    }
-    .step-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--blue);
-      margin-bottom: 0.8rem;
-    }
-    .step-desc { color: #555; line-height: 1.6; font-size: 1.05rem; }
-
-    /* FAQ ACCORDION */
-    .faq-container { max-width: 800px; margin: 0 auto 4rem; }
-    .faq-item {
-      margin-bottom: 1rem;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-      border: 1px solid #eee;
-      overflow: hidden;
-    }
-    .faq-item details { width: 100%; }
-    .faq-item summary {
-      padding: 1.5rem;
-      font-weight: 700;
-      font-size: 1.15rem;
-      color: var(--blue-dark);
-      cursor: pointer;
-      list-style: none;
-      position: relative;
-      transition: background 0.2s;
-    }
-    .faq-item summary::-webkit-details-marker { display: none; }
-    .faq-item summary::after {
-      content: '+';
-      position: absolute;
-      right: 1.5rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.5rem;
-      font-weight: 400;
-      color: var(--blue);
-      transition: transform 0.3s;
-    }
-    .faq-item details[open] summary::after { content: '−'; }
-    .faq-item details[open] summary { background: #fdfdfd; border-bottom: 1px solid #eee; }
-    .faq-answer {
-      padding: 1.5rem;
-      color: #555;
-      line-height: 1.7;
-      background: #fff;
-      animation: fadeIn 0.3s ease;
-    }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* CONTACTO */
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 3rem;
-      margin-bottom: 4rem;
-    }
-    .contact-info-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 2.5rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-      border: 1px solid #f0f0f0;
-      border-top: 4px solid var(--blue);
-    }
-    .contact-method {
-      display: flex;
-      align-items: flex-start;
-      gap: 1.2rem;
-      margin-bottom: 2rem;
-    }
-    .contact-method:last-child { margin-bottom: 0; }
-    .cm-icon {
-      width: 45px; height: 45px;
-      background: rgba(0,103,177,0.1);
-      color: var(--blue);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      flex: 0 0 auto;
-    }
-    .cm-content h4 { font-size: 1.1rem; color: #333; margin-bottom: 0.4rem; }
-    .cm-content p, .cm-content a { color: #666; line-height: 1.5; text-decoration: none; }
-    .cm-content a:hover { color: var(--blue); }
+  <div class="section-wrap" style="padding-top:1rem">
+    <div class="breadcrumb-nav" style="margin: 0 0 1rem 0">
+      <a href="index.html">Inicio</a> <span>›</span> <span class="curr">Ofertas</span>
+    </div>
     
-    .contact-form-card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 2.5rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-      border: 1px solid #f0f0f0;
-    }
-    .cf-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 2rem;
-      color: var(--blue);
-      margin-bottom: 1.5rem;
-    }
-    .form-group { margin-bottom: 1.2rem; }
-    .form-control {
-      width: 100%;
-      padding: 14px;
-      background: #f9f9f9;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      font-family: 'Barlow', sans-serif;
-      font-size: 1rem;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .form-control:focus {
-      outline: none;
-      border-color: var(--blue);
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(0,103,177,0.1);
-    }
-    textarea.form-control { min-height: 140px; resize: vertical; }
-    .btn-brand {
-      background: #111;
-      color: #fff;
-      border: none;
-      padding: 14px 28px;
-      font-size: 1.1rem;
-      font-weight: 800;
-      border-radius: 8px;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      width: 100%;
-      transition: background 0.2s, transform 0.2s;
-      box-shadow: 0 4px 12px rgba(236,29,37,0.2);
-    }
-    .btn-brand:hover { background: var(--red-dark); transform: translateY(-2px); }
-
-    .wa-float-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: #25D366;
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 50px;
-      text-decoration: none;
-      font-weight: 800;
-      box-shadow: 0 4px 15px rgba(37,211,102,0.3);
-      transition: transform 0.2s;
-      margin-top: 1rem;
-    }
-    .wa-float-btn:hover { transform: scale(1.05); }
-
-    @media(max-width: 768px) {
-      .contact-grid { grid-template-columns: 1fr; }
-      .steps-timeline { padding-left: 0; }
-      .steps-timeline::before { display: none; }
-      .step-item { padding-left: 0; }
-      .step-number { position: relative; margin: 0 auto 1rem; }
-      .page-hero-title { font-size: 2.5rem; }
-    }
-  </style>
-
-  <div class="page-hero">
-    <div class="page-hero-inner">
-      <h1 class="page-hero-title">¿Cómo Comprar?</h1>
-      <p class="page-hero-subtitle">Tu despensa en la puerta de tu casa en 4 sencillos pasos. Descubre lo fácil que es comprar en Abarrotes El Rosal.</p>
+    <div class="cat-explorer-header" style="margin-bottom: 2rem;">
+      <h1 style="font-family:'Barlow Condensed',sans-serif; font-size: 2.5rem; font-weight: 900; margin: 0; color: var(--red);">Ofertas del Día</h1>
     </div>
   </div>
-  <div class="container">
-    <div class="steps-timeline">
-      
-      <div class="step-item">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <h3 class="step-title">Explora nuestro catálogo</h3>
-          <p class="step-desc">Navega a través de nuestras categorías o usa el buscador para encontrar rápidamente frutas, verduras, lácteos, abarrotes y más. Constantemente añadimos ofertas y promociones exclusivas.</p>
+
+  <div class="ecommerce-layout">
+    <aside class="filter-sidebar">
+      <!-- Categoría -->
+      <div class="sidebar-section">
+        <div class="sidebar-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <h3>Categoría</h3>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="sidebar-content">
+          <div class="filter-list" id="filter-cats"></div>
         </div>
       </div>
 
-      <div class="step-item">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h3 class="step-title">Agrega al carrito</h3>
-          <p class="step-desc">Elige las cantidades de los productos que deseas y presiona "Agregar". Revisa tu carrito en la esquina superior en cualquier momento para ver tu subtotal.</p>
+      <!-- Precio Slider -->
+      <div class="sidebar-section">
+        <div class="sidebar-header" onclick="this.parentElement.classList.toggle('collapsed')">
+          <h3>Precio</h3>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="sidebar-content">
+          <div class="price-slider-wrap">
+            <input type="range" id="side-price-slider" min="0" max="1000" value="1000" oninput="updateFilters()">
+            <div class="price-vals">
+              <span>$0</span>
+              <span id="side-price-max">$500+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="product-listing">
+      <div class="listing-header">
+        <div class="results-count" id="results-count">Cargando ofertas...</div>
+        <div class="sort-box">
+          ORDENAR POR
+          <select id="sort-select" onchange="updateFilters()">
+            <option value="relevance">RELEVANCIA</option>
+            <option value="price-asc">PRECIO: MENOR A MAYOR</option>
+            <option value="price-desc">PRECIO: MAYOR A MENOR</option>
+            <option value="discount" selected>MAYOR DESCUENTO</option>
+          </select>
         </div>
       </div>
 
-      <div class="step-item">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <h3 class="step-title">Finaliza tu pedido</h3>
-          <p class="step-desc">Ve al carrito y haz clic en "Finalizar pedido". Te pediremos algunos datos de contacto y tu ubicación exacta (dentro del radio de 18 cuadras) para garantizar la entrega.</p>
-        </div>
-      </div>
+      <div id="promo-grid" class="products-grid"></div>
 
-      <div class="step-item">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <h3 class="step-title">Recibe y paga en casa</h3>
-          <p class="step-desc">¡Y listo! Nosotros nos encargamos de preparar tu pedido. El pago se realiza directamente al momento de recibir tus compras en tu puerta (efectivo o tarjeta).</p>
-        </div>
+      <div id="no-results" style="display:none; text-align:center; padding: 5rem 0; color: #999;">
+        <div style="font-size: 4rem; margin-bottom: 1rem">🔎</div>
+        <p>No encontramos ofertas que coincidan con tus filtros.</p>
+        <button onclick="resetFilters()"
+          style="margin-top:1rem; background:none; border:none; color:var(--blue); font-weight:700; cursor:pointer; text-decoration:underline">Limpiar
+          todos los filtros</button>
       </div>
-
-    </div>
-  </div>
-<div id="search-results" style="display:none">
-    <div class="section-wrap">
-      <div class="section-title-bar">
-        <div class="section-title-line"></div>
-        <div class="section-title-badge" style="background:var(--blue)">Resultados de búsqueda</div>
-        <div class="section-title-line"></div>
-      </div>
-      <div class="products-grid" id="search-grid"></div>
-    </div>
+    </main>
   </div>
 
   <button class="float-cart" onclick="toggleCart()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg> Mi carrito <div class="float-badge" id="float-count">0</div>
@@ -481,15 +191,6 @@
         <div class="cart-empty">Tu carrito está vacío</div>
       </div>
       <div class="cart-footer" id="cart-footer" style="display:none">
-        <div class="cf-row">
-          <span class="cf-label">Subtotal</span>
-          <span id="cart-subtotal">$0.00</span>
-        </div>
-        <div class="cf-row cf-savings" id="cart-savings-row" style="display:none">
-          <span class="cf-label">Descuentos</span>
-          <span id="cart-savings" class="cf-savings-val">-$0.00</span>
-        </div>
-        <div class="cf-divider"></div>
         <div class="cf-row cf-total">
           <span>Total</span>
           <span id="cart-total-val">$0.00</span>
@@ -501,13 +202,6 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       FOOTER — index.html ONLY  (layout estilo Calimax)
-       ═══════════════════════════════════════════════════════════ -->
-  
-  
-  
-  
   
   <footer class="site-footer">
     <div class="sf-inner">
@@ -586,13 +280,6 @@
   </footer>
 
 
-
-
-
-
-  
-
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/auth.js"></script>
@@ -600,8 +287,7 @@
   <script src="js/app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Show only a few featured products
-      renderFeatured(5);
+      initPromociones();
     });
   </script>
 </body>

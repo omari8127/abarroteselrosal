@@ -102,6 +102,8 @@ function _injectAuthModal() {
         <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Registrarse</button>
       </div>
 
+      <p class="auth-subtitle">Accede para gestionar tu perfil y ver tus pedidos.</p>
+
       <!-- Mensaje de error -->
       <div class="auth-error" id="auth-error" style="display:none"></div>
 
@@ -297,6 +299,15 @@ function _injectAuthStyles() {
     }
     @media (max-width: 480px) {
       .auth-modal { padding: 1.5rem 1.25rem 1.25rem; max-width: 95vw; }
+    }
+
+    .auth-subtitle {
+      font-size: 0.88rem;
+      color: #666;
+      text-align: center;
+      margin-bottom: 1.25rem;
+      line-height: 1.4;
+      padding: 0 10px;
     }
 
     /* ── Close button ─────────────────────────────────── */

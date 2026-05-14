@@ -562,48 +562,101 @@ function renderDetalle(id) {
   };
 }
 
-// Delivery Modal functions
+// Delivery Drawer functions (Calimax Style)
+function injectDeliveryDrawer() {
+  if (document.getElementById('delivery-drawer-container')) return;
+
+  const html = `
+    <div id="delivery-drawer-container">
+      <div class="delivery-overlay" id="delivery-overlay" onclick="closeDeliveryModal()"></div>
+      <div class="delivery-drawer" id="delivery-drawer">
+        <div class="delivery-header">
+          <h2>¿Cómo recibirás tu pedido?</h2>
+          <button class="delivery-close" onclick="closeDeliveryModal()">✕</button>
+        </div>
+        
+        <div class="delivery-tabs-nav">
+          <button class="delivery-tab-btn active" onclick="switchDeliveryTab('domicilio')">Domicilio</button>
+          <button class="delivery-tab-btn" onclick="switchDeliveryTab('pickup')">Pickup</button>
+        </div>
+
+        <div class="delivery-content" id="delivery-tab-content">
+          <!-- Dynamically filled -->
+        </div>
+
+        <div class="delivery-footer">
+          <button class="btn-delivery-confirm" onclick="confirmDelivery()">Confirmar Selección</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', html);
+  switchDeliveryTab('domicilio'); // Default tab
+}
+
 window.openDeliveryModal = () => {
-  const modal = document.getElementById('delivery-modal');
-  if (modal) {
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
+  injectDeliveryDrawer();
+  const overlay = document.getElementById('delivery-overlay');
+  const drawer = document.getElementById('delivery-drawer');
+  
+  overlay.style.display = 'block';
+  setTimeout(() => {
+    overlay.classList.add('active');
+    drawer.classList.add('active');
+  }, 10);
+  document.body.style.overflow = 'hidden';
 };
 
 window.closeDeliveryModal = () => {
-  const modal = document.getElementById('delivery-modal');
-  if (modal) {
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-  }
+  const overlay = document.getElementById('delivery-overlay');
+  const drawer = document.getElementById('delivery-drawer');
+  
+  if (!drawer) return;
+  
+  drawer.classList.remove('active');
+  overlay.classList.remove('active');
+  
+  setTimeout(() => {
+    overlay.style.display = 'none';
+  }, 300);
+  document.body.style.overflow = '';
 };
 
 window.switchDeliveryTab = (tab) => {
-  document.querySelectorAll('.delivery-tab').forEach(t => {
-    t.classList.remove('active');
-    t.style.color = '#666';
-    t.style.background = 'transparent';
-    const indicator = t.querySelector('div');
-    if (indicator) indicator.remove();
-  });
+  const btns = document.querySelectorAll('.delivery-tab-btn');
+  const content = document.getElementById('delivery-tab-content');
+  if (!content) return;
+
+  btns.forEach(b => b.classList.remove('active'));
   
-  document.querySelectorAll('.delivery-tab-content').forEach(c => c.style.display = 'none');
-  
-  const tabs = document.querySelectorAll('.delivery-tab');
   if (tab === 'domicilio') {
-    tabs[1].classList.add('active');
-    tabs[1].style.color = 'var(--blue)';
-    tabs[1].style.background = '#e6f0fa';
-    tabs[1].innerHTML += '<div style="position:absolute; bottom:0; left:20%; right:20%; height:3px; background:var(--blue); border-radius:3px 3px 0 0;"></div>';
-    document.getElementById('delivery-tab-domicilio').style.display = 'block';
+    btns[0].classList.add('active');
+    content.innerHTML = `
+      <div class="delivery-empty-state">
+        <span class="delivery-empty-icon">📍</span>
+        <p>Parece que aún no tienes direcciones guardadas.</p>
+        <button class="btn-primary" style="margin-top:1rem; width:auto; padding:10px 20px" onclick="window.location.href='login.html'">Iniciar sesión para agregar</button>
+      </div>
+    `;
   } else {
-    tabs[0].classList.add('active');
-    tabs[0].style.color = 'var(--blue)';
-    tabs[0].style.background = '#e6f0fa';
-    tabs[0].innerHTML += '<div style="position:absolute; bottom:0; left:20%; right:20%; height:3px; background:var(--blue); border-radius:3px 3px 0 0;"></div>';
-    document.getElementById('delivery-tab-pickup').style.display = 'block';
+    btns[1].classList.add('active');
+    content.innerHTML = `
+      <div class="delivery-option-card selected">
+        <div class="delivery-option-icon">🏪</div>
+        <div class="delivery-option-info">
+          <strong>Anexa 20 de Noviembre</strong>
+          <p>Blvd. Díaz Ordaz, Tijuana B.C.</p>
+          <p><small>Horario: 9:00 AM - 9:00 PM</small></p>
+        </div>
+      </div>
+      <p style="font-size:0.8rem; color:#999; margin-top:1rem; text-align:center">Más sucursales próximamente.</p>
+    `;
   }
+};
+
+window.confirmDelivery = () => {
+  // Placeholder for real selection logic
+  closeDeliveryModal();
 };
 
 function updateCartUI() {

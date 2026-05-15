@@ -27,6 +27,7 @@ function _listenAuthChanges() {
   window.supabaseClient.auth.onAuthStateChange((_event, session) => {
     _currentUser = session?.user ?? null;
     _updateAccountBtn(_currentUser);
+    if (typeof updateDeliveryInfo === 'function') updateDeliveryInfo();
   });
 }
 
@@ -60,14 +61,14 @@ function _toggleUserDropdown(e) {
     dd.className = 'user-dropdown';
     dd.innerHTML = `
       <a href="mi-cuenta.html#perfil" class="user-dd-item">
-        <img src="img/icon_profile.png" style="width:18px; height:18px; object-fit:contain; mix-blend-mode:multiply;"> Ver / Editar Perfil
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#555"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Ver / Editar Perfil
       </a>
       <a href="mi-cuenta.html#pedidos" class="user-dd-item">
-        <img src="img/icon_orders.png" style="width:18px; height:18px; object-fit:contain; mix-blend-mode:multiply;"> Mis Pedidos
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#555"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg> Mis Pedidos
       </a>
       <div class="user-dd-divider"></div>
-      <button class="user-dd-item user-dd-signout" onclick="signOut()">
-        <img src="img/icon_logout.png" style="width:18px; height:18px; object-fit:contain; mix-blend-mode:multiply;"> Cerrar Sesión
+      <button class="user-dd-item user-dd-signout" onclick="signOut()" style="color: #ec1d25;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#ec1d25"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Cerrar Sesión
       </button>
     `;
     document.getElementById('account-btn').parentElement.style.position = 'relative';

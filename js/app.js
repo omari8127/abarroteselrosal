@@ -12,6 +12,7 @@ let activeFilters = {
   price: 1000,
   sort: 'relevance'
 };
+window.currentDeliveryMode = 'domicilio'; // 'domicilio' | 'pickup'
 
 // INICIALIZACI├ôN
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,11 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
     initDropdown();
     updateCartUI();
 
-    // Identificar en qu├® p├ígina estamos
+    // Identificar en qué página estamos
     if (document.querySelector('.page-home')) initHome();
     if (document.querySelector('.page-productos')) initProductos();
     if (document.querySelector('.page-detalle')) initDetalle();
     if (document.querySelector('.page-promociones')) initPromociones();
+    
+    // Cargar info de entrega si hay sesión
+    if (typeof updateDeliveryInfo === 'function') updateDeliveryInfo();
   }
 });
 
@@ -563,41 +567,58 @@ function renderDetalle(id) {
 }
 
 // Delivery Drawer functions (Calimax Style)
-function injectDeliveryDrawer() {
-  if (document.getElementById('delivery-drawer-container')) return;
+async function injectDeliveryDrawer() {
+  let container = document.getElementById('delivery-drawer-container');
+  
+  // Check if logged in
+  const { data: { session } } = await window.supabaseClient.auth.getSession();
+  const isLoggedIn = !!session?.user;
 
-  const html = `
-    <div id="delivery-drawer-container">
-      <div class="delivery-overlay" id="delivery-overlay" onclick="closeDeliveryModal()"></div>
-      <div class="delivery-drawer" id="delivery-drawer">
-        <div class="delivery-header">
-          <h2>¿Cómo recibirás tu pedido?</h2>
-          <button class="delivery-close" onclick="closeDeliveryModal()">✕</button>
-        </div>
-        
-        <div class="delivery-tabs-nav">
-          <button class="delivery-tab-btn active" onclick="switchDeliveryTab('domicilio')">Domicilio</button>
-          <button class="delivery-tab-btn" onclick="switchDeliveryTab('pickup')">Pickup</button>
-        </div>
-
-        <div class="delivery-content" id="delivery-tab-content">
-          <!-- Dynamically filled -->
-        </div>
-
-        <div class="delivery-footer">
-          <button class="btn-delivery-confirm" onclick="window.location.href='login.html'">INICIAR SESIÓN</button>
+  if (!container) {
+    const html = `
+      <div id="delivery-drawer-container">
+        <div class="delivery-overlay" id="delivery-overlay" onclick="closeDeliveryModal()"></div>
+        <div class="delivery-drawer" id="delivery-drawer">
+          <div class="delivery-header">
+            <h2>¿Cómo recibirás tu pedido?</h2>
+            <button class="delivery-close" onclick="closeDeliveryModal()">✕</button>
+          </div>
+          
+          <div class="delivery-tabs-nav">
+            <button class="delivery-tab-btn active" onclick="switchDeliveryTab('domicilio')">Domicilio</button>
+            <button class="delivery-tab-btn" onclick="switchDeliveryTab('pickup')">Pickup</button>
+          </div>
+   
+          <div class="delivery-content" id="delivery-tab-content">
+            <!-- Dynamically filled -->
+          </div>
+   
+          <div class="delivery-footer" id="delivery-drawer-footer">
+            <!-- Filled dynamically -->
+          </div>
         </div>
       </div>
-    </div>
-  `;
-  document.body.insertAdjacentHTML('beforeend', html);
-  switchDeliveryTab('domicilio'); // Default tab
+    `;
+    document.body.insertAdjacentHTML('beforeend', html);
+    container = document.getElementById('delivery-drawer-container');
+    switchDeliveryTab('domicilio'); // Default tab
+  }
+
+  // Always update the footer button based on current session
+  const footer = document.getElementById('delivery-drawer-footer');
+  if (footer) {
+    footer.innerHTML = isLoggedIn 
+      ? `<button class="btn-delivery-confirm" onclick="confirmDelivery()">CONFIRMAR ENTREGA</button>`
+      : `<button class="btn-delivery-confirm" onclick="closeDeliveryModal(); openAuthModal()">INICIAR SESIÓN</button>`;
+  }
 }
 
-window.openDeliveryModal = () => {
-  injectDeliveryDrawer();
+window.openDeliveryModal = async () => {
+  await injectDeliveryDrawer();
   const overlay = document.getElementById('delivery-overlay');
   const drawer = document.getElementById('delivery-drawer');
+  
+  if (!overlay || !drawer) return;
   
   overlay.style.display = 'block';
   setTimeout(() => {
@@ -623,6 +644,7 @@ window.closeDeliveryModal = () => {
 };
 
 window.switchDeliveryTab = (tab) => {
+  window.currentDeliveryMode = tab;
   const btns = document.querySelectorAll('.delivery-tab-btn');
   const content = document.getElementById('delivery-tab-content');
   if (!content) return;
@@ -631,28 +653,54 @@ window.switchDeliveryTab = (tab) => {
   
   if (tab === 'domicilio') {
     btns[0].classList.add('active');
-    content.innerHTML = `
-      <div class="delivery-search-box" style="margin-bottom: 1.5rem;">
-        <div style="position:relative">
-          <input type="text" placeholder="Ingresa tu dirección (Calle, número...)" 
-            style="width:100%; padding:12px 45px 12px 15px; border:1px solid #ddd; border-radius:8px; font-size:0.9rem;">
-          <span style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:var(--blue)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          </span>
+    
+    // Check for saved address if logged in
+    _getSavedAddress().then(perfil => {
+      let addressContent = '';
+      if (perfil?.direccion) {
+        // Mostrar dirección completa de forma elegante
+        const parts = perfil.direccion.split(' | ').filter(p => p.trim());
+        const mainAddr = parts[0] || '';
+        const extraInfo = parts.slice(1).join(', ');
+        
+        addressContent = `
+          <div class="delivery-option-card selected" style="margin-bottom: 1.5rem; cursor: pointer;" onclick="confirmDelivery()">
+            <div class="delivery-option-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </div>
+            <div class="delivery-option-info">
+              <strong>Dirección Guardada</strong>
+              <p>${mainAddr}</p>
+              ${extraInfo ? `<p style="font-size:0.8rem; color:#666; margin-top:2px;">${extraInfo}</p>` : ''}
+            </div>
+          </div>
+        `;
+      }
+
+      content.innerHTML = `
+        <div class="delivery-search-box" style="margin-bottom: 1.5rem;">
+          <div style="position:relative">
+            <input type="text" id="delivery-search-input" placeholder="Ingresa tu dirección (Calle, número...)" 
+              style="width:100%; padding:12px 45px 12px 15px; border:1px solid #ddd; border-radius:8px; font-size:0.9rem;">
+            <span style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:var(--blue)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </span>
+          </div>
         </div>
-      </div>
-      <div class="delivery-empty-state">
-        <span class="delivery-empty-icon" style="color: var(--blue);">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-        </span>
-        <p style="margin-top: 1rem; color: #555; font-weight: 500;">Inicia sesión para ver tus direcciones guardadas o busca una nueva arriba.</p>
-        <button class="btn-primary" style="margin-top:1.5rem; width:auto; padding:12px 24px; border-radius: 8px;" onclick="window.location.href='login.html'">INICIAR SESIÓN</button>
-      </div>
-    `;
+        ${addressContent}
+        <div class="delivery-empty-state" style="${perfil?.direccion ? 'display:none' : ''}">
+          <span class="delivery-empty-icon" style="color: var(--blue);">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          </span>
+          <p style="margin-top: 1rem; color: #555; font-weight: 500;">Inicia sesión para ver tus direcciones guardadas o busca una nueva arriba.</p>
+          <button class="btn-primary" style="margin-top:1.5rem; width:auto; padding:12px 24px; border-radius: 8px;" onclick="closeDeliveryModal(); openAuthModal()">INICIAR SESIÓN</button>
+        </div>
+      `;
+    });
   } else {
     btns[1].classList.add('active');
     content.innerHTML = `
-      <div class="delivery-option-card selected">
+      <div class="delivery-option-card selected" onclick="confirmDelivery()">
         <div class="delivery-option-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
         </div>
@@ -664,6 +712,37 @@ window.switchDeliveryTab = (tab) => {
       </div>
       <p style="font-size:0.85rem; color:#999; margin-top:1.5rem; text-align:center; font-style: italic;">Más sucursales próximamente.</p>
     `;
+  }
+};
+
+async function _getSavedAddress() {
+  if (!window.supabaseClient) return null;
+  const { data: { session } } = await window.supabaseClient.auth.getSession();
+  if (!session?.user) return null;
+
+  const { data: perfil } = await window.supabaseClient
+    .from('perfiles')
+    .select('direccion')
+    .eq('id', session.user.id)
+    .single();
+  return perfil;
+}
+
+window.updateDeliveryInfo = async function() {
+  const perfil = await _getSavedAddress();
+  if (perfil?.direccion) {
+    const navSuc = document.querySelector('.nav-sucursal span');
+    if (navSuc) {
+      const parts = perfil.direccion.split(' | ').filter(p => p.trim());
+      const cleanAddr = parts[0] || '';
+      navSuc.innerHTML = `Entrega: <strong>${cleanAddr}</strong>`;
+    }
+    
+    // Also re-inject drawer to update footer button if it exists
+    const drawer = document.getElementById('delivery-drawer-container');
+    if (drawer) {
+      drawer.remove(); // Force re-injection next time it's opened
+    }
   }
 };
 
@@ -923,7 +1002,13 @@ function _executeWAFinal(nombre, direccion) {
 
   let msg = `📦 *Nuevo pedido - Abarrotes el Rosal*\n\n`;
   msg += `👤 Cliente: ${nombre}\n`;
-  msg += `📍 Dirección: ${direccion}\n\n`;
+  
+  if (window.currentDeliveryMode === 'pickup') {
+    msg += `📍 *Entrega:* Recoger en tienda (Anexa 20 de Noviembre)\n`;
+    msg += `🕒 *Tiempo estimado:* Listo para recoger en 10-20 minutos.\n\n`;
+  } else {
+    msg += `📍 Dirección: ${direccion}\n\n`;
+  }
   msg += `🛒 Pedido:\n`;
 
   items.forEach(i => {

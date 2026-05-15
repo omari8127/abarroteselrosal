@@ -305,9 +305,10 @@ async function sendWAFinal() {
   msg += `📞 *Teléfono:* ${o.tel}\n`;
 
   if (ckDelivery === 'domicilio') {
-    msg += ` *Entrega:* ${o.entregaLabel}\n`;
+    msg += `📍 *Entrega:* ${o.entregaLabel}\n`;
   } else {
-    msg += ` *Entrega:* Recoger en tienda\n`;
+    msg += `📍 *Entrega:* Recoger en tienda (Anexa 20 de Noviembre)\n`;
+    msg += `🕒 *Tiempo estimado:* Pasar por el producto en 10-20 minutos.\n`;
   }
 
   msg += `💳 *Pago:* ${o.pagoLabel}\n\n`;

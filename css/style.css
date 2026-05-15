@@ -247,10 +247,29 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 .recientes-ver-mas:hover{background:var(--blue);color:#fff;transform:translateX(4px)}
 @media(max-width:768px){.recientes-banner{height:130px}.recientes-banner-overlay{padding:0 1.25rem}.recientes-title{font-size:1.6rem}.recientes-ver-mas{display:none}}
 
-.products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:1.5rem}
-#featured-products, #recientes-products{grid-template-columns:repeat(5,1fr)}
-@media(max-width:1100px){.products-grid,#featured-products, #recientes-products{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.products-grid,#featured-products, #recientes-products{grid-template-columns:1fr}}
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  margin-bottom: 1.5rem;
+}
+
+#featured-products, #recientes-products {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+@media (max-width: 1100px) {
+  .products-grid, #featured-products, #recientes-products {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .products-grid, #featured-products, #recientes-products {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
+  }
+}
 
 .prod-card{border:1px solid #ddd;border-radius:4px;background:#fff;padding:1.25rem;transition:box-shadow 0.2s, border-color 0.2s;position:relative;display:flex;flex-direction:column;min-height:480px}
 .prod-card:hover{box-shadow:0 12px 40px rgba(0,0,0,0.15), 0 0 0 1px var(--blue);border-color:var(--blue);transform:translateY(-2px)}
@@ -470,9 +489,6 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
   box-shadow: 0 3px 10px rgba(0,103,177,0.28);
 }
 .ck-go-btn:hover { background: #004a80; transform: translateY(-1px); }
-
-footer{background:#111;color:rgba(255,255,255,0.6);text-align:center;padding:2rem;font-size:0.82rem;margin-top:4rem;border-top:1px solid #333}
-footer strong{color:#fff}
 
 /* ── DETALLE PRODUCTO — ESTILO CALIMAX ─────────────────────────── */
 .page-detalle { background: #fff; }
@@ -1017,8 +1033,11 @@ footer strong{color:#fff}
 
 @media (max-width: 450px) {
   .delivery-drawer {
-    width: 100%;
-    right: -100%;
+    width: 100vw;
+    right: -100vw;
+  }
+  .delivery-drawer.active {
+    right: 0;
   }
 }
 
@@ -1167,4 +1186,215 @@ footer strong{color:#fff}
   font-size: 3rem;
   margin-bottom: 1rem;
   display: block;
+}
+
+/* ── FOOTER ESTILO CALIMAX ─────────────────────────── */
+.site-footer {
+  background: #111;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 4rem;
+  font-family: 'Barlow', sans-serif;
+}
+
+.sf-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem 3rem;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1.2fr 1fr;
+  gap: 3rem;
+}
+
+.sf-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.sf-brand-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sf-brand-icon {
+  color: var(--red);
+  display: flex;
+  align-items: center;
+}
+
+.sf-tagline {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.sf-info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sf-info-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 8px;
+}
+
+.sf-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--blue);
+  flex-shrink: 0;
+}
+
+.sf-col-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.sf-col-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 30px;
+  height: 2px;
+  background: var(--red);
+}
+
+.sf-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sf-links a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.sf-links a:hover {
+  color: #fff;
+  padding-left: 5px;
+}
+
+.sf-link-text {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sf-schedule {
+  color: #fff;
+  font-weight: 600;
+}
+
+.sf-social-row {
+  display: flex;
+  gap: 12px;
+}
+
+.sf-soc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+}
+
+.sf-soc[aria-label="Facebook"] { background: #1877F2; }
+.sf-soc[aria-label="Instagram"] { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+.sf-soc[aria-label="TikTok"] { background: #000000; }
+.sf-soc[aria-label="WhatsApp"] { background: #25D366; }
+
+.sf-soc svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sf-soc:hover {
+  transform: translateY(-5px);
+  filter: brightness(1.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.sf-sub {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1.5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.sf-copy {
+  font-weight: 500;
+}
+
+@media (max-width: 992px) {
+  .sf-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .sf-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding-top: 3rem;
+  }
+  
+  .sf-brand {
+    justify-content: center;
+  }
+  
+  .sf-info-list li {
+    justify-content: center;
+  }
+  
+  .sf-col-title::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .sf-social-row {
+    justify-content: center;
+  }
+  
+  .sf-sub {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
 }

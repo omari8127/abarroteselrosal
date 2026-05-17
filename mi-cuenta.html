@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="img/favicon.png">
   <meta name="description" content="Gestiona tu perfil y consulta el historial de pedidos en Abarrotes El Rosal.">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style-new.css">
   <style>
     /* ──────────────────────────────────────────────────────
        MI CUENTA — Estilos Originales (Revertidos)
@@ -225,7 +225,7 @@
       </a>
       <div class="search-bar">
         <input type="search" id="search-input" placeholder="Busca tus productos aquí"
-          oninput="searchProducts && searchProducts(this.value)">
+          oninput="showSuggestions(this.value)">
         <button onclick="searchProducts && searchProducts(document.getElementById('search-input').value, true)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
       </div>
       <div class="header-actions">

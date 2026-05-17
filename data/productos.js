@@ -180,6 +180,8 @@ const allProducts = [
   { id: 1047, cat: 'bebidas', name: 'Del Valle Pulpy Naranja', unit: '400 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/delvalle-pulpy-naranja-400ml.jpg' },
   { id: 1048, cat: 'bebidas', name: 'Del Valle Pulpu Mango', unit: '400 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/delvalle-pulpy-mango-400ml.jpg' },
   { id: 1049, cat: 'bebidas', name: 'Del Valle Jugo de Naranja', unit: '413 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/delvalle-jugo-naranja-413ml.jpg' },
+  { id: 1050, cat: 'bebidas', name: 'Coca Cola Vidrio 275ml', unit: '275 ml', price: 15.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/' },
+  { id: 1051, cat: 'bebidas', name: 'Fuze Tea Verde Limón 600ml', unit: '600 ml', price: 18.50, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/' },
 
 
 
@@ -364,6 +366,41 @@ const allProducts = [
 
 
 
+
+  { id: 472, cat: 'limpieza', name: 'Ariel 1 Kilo', unit: '1 Kg', price: 40.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 473, cat: 'limpieza', name: 'Ace 1 Kilo', unit: '1 Kg', price: 38.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 474, cat: 'limpieza', name: 'Foca 1 Kilo', unit: '1 Kg', price: 35.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 475, cat: 'limpieza', name: 'Suavitel 800ml', unit: '800 ml', price: 24.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 476, cat: 'limpieza', name: 'Cloro 1L', unit: '1 L', price: 16.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 477, cat: 'limpieza', name: 'Pinol 1L', unit: '1 L', price: 26.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 478, cat: 'limpieza', name: 'Fabuloso Lavanda 1L', unit: '1 L', price: 24.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 479, cat: 'limpieza', name: 'Axion 480ml', unit: '480 ml', price: 34.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 480, cat: 'limpieza', name: 'Papel Petalo 4 rollos', unit: '4 pz', price: 30.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 481, cat: 'limpieza', name: 'Papel Rollo 1 pz', unit: '1 pz', price: 8.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 482, cat: 'limpieza', name: 'Servilletas Vogue', unit: '1 pz', price: 18.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 483, cat: 'limpieza', name: 'Jabon Zote 400g', unit: '400 g', price: 22.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 484, cat: 'limpieza', name: 'Bolsa Jumbo Basura', unit: '1 pz', price: 25.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 485, cat: 'limpieza', name: 'Servilletas Delsey', unit: '1 pz', price: 18.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 486, cat: 'limpieza', name: 'Detegente Liquido Blanca Nieves 1L', unit: '1 L', price: 34.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 487, cat: 'limpieza', name: 'Foca Liquido 1L', unit: '1 L', price: 34.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 488, cat: 'limpieza', name: 'Roma Liquido 1L', unit: '1 L', price: 34.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 489, cat: 'limpieza', name: 'Jabon Liquido Zote Rosa 1L', unit: '1 L', price: 44.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 490, cat: 'limpieza', name: 'Jabon Liquido Zote Blanco 1L', unit: '1 L', price: 44.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 491, cat: 'limpieza', name: 'Pasta Colgate 75ml', unit: '75 ml', price: 28.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 492, cat: 'limpieza', name: 'Shampoo 180ml', unit: '180 ml', price: 42.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 493, cat: 'limpieza', name: 'Detergente Roma Polvo 1Kilo', unit: '1 Kg', price: 35.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 494, cat: 'limpieza', name: 'Jabon Lirio 400g', unit: '400 g', price: 24.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 495, cat: 'limpieza', name: 'Jabon Zote Rosa 400g', unit: '400 g', price: 22.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 496, cat: 'limpieza', name: 'Jabon Zote Blanco 400g', unit: '400 g', price: 22.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 497, cat: 'limpieza', name: 'Liquido Bref Cloro 2L', unit: '2 L', price: 50.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 498, cat: 'limpieza', name: 'Cloralex Quita Manchas 950ml', unit: '950 ml', price: 26.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 499, cat: 'limpieza', name: 'Detergente Liquido Blanca Nieves 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 600, cat: 'limpieza', name: 'Liquido Roma 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 601, cat: 'limpieza', name: 'Liquido Foca 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 602, cat: 'limpieza', name: 'Mas Oscura 830ml', unit: '830 ml', price: 44.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 603, cat: 'limpieza', name: 'Bold3 2L', unit: '2 L', price: 75.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 604, cat: 'limpieza', name: 'Suavitel 850ml', unit: '850 ml', price: 26.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 605, cat: 'limpieza', name: 'Downy 700ml', unit: '700 ml', price: 34.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
 
 
   // ── BOTANAS ───────────────────────────────────────────────────

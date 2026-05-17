@@ -9,7 +9,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style-new.css">
   <style>
     .promo-layout {
       display: grid;
@@ -91,7 +91,7 @@
       </a>
       <div class="search-bar">
         <input type="text" id="search-input" placeholder="Busca tus productos aquí"
-          oninput="searchProducts(this.value)">
+          oninput="showSuggestions(this.value)">
         <button onclick="searchProducts(document.getElementById('search-input').value, true)"><svg width="20"
             height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" style="vertical-align: middle;">
@@ -307,6 +307,23 @@
 
       <div id="promo-grid" class="products-grid"></div>
 
+      <!-- BOTÓN CARGAR MAS PRODUCTOS -->
+      <div class="load-more-container" id="load-more-container" style="display: none;">
+        <button class="load-more-btn" id="load-more-btn" onclick="loadMoreProducts()">
+          <span>Cargar más productos</span>
+          <svg class="load-more-spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+            <line x1="12" y1="2" x2="12" y2="6" opacity="0.3"></line>
+            <line x1="12" y1="18" x2="12" y2="22" opacity="0.9"></line>
+            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" opacity="0.4"></line>
+            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" opacity="0.8"></line>
+            <line x1="2" y1="12" x2="6" y2="12" opacity="0.5"></line>
+            <line x1="18" y1="12" x2="22" y2="12" opacity="0.7"></line>
+            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" opacity="0.6"></line>
+            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" opacity="0.1"></line>
+          </svg>
+        </button>
+      </div>
+
       <div id="no-results" style="display:none; text-align:center; padding: 5rem 0; color: #999;">
         <div style="font-size: 4rem; margin-bottom: 1rem">🔎</div>
         <p>No encontramos ofertas que coincidan con tus filtros.</p>
@@ -317,16 +334,14 @@
     </main>
   </div>
 
-  <div id="search-results" style="display:none">
+  <div id="search-results" style="display:none"></div>
 
-    <button class="float-cart" onclick="toggleCart()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-        style="vertical-align: text-bottom; margin-right: 4px;">
-        <circle cx="9" cy="21" r="1"></circle>
-        <circle cx="20" cy="21" r="1"></circle>
-        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-      </svg> Mi carrito <div class="float-badge" id="float-count">0</div>
-    </button>
+  <!-- Botón flotante Volver Arriba -->
+  <button class="float-scroll-top" onclick="scrollToTop()" title="Volver arriba">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
 
     <div class="cart-overlay" id="cart-overlay" onclick="outsideClose(event)">
       <div class="cart-drawer">
@@ -426,7 +441,7 @@
     <script src="js/supabase-config.js"></script>
     <script src="js/auth.js"></script>
     <script src="data/productos.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/app.js?v=3"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         initPromociones();

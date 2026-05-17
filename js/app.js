@@ -13,6 +13,7 @@ let activeFilters = {
   sort: 'relevance'
 };
 window.currentDeliveryMode = 'domicilio'; // 'domicilio' | 'pickup'
+let visibleProductsLimit = 24;
 
 // INICIALIZACI├ôN
 document.addEventListener('DOMContentLoaded', () => {
@@ -205,7 +206,10 @@ function extractBrand(name) {
   return firstWord;
 }
 
-function updateFilters(isPromoPage = false) {
+function updateFilters(isPromoPage = false, keepLimit = false) {
+  if (!keepLimit) {
+    visibleProductsLimit = 24;
+  }
   // Sync state from UI
   activeFilters.cats = Array.from(document.querySelectorAll('.cat-check:checked')).map(cb => cb.value);
   activeFilters.brands = Array.from(document.querySelectorAll('.brand-check:checked')).map(cb => cb.value);
@@ -244,16 +248,29 @@ function updateFilters(isPromoPage = false) {
   const countEl = document.getElementById('results-count');
   const noRes = document.getElementById('no-results');
 
-  if (countEl) countEl.textContent = `${filtered.length} PRODUCTOS`;
+  const totalCount = filtered.length;
+  if (countEl) countEl.textContent = `${totalCount} PRODUCTOS`;
 
   if (!container) return;
 
-  if (filtered.length === 0) {
+  const displayed = filtered.slice(0, visibleProductsLimit);
+
+  if (displayed.length === 0) {
     container.innerHTML = '';
     if (noRes) noRes.style.display = 'block';
   } else {
-    container.innerHTML = filtered.map(p => cardHTML(p)).join('');
+    container.innerHTML = displayed.map(p => cardHTML(p)).join('');
     if (noRes) noRes.style.display = 'none';
+  }
+
+  // Update "Cargar Más" button visibility
+  const loadMoreContainer = document.getElementById('load-more-container');
+  if (loadMoreContainer) {
+    if (totalCount > visibleProductsLimit) {
+      loadMoreContainer.style.display = 'flex';
+    } else {
+      loadMoreContainer.style.display = 'none';
+    }
   }
 
   // Refresh button states after re-render
@@ -267,6 +284,20 @@ function resetFilters() {
   const sortSel = document.getElementById('sort-select');
   if (sortSel) sortSel.value = 'relevance';
   updateFilters(document.querySelector('.page-promociones') !== null);
+}
+
+function loadMoreProducts() {
+  const btn = document.getElementById('load-more-btn');
+  if (!btn || btn.classList.contains('loading')) return;
+
+  btn.classList.add('loading');
+
+  setTimeout(() => {
+    visibleProductsLimit += 24;
+    const isPromoPage = document.querySelector('.page-promociones') !== null;
+    updateFilters(isPromoPage, true);
+    btn.classList.remove('loading');
+  }, 600);
 }
 
 // --- CATALOG RENDERING ---
@@ -1064,6 +1095,211 @@ function searchProducts(q, forceDetail = false) {
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && e.target.id === 'search-input') {
-    searchProducts(e.target.value, true);
+    // Hide dropdown on enter
+    const dd = document.getElementById('search-suggestions-dropdown');
+    if (dd) dd.classList.remove('active');
+    
+    // Jump directly if we have forceDetail logic, or just let searchProducts handle it
+    searchProducts(e.target.value, false); 
+    // Wait, the original was: searchProducts(e.target.value, true);
+    // But "forceDetail=true" jumps to the first product detail page if there is a match!
+    // The user said: "no cargue automaticamente y le tengan que dar enter para cargar la otra pagina".
+    // Let's go to `productos.html?q=...` instead of detail page.
+    window.location.href = `productos.html?q=${encodeURIComponent(e.target.value)}`;
   }
 });
+
+// Hide dropdown if clicked outside
+document.addEventListener('click', (e) => {
+  const dd = document.getElementById('search-suggestions-dropdown');
+  const input = document.getElementById('search-input');
+  if (dd && input && !dd.contains(e.target) && e.target !== input) {
+    dd.classList.remove('active');
+  }
+});
+
+// Pagination state for search suggestions carousel
+let currentSuggestionIndex = 0;
+let suggestedProducts = [];
+let lastQueryText = '';
+
+// Expose navigation functions to global window context
+window.slideSuggestions = function(dir, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const step = 5;
+  if (dir === 1) {
+    if (currentSuggestionIndex + step < suggestedProducts.length) {
+      currentSuggestionIndex += step;
+    }
+  } else {
+    if (currentSuggestionIndex - step >= 0) {
+      currentSuggestionIndex -= step;
+    }
+  }
+  renderSuggestedProductsGrid();
+};
+
+function renderSuggestedProductsGrid() {
+  const grid = document.querySelector('.ss-products-grid');
+  if (!grid) return;
+  
+  const prevBtn = document.getElementById('ss-carousel-prev');
+  const nextBtn = document.getElementById('ss-carousel-next');
+  
+  if (prevBtn) {
+    if (currentSuggestionIndex === 0) {
+      prevBtn.style.opacity = '0.4';
+      prevBtn.style.pointerEvents = 'none';
+    } else {
+      prevBtn.style.opacity = '1';
+      prevBtn.style.pointerEvents = 'auto';
+    }
+  }
+  
+  if (nextBtn) {
+    if (currentSuggestionIndex + 5 >= suggestedProducts.length) {
+      nextBtn.style.opacity = '0.4';
+      nextBtn.style.pointerEvents = 'none';
+    } else {
+      nextBtn.style.opacity = '1';
+      nextBtn.style.pointerEvents = 'auto';
+    }
+  }
+
+  const visibleProds = suggestedProducts.slice(currentSuggestionIndex, currentSuggestionIndex + 5);
+  
+  grid.innerHTML = visibleProds.map(p => {
+    const imgPart = p.img ? `<img src="${p.img}" alt="${p.name}" class="ss-prod-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="prod-emoji" style="display:none">${p.emoji}</span>` : `<div style="font-size:2rem;height:70px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;">${p.emoji}</div>`;
+    const isAdded = cart[p.id] ? 'added' : '';
+    const addText = cart[p.id] ? 'Agregado' : 'Agregar';
+    
+    return `
+      <div class="ss-prod-card">
+        <a href="producto-detalle.html?id=${p.id}" style="text-decoration:none; display:flex; flex-direction:column; align-items:center; width: 100%;">
+          ${imgPart}
+        </a>
+        <a href="producto-detalle.html?id=${p.id}" class="ss-prod-name">${p.name}</a>
+        <div class="ss-prod-price">$${p.price.toFixed(2)}</div>
+        <button class="ss-prod-add ${isAdded}" id="ssbtn-${p.id}" onclick="ssAddToCart(event, ${p.id})">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          ${addText}
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+function showSuggestions(q) {
+  let dd = document.getElementById('search-suggestions-dropdown');
+  const searchBar = document.querySelector('.search-bar');
+  
+  if (!dd && searchBar) {
+    dd = document.createElement('div');
+    dd.id = 'search-suggestions-dropdown';
+    dd.className = 'search-suggestions-dropdown';
+    searchBar.appendChild(dd);
+  }
+  
+  if (!dd) return;
+
+  if (!q || !q.trim()) {
+    dd.classList.remove('active');
+    return;
+  }
+
+  const query = q.toLowerCase();
+  
+  // Reset index if search query changes
+  if (query !== lastQueryText) {
+    currentSuggestionIndex = 0;
+    lastQueryText = query;
+  }
+  
+  // Find matching products
+  suggestedProducts = allProducts.filter(p => (p.name + ' ' + p.cat).toLowerCase().includes(query));
+  
+  if (suggestedProducts.length === 0) {
+    dd.innerHTML = `<div style="padding: 1rem; color: #666;">No se encontraron resultados para "${q}"</div>`;
+    dd.classList.add('active');
+    return;
+  }
+
+  // Top 5 text suggestions
+  const topTextMatches = suggestedProducts.slice(0, 5);
+  // Find related category
+  const matchCat = categories.find(c => c.id === suggestedProducts[0].cat);
+
+  let html = `
+    <div class="ss-left">
+      <div class="ss-title">Sugerencias de búsqueda</div>
+      ${topTextMatches.map(p => `
+        <a href="productos.html?q=${encodeURIComponent(p.name)}" class="ss-item">
+          <span>${p.name}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+      `).join('')}
+    </div>
+    <div class="ss-right">
+      <div class="ss-right-header">
+        <div class="ss-right-title">Productos relacionados</div>
+        <div class="ss-carousel-nav" style="display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 16px;">
+          <button class="ss-carousel-arrow prev" id="ss-carousel-prev" onclick="slideSuggestions(-1, event)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button class="ss-carousel-arrow next" id="ss-carousel-next" onclick="slideSuggestions(1, event)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+        <a href="productos.html?q=${encodeURIComponent(q)}" class="ss-view-all">Ver todos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></a>
+      </div>
+      <div class="ss-products-grid">
+        <!-- Rendered dynamically by renderSuggestedProductsGrid -->
+      </div>
+      ${matchCat ? `
+      <div class="ss-cats-area">
+        <div class="ss-right-title">Categorías relacionadas</div>
+        <a href="productos.html?cat=${matchCat.id}" class="ss-cat-btn">${matchCat.label}</a>
+      </div>` : ''}
+    </div>
+  `;
+
+  dd.innerHTML = html;
+  dd.classList.add('active');
+  
+  // Render initial grid
+  renderSuggestedProductsGrid();
+}
+
+// Helper to add to cart from suggestion without redirecting
+window.ssAddToCart = function(e, id) {
+  e.preventDefault();
+  e.stopPropagation();
+  addToCart(id);
+  // Re-render suggestions to update "Agregar" to "Agregado"
+  const input = document.getElementById('search-input');
+  if (input) showSuggestions(input.value);
+};
+
+// Global scroll listener for "Volver arriba" button visibility
+window.addEventListener('scroll', () => {
+  const btn = document.querySelector('.float-scroll-top');
+  if (btn) {
+    if (window.scrollY > 300) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  }
+});
+
+// Scroll to top with premium smooth behavior
+window.scrollToTop = function() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+};
+

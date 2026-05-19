@@ -7,212 +7,325 @@
   <title>Mi Cuenta — Abarrotes El Rosal</title>
   <link rel="icon" type="image/png" href="img/favicon.png">
   <meta name="description" content="Gestiona tu perfil y consulta el historial de pedidos en Abarrotes El Rosal.">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style-new.css">
-  <style>
-    /* ──────────────────────────────────────────────────────
+  <<<<<<< Updated upstream <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+    <link rel="stylesheet" href="css/style-new.css">
+    =======
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
+      rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    >>>>>>> Stashed changes
+    <style>
+      /* ──────────────────────────────────────────────────────
        MI CUENTA — Estilos Originales (Revertidos)
     ────────────────────────────────────────────────────── */
-    :root {
-      --red: #ec1d25;
-      --red-dark: #c9181d;
-      --blue: #0067b1;
-      --blue-dark: #004a80;
-    }
+      :root {
+        --red: #ec1d25;
+        --red-dark: #c9181d;
+        --blue: #0067b1;
+        --blue-dark: #004a80;
+      }
 
-    body {
-      background-color: #f4f7f9;
-    }
+      body {
+        background-color: #f4f7f9;
+      }
 
-    .mc-wrap {
-      max-width: 960px;
-      margin: 2.5rem auto;
-      padding: 0 1.25rem;
-      font-family: 'Barlow', sans-serif;
-    }
+      .mc-wrap {
+        max-width: 960px;
+        margin: 2.5rem auto;
+        padding: 0 1.25rem;
+        font-family: 'Barlow', sans-serif;
+      }
 
-    /* ── Guard (se muestra si no hay sesión) ──────── */
-    #mc-guard {
-      text-align: center;
-      padding: 4rem 1rem;
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.05);
-    }
-    #mc-guard h2 { font-size: 1.5rem; color: #333; margin-bottom: .75rem; }
-    #mc-guard p { color: #666; margin-bottom: 1.5rem; }
-    #mc-guard .btn-login {
-      background: var(--blue);
-      color: #fff;
-      border: none;
-      padding: .9rem 2.5rem;
-      border-radius: 12px;
-      font-size: 1rem; font-weight: 800;
-      cursor: pointer;
-      transition: all .2s ease;
-      box-shadow: 0 4px 15px rgba(0,103,177,0.2);
-    }
-    #mc-guard .btn-login:hover { background: var(--blue-dark); transform: translateY(-2px); }
+      /* ── Guard (se muestra si no hay sesión) ──────── */
+      #mc-guard {
+        text-align: center;
+        padding: 4rem 1rem;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+      }
 
-    /* ── Sección nav lateral + contenido ─────────── */
-    .mc-layout {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 2rem;
-    }
-    @media (max-width: 680px) {
-      .mc-layout { grid-template-columns: 1fr; }
-    }
+      #mc-guard h2 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: .75rem;
+      }
 
-    /* ── Sidebar nav ──────────────────────────────── */
-    .mc-nav {
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.07);
-      overflow: hidden;
-      height: fit-content;
-    }
-    .mc-nav-user {
-      background: #1a1a1a;
-      color: #fff;
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 12px;
-    }
-    .mc-avatar {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      background: var(--blue);
-      color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.75rem; font-weight: 800;
-      flex-shrink: 0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-    .mc-nav-name { font-weight: 800; font-size: 1.05rem; word-break: break-word; }
-    .mc-nav-email { font-size: .85rem; opacity: .7; word-break: break-word; }
+      #mc-guard p {
+        color: #666;
+        margin-bottom: 1.5rem;
+      }
 
-    .mc-nav-links { padding: 12px; }
-    .mc-nav-link {
-      display: flex; align-items: center; gap: 12px;
-      padding: .8rem 1rem;
-      border-radius: 12px;
-      font-size: .95rem; font-weight: 600; color: #555;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all .2s ease;
-      border: none; background: none; width: 100%; text-align: left;
-    }
-    .mc-nav-link:hover, .mc-nav-link.active {
-      background: #f0f7ff;
-      color: var(--blue);
-      transform: translateX(4px);
-    }
-    .mc-nav-link.signout { color: #c00; margin-top: 8px; }
-    .mc-nav-link.signout:hover { background: #fff0f0; }
+      #mc-guard .btn-login {
+        background: var(--blue);
+        color: #fff;
+        border: none;
+        padding: .9rem 2.5rem;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: all .2s ease;
+        box-shadow: 0 4px 15px rgba(0, 103, 177, 0.2);
+      }
 
-    /* ── Contenido principal ──────────────────────── */
-    .mc-content { display: flex; flex-direction: column; gap: 1.5rem; }
-    .mc-section {
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.04);
-      padding: 2.5rem;
-      border: 1px solid #f0f0f0;
-    }
-    .mc-section-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.6rem; font-weight: 800;
-      color: #111;
-      margin: 0 0 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid #f8f8f8;
-      display: flex; align-items: center; gap: 12px;
-      letter-spacing: -0.5px;
-    }
+      #mc-guard .btn-login:hover {
+        background: var(--blue-dark);
+        transform: translateY(-2px);
+      }
 
-    /* ── Formulario de perfil ─────────────────────── */
-    .mc-form { display: flex; flex-direction: column; gap: 1.25rem; }
-    .mc-field { display: flex; flex-direction: column; gap: 8px; }
-    .mc-field label { font-size: .88rem; font-weight: 700; color: #444; }
-    .mc-field input {
-      padding: .85rem 1.1rem;
-      border: 1.5px solid #eee;
-      background: #fafafa;
-      border-radius: 10px;
-      font-size: .95rem;
-      outline: none;
-      transition: all .2s ease;
-      color: #333;
-    }
-    .mc-field input:focus {
-      background: #fff;
-      border-color: var(--blue);
-      box-shadow: 0 0 0 4px rgba(0,103,177,.1);
-    }
-    .mc-save-btn {
-      align-self: flex-start;
-      background: var(--blue);
-      color: #fff;
-      border: none;
-      padding: .85rem 2rem;
-      border-radius: 10px;
-      font-size: .95rem; font-weight: 800;
-      cursor: pointer;
-      transition: all .2s ease;
-      box-shadow: 0 4px 12px rgba(0,103,177,0.2);
-    }
-    .mc-save-btn:hover { background: var(--blue-dark); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,103,177,0.3); }
-    .mc-save-success {
-      color: #166534;
-      background: #f0fff4;
-      border: 1px solid #a3e8b5;
-      padding: .6rem .9rem;
-      border-radius: 8px;
-      font-size: .88rem;
-      display: none;
-    }
+      /* ── Sección nav lateral + contenido ─────────── */
+      .mc-layout {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 2rem;
+      }
 
-    /* ── Tabla de pedidos ─────────────────────────── */
-    .pedidos-empty {
-      text-align: center;
-      padding: 2.5rem 1rem;
-      color: #888;
-    }
-    .pedidos-table-wrap { overflow-x: auto; }
-    .pedidos-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .88rem;
-    }
-    .pedidos-table th {
-      background: #f8f8f8;
-      padding: .7rem 1rem;
-      text-align: left;
-      font-weight: 700;
-      color: #555;
-      border-bottom: 2px solid #eee;
-    }
-    .pedidos-table td {
-      padding: .8rem 1rem;
-      border-bottom: 1px solid #f0f0f0;
-      color: #333;
-      vertical-align: middle;
-    }
-    .status-badge {
-      display: inline-block;
-      padding: .25rem .65rem;
-      border-radius: 20px;
-      font-size: .8rem;
-      font-weight: 700;
-    }
-    .status-pending  { background: #fff8e1; color: #b45309; }
-    .status-done     { background: #f0fff4; color: #166534; }
-    .status-canceled { background: #fff0f0; color: #991b1b; }
-  </style>
+      @media (max-width: 680px) {
+        .mc-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ── Sidebar nav ──────────────────────────────── */
+      .mc-nav {
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .07);
+        overflow: hidden;
+        height: fit-content;
+      }
+
+      .mc-nav-user {
+        background: #1a1a1a;
+        color: #fff;
+        padding: 2rem 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+      }
+
+      .mc-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: var(--blue);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        font-weight: 800;
+        flex-shrink: 0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .mc-nav-name {
+        font-weight: 800;
+        font-size: 1.05rem;
+        word-break: break-word;
+      }
+
+      .mc-nav-email {
+        font-size: .85rem;
+        opacity: .7;
+        word-break: break-word;
+      }
+
+      .mc-nav-links {
+        padding: 12px;
+      }
+
+      .mc-nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: .8rem 1rem;
+        border-radius: 12px;
+        font-size: .95rem;
+        font-weight: 600;
+        color: #555;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all .2s ease;
+        border: none;
+        background: none;
+        width: 100%;
+        text-align: left;
+      }
+
+      .mc-nav-link:hover,
+      .mc-nav-link.active {
+        background: #f0f7ff;
+        color: var(--blue);
+        transform: translateX(4px);
+      }
+
+      .mc-nav-link.signout {
+        color: #c00;
+        margin-top: 8px;
+      }
+
+      .mc-nav-link.signout:hover {
+        background: #fff0f0;
+      }
+
+      /* ── Contenido principal ──────────────────────── */
+      .mc-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .mc-section {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, .04);
+        padding: 2.5rem;
+        border: 1px solid #f0f0f0;
+      }
+
+      .mc-section-title {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #111;
+        margin: 0 0 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f8f8f8;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        letter-spacing: -0.5px;
+      }
+
+      /* ── Formulario de perfil ─────────────────────── */
+      .mc-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+      }
+
+      .mc-field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .mc-field label {
+        font-size: .88rem;
+        font-weight: 700;
+        color: #444;
+      }
+
+      .mc-field input {
+        padding: .85rem 1.1rem;
+        border: 1.5px solid #eee;
+        background: #fafafa;
+        border-radius: 10px;
+        font-size: .95rem;
+        outline: none;
+        transition: all .2s ease;
+        color: #333;
+      }
+
+      .mc-field input:focus {
+        background: #fff;
+        border-color: var(--blue);
+        box-shadow: 0 0 0 4px rgba(0, 103, 177, .1);
+      }
+
+      .mc-save-btn {
+        align-self: flex-start;
+        background: var(--blue);
+        color: #fff;
+        border: none;
+        padding: .85rem 2rem;
+        border-radius: 10px;
+        font-size: .95rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: all .2s ease;
+        box-shadow: 0 4px 12px rgba(0, 103, 177, 0.2);
+      }
+
+      .mc-save-btn:hover {
+        background: var(--blue-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0, 103, 177, 0.3);
+      }
+
+      .mc-save-success {
+        color: #166534;
+        background: #f0fff4;
+        border: 1px solid #a3e8b5;
+        padding: .6rem .9rem;
+        border-radius: 8px;
+        font-size: .88rem;
+        display: none;
+      }
+
+      /* ── Tabla de pedidos ─────────────────────────── */
+      .pedidos-empty {
+        text-align: center;
+        padding: 2.5rem 1rem;
+        color: #888;
+      }
+
+      .pedidos-table-wrap {
+        overflow-x: auto;
+      }
+
+      .pedidos-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: .88rem;
+      }
+
+      .pedidos-table th {
+        background: #f8f8f8;
+        padding: .7rem 1rem;
+        text-align: left;
+        font-weight: 700;
+        color: #555;
+        border-bottom: 2px solid #eee;
+      }
+
+      .pedidos-table td {
+        padding: .8rem 1rem;
+        border-bottom: 1px solid #f0f0f0;
+        color: #333;
+        vertical-align: middle;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: .25rem .65rem;
+        border-radius: 20px;
+        font-size: .8rem;
+        font-weight: 700;
+      }
+
+      .status-pending {
+        background: #fff8e1;
+        color: #b45309;
+      }
+
+      .status-done {
+        background: #f0fff4;
+        color: #166534;
+      }
+
+      .status-canceled {
+        background: #fff0f0;
+        color: #991b1b;
+      }
+    </style>
 </head>
 
 <body>
@@ -224,18 +337,42 @@
         <img src="img/logo.png" alt="Abarrotes El Rosal" class="brand-logo">
       </a>
       <div class="search-bar">
-        <input type="search" id="search-input" placeholder="Busca tus productos aquí"
+        <input type="search" id="search-input" placeholder="Busca tus productos aquí" <<<<<<< Updated upstream
           oninput="showSuggestions(this.value)">
-        <button onclick="searchProducts && searchProducts(document.getElementById('search-input').value, true)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
+        <button onclick="searchProducts && searchProducts(document.getElementById('search-input').value, true)"><svg
+            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg></button>
+        =======
+        oninput="searchProducts && searchProducts(this.value)">
+        <button onclick="searchProducts && searchProducts(document.getElementById('search-input').value, true)"><svg
+            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg></button>
+        >>>>>>> Stashed changes
       </div>
       <div class="header-actions">
         <div class="header-action" id="account-btn">
-          <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+          <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg></span>
           <span>Mi Cuenta</span>
         </div>
         <div class="cart-action" onclick="toggleCart && toggleCart()">
           <span class="cart-badge" id="hdr-count">0</span>
-          <span class="cart-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></span>
+          <span class="cart-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              style="vertical-align: text-bottom; margin-right: 4px;">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg></span>
           <span id="hdr-total">$0.00</span>
         </div>
       </div>
@@ -248,7 +385,11 @@
       <a href="promociones.html" class="nav-link promo-link">Promociones</a>
       <a href="ofertas.html" class="nav-link ofertas-link">Ofertas</a>
       <div class="nav-sucursal">
-        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></span>
+        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg></span>
         <span>Sucursal: <strong>Anexa 20 de Noviembre</strong></span>
       </div>
     </div>
@@ -260,7 +401,11 @@
     <!-- Guard: se oculta si hay sesión -->
     <div id="mc-guard">
       <div style="font-size: 5rem; margin-bottom: 1rem; color: #333;">
-        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
       </div>
       <h2>Inicia sesión para ver tu cuenta</h2>
       <p>Accede a tu perfil y revisa el historial de tus pedidos.</p>
@@ -280,14 +425,28 @@
         </div>
         <div class="mc-nav-links">
           <a href="#perfil" class="mc-nav-link active" onclick="showSection('perfil', this)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Perfil
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg> Perfil
           </a>
           <a href="#pedidos" class="mc-nav-link" onclick="showSection('pedidos', this)">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg> Mis Pedidos
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+              <path d="M3 6h18"></path>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg> Mis Pedidos
           </a>
           <div style="height:1px;background:#f0f0f0;margin:6px 0"></div>
           <button class="mc-nav-link signout" onclick="signOut()" style="color: #ec1d25;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#ec1d25"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Cerrar Sesión
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" style="color:#ec1d25">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg> Cerrar Sesión
           </button>
         </div>
       </aside>
@@ -298,7 +457,11 @@
         <!-- ╔══ SECCIÓN PERFIL ══╗ -->
         <section class="mc-section" id="section-perfil">
           <h2 class="mc-section-title">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
             Mi Perfil
           </h2>
           <div class="mc-form">
@@ -306,7 +469,7 @@
               <label>Nombre Completo</label>
               <input type="text" id="pf-nombre" placeholder="Tu nombre">
             </div>
-            
+
             <div class="mc-field">
               <label>Correo Electrónico</label>
               <input type="email" id="pf-email" placeholder="Tu correo" disabled>
@@ -342,7 +505,12 @@
         <!-- ╔══ SECCIÓN PEDIDOS ══╗ -->
         <section class="mc-section" id="section-pedidos" style="display:none">
           <h2 class="mc-section-title">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+              <path d="M3 6h18"></path>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
             Mis Pedidos
           </h2>
           <div id="pedidos-container">
@@ -356,56 +524,89 @@
 
   <!-- ═══ FOOTER ═══ -->
   <footer class="site-footer">
-    <div class="sf-inner">
-      <div class="sf-col sf-col--brand">
-        <div class="sf-brand">
-          <span class="sf-brand-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></span>
-          <span class="sf-brand-name">Abarrotes El Rosal</span>
+    <div class="sf-main-container">
+      <div class="sf-main-row">
+        <div class="sf-col sf-brand-col">
+          <div class="sf-brand">
+            <img src="img/logo.png" alt="Abarrotes El Rosal" class="sf-brand-logo">
+          </div>
+          <p class="sf-vamos-conectar">Vamos a conectarnos</p>
+          <div class="sf-social-row">
+            <a href="#" class="sf-soc" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" /></svg></a>
+            <a href="#" class="sf-soc" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg></a>
+            <a href="#" class="sf-soc" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1.04-.1z"/></svg></a>
+            <a href="https://wa.me/526643944760" target="_blank" class="sf-soc" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" /></svg></a>
+          </div>
+          <p class="sf-apps-title" style="margin-top:2rem; font-size:0.9rem; margin-bottom:1rem; color:#fff;">Descargue nuestras aplicaciones</p>
+          <div class="sf-apps-row" style="display:flex; gap:10px;">
+            <a href="#" class="sf-app-btn sf-app-store">
+              <svg class="sf-app-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.1,16.67C20.08,16.74 19.67,18.11 18.71,19.5M15.97,4.17C16.63,3.37 17.07,2.28 16.95,1C16,1.04 14.9,1.6 14.24,2.38C13.68,3.04 13.19,4.14 13.34,5.39C14.39,5.47 15.4,4.88 15.97,4.17Z"/>
+              </svg>
+              <div class="sf-app-text">
+                <span class="sf-app-small">Consíguelo en el</span>
+                <span class="sf-app-large">App Store</span>
+              </div>
+            </a>
+            <a href="#" class="sf-app-btn sf-google-play">
+              <svg class="sf-app-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M3.25 2.3c-.14.12-.25.33-.25.6v18.2c0 .27.11.48.25.6l.05.05 10.3-10.3v-.2L3.3 2.25l-.05.05z" fill="#00f0ff"/>
+                <path d="M17.15 16.15l-3.6-3.6v-.2l3.6-3.6.07.04 4.25 2.42c1.21.69 1.21 1.83 0 2.52l-4.25 2.42-.07.02z" fill="#ffc107"/>
+                <path d="M13.6 12.35L3.25 22c.36.38 1 .42 1.63.06l12.27-7L13.6 12.35z" fill="#ff3d00"/>
+                <path d="M13.6 12.25l3.55-3.55-12.27-7C4.25 1.34 3.61 1.38 3.25 1.76L13.6 12.25z" fill="#4caf50"/>
+              </svg>
+              <div class="sf-app-text">
+                <span class="sf-app-small">DESCARGAR EN</span>
+                <span class="sf-app-large">Google Play</span>
+              </div>
+            </a>
+          </div>
         </div>
-        <p class="sf-tagline">Calidad y frescura en cada pedido.<br>Tu supermercado de confianza en línea.</p>
-        <ul class="sf-info-list">
-          <li>
-            <svg class="sf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-            Anexa 20 de Noviembre, Tijuana, B.C.
-          </li>
-        </ul>
-      </div>
 
-      <div class="sf-col">
-        <h3 class="sf-col-title">Centro de Ayuda</h3>
-        <ul class="sf-links">
-          <li><a href="index.html">Inicio</a></li>
-          <li><a href="productos.html">Productos</a></li>
-          <li><a href="promociones.html">Promociones</a></li>
-          <li><a href="ofertas.html">Ofertas</a></li>
-        </ul>
-      </div>
-
-      <div class="sf-col">
-        <h3 class="sf-col-title">Servicio al cliente</h3>
-        <ul class="sf-links">
-          <li class="sf-link-text">Horario de Atención</li>
-          <li class="sf-link-text sf-schedule">Lunes a Domingo<br>9:00 AM a 9:00 PM</li>
-          <li><a href="https://wa.me/526643944760" target="_blank">WhatsApp: 664-394-4760</a></li>
-        </ul>
-      </div>
-
-      <div class="sf-col sf-col--social">
-        <h3 class="sf-col-title">Síguenos</h3>
-        <div class="sf-social-row">
-          <a href="#" class="sf-soc" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" /></svg></a>
-          <a href="#" class="sf-soc" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg></a>
-          <a href="#" class="sf-soc" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1.04-.1z"/></svg></a>
-          <a href="https://wa.me/526643944760" target="_blank" class="sf-soc" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" /></svg></a>
+        <div class="sf-links-wrapper">
+          <div class="sf-col">
+            <h3 class="sf-col-title">Ayuda</h3>
+            <ul class="sf-links">
+              <li><a href="index.html">Inicio</a></li>
+              <li><a href="productos.html">Productos</a></li>
+              <li><a href="promociones.html">Promociones</a></li>
+              <li><a href="ofertas.html">Ofertas</a></li>
+            </ul>
+          </div>
+          <div class="sf-col">
+            <h3 class="sf-col-title">Servicio al cliente</h3>
+            <ul class="sf-links">
+              <li class="sf-link-text">Lunes a Domingo</li>
+              <li class="sf-link-text">9:00 AM a 9:00 PM</li>
+              <li><a href="https://wa.me/526643944760" target="_blank">WhatsApp: 664-394-4760</a></li>
+            </ul>
+          </div>
+          <div class="sf-col">
+            <h3 class="sf-col-title">Encuéntranos</h3>
+            <ul class="sf-links">
+              <li class="sf-link-text">Anexa 20 de Noviembre</li>
+              <li class="sf-link-text">Tijuana, B.C.</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
-    <div class="sf-sub">
-      <span class="sf-copy">© 2026 Abarrotes El Rosal. Todos los derechos reservados.</span>
-      <span class="sf-address">Tijuana, Baja California, México.</span>
+    
+    <div class="sf-sub-container">
+      <div class="sf-sub-text">
+        Al continuar en esta página, usted acuerda regirse por nuestros <a href="#">Términos de uso</a>.
+      </div>
+      <div class="sf-divider"></div>
+      <div class="sf-bottom-row">
+        <div class="sf-legal-links">
+          <a href="#">Política de Compra</a>
+          <a href="#">Aviso de Privacidad</a>
+          <a href="#">Política de Cookies</a>
+        </div>
+        <div class="sf-copyright">
+          © 1999-2026 Abarrotes El Rosal. Todos los derechos reservados.
+        </div>
+      </div>
     </div>
   </footer>
 
@@ -454,15 +655,15 @@
         .single();
 
       if (perfil) {
-        document.getElementById('pf-nombre').value   = perfil.nombre   || '';
+        document.getElementById('pf-nombre').value = perfil.nombre || '';
         document.getElementById('pf-telefono').value = perfil.telefono || '';
-        
+
         // Parsear dirección (si contiene separadores | o similar)
         const fullAddr = perfil.direccion || '';
         const parts = fullAddr.split(' | ');
-        document.getElementById('pf-direccion').value   = parts[0] || '';
+        document.getElementById('pf-direccion').value = parts[0] || '';
         document.getElementById('pf-direccion-2').value = parts[1] || '';
-        document.getElementById('pf-cp').value          = parts[2] || '';
+        document.getElementById('pf-cp').value = parts[2] || '';
       } else {
         document.getElementById('pf-nombre').value = user.user_metadata?.full_name || '';
       }
@@ -475,21 +676,21 @@
       const btn = document.querySelector('.mc-save-btn');
       btn.textContent = 'Guardando...'; btn.disabled = true;
 
-      const nombre   = document.getElementById('pf-nombre').value.trim();
+      const nombre = document.getElementById('pf-nombre').value.trim();
       const telefono = document.getElementById('pf-telefono').value.trim();
-      const addr1    = document.getElementById('pf-direccion').value.trim();
-      const addr2    = document.getElementById('pf-direccion-2').value.trim();
-      const cp       = document.getElementById('pf-cp').value.trim();
+      const addr1 = document.getElementById('pf-direccion').value.trim();
+      const addr2 = document.getElementById('pf-direccion-2').value.trim();
+      const cp = document.getElementById('pf-cp').value.trim();
 
       // Guardamos todo en el campo 'direccion' separado por un pipe para no perder datos
       // ya que la base de datos no tiene las columnas calle, num_int o cp.
       const consolidatedAddr = `${addr1}${addr2 ? ' | ' + addr2 : ''}${cp ? ' | ' + cp : ''}`;
 
       const { error } = await window.supabaseClient.from('perfiles').upsert({
-        id:          session.user.id,
-        nombre:      nombre,
-        telefono:    telefono,
-        direccion:   consolidatedAddr
+        id: session.user.id,
+        nombre: nombre,
+        telefono: telefono,
+        direccion: consolidatedAddr
       });
 
       btn.textContent = 'Guardar cambios'; btn.disabled = false;
@@ -497,7 +698,7 @@
         const ok = document.getElementById('pf-success');
         ok.style.display = 'block';
         setTimeout(() => ok.style.display = 'none', 3500);
-        
+
         // Opcional: Actualizar datos de entrega globalmente
         if (window.updateDeliveryInfo) window.updateDeliveryInfo();
       } else {
@@ -506,7 +707,7 @@
     }
 
     function showSection(section, linkEl) {
-      document.getElementById('section-perfil').style.display  = section === 'perfil'  ? '' : 'none';
+      document.getElementById('section-perfil').style.display = section === 'perfil' ? '' : 'none';
       document.getElementById('section-pedidos').style.display = section === 'pedidos' ? '' : 'none';
       document.querySelectorAll('.mc-nav-link').forEach(l => l.classList.remove('active'));
       if (linkEl) linkEl.classList.add('active');
@@ -536,14 +737,15 @@
             <thead><tr><th>Fecha</th><th>Total</th><th>Estado</th></tr></thead>
             <tbody>
               ${pedidos.map(p => {
-                const fecha = new Date(p.created_at).toLocaleDateString();
-                const [cls, label] = statusMap[p.status] || ['status-pending', p.status];
-                return `<tr><td>${fecha}</td><td>$${Number(p.total).toFixed(2)}</td><td><span class="status-badge ${cls}">${label}</span></td></tr>`;
-              }).join('')}
+        const fecha = new Date(p.created_at).toLocaleDateString();
+        const [cls, label] = statusMap[p.status] || ['status-pending', p.status];
+        return `<tr><td>${fecha}</td><td>$${Number(p.total).toFixed(2)}</td><td><span class="status-badge ${cls}">${label}</span></td></tr>`;
+      }).join('')}
             </tbody>
           </table>
         </div>`;
     }
   </script>
 </body>
+
 </html>

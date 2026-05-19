@@ -365,7 +365,7 @@ function cardHTML(p) {
     ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="prod-emoji" style="display:none">${p.emoji}</span>`
     : `<span class="prod-emoji">${p.emoji}</span>`;
 
-  // ÔöÇÔöÇ Frutas y Verduras: segmented control de Kg/Unidades ÔöÇÔöÇ
+  // ── Frutas y Verduras: segmented control de Kg/Unidades ──
   if (p.cat === 'frutas') {
     if (!frutaModes[p.id]) frutaModes[p.id] = { mode: 'kg', val: 0.5 };
     const fm = frutaModes[p.id];
@@ -393,13 +393,22 @@ function cardHTML(p) {
       <a href="producto-detalle.html?id=${p.id}" class="prod-name">${p.name}</a>
 
       <div class="prod-price-area">
-        ${p.oldPrice ? `<div class="prod-price-old">$${p.oldPrice.toFixed(2)}</div>` : '<div class="prod-price-old" style="visibility:hidden">$0.00</div>'}
-        <div class="prod-price">$${p.price.toFixed(2)}</div>
+        ${p.oldPrice ? `
+          <div class="prod-price-row">
+            <span class="prod-price promo">$${p.price.toFixed(2)}</span>
+            <span class="prod-price-old">$${p.oldPrice.toFixed(2)}</span>
+          </div>
+          <div class="prod-savings-badge">Ahorras $${(p.oldPrice - p.price).toFixed(2)}</div>
+        ` : `
+          <div class="prod-price-row">
+            <span class="prod-price">$${p.price.toFixed(2)}</span>
+          </div>
+        `}
       </div>
     </div>`;
   }
 
-  // ÔöÇÔöÇ Resto de categor├¡as (comportamiento original) ÔöÇÔöÇ
+  // ── Resto de categorías ──
   return `
     <div class="prod-card">
       ${badge}
@@ -418,8 +427,17 @@ function cardHTML(p) {
       <a href="producto-detalle.html?id=${p.id}" class="prod-name">${p.name}</a>
       
       <div class="prod-price-area">
-        ${p.oldPrice ? `<div class="prod-price-old">$${p.oldPrice.toFixed(2)}</div>` : '<div class="prod-price-old" style="visibility:hidden">$0.00</div>'}
-        <div class="prod-price">$${p.price.toFixed(2)}</div>
+        ${p.oldPrice ? `
+          <div class="prod-price-row">
+            <span class="prod-price promo">$${p.price.toFixed(2)}</span>
+            <span class="prod-price-old">$${p.oldPrice.toFixed(2)}</span>
+          </div>
+          <div class="prod-savings-badge">Ahorras $${(p.oldPrice - p.price).toFixed(2)}</div>
+        ` : `
+          <div class="prod-price-row">
+            <span class="prod-price">$${p.price.toFixed(2)}</span>
+          </div>
+        `}
       </div>
     </div>`;
 }
@@ -538,7 +556,17 @@ function renderDetalle(id) {
 
           ${hasPromo ? `<div class="detalle-promo-badge">${promoText}</div>` : ''}
 
-          <div class="detalle-main-price">$${p.price.toFixed(2)}</div>
+          <div class="detalle-price-area">
+            ${p.oldPrice ? `
+              <div class="detalle-price-row">
+                <span class="detalle-main-price promo">$${p.price.toFixed(2)}</span>
+                <span class="detalle-price-old">$${p.oldPrice.toFixed(2)}</span>
+              </div>
+              <div class="prod-savings-badge" style="margin-bottom: 1.5rem; font-size: 0.95rem; padding: 4px 10px;">Ahorras $${(p.oldPrice - p.price).toFixed(2)}</div>
+            ` : `
+              <div class="detalle-main-price">$${p.price.toFixed(2)}</div>
+            `}
+          </div>
 
           <button class="btn-agregar" onclick="addToCart(${p.id})">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -579,7 +607,17 @@ function renderDetalle(id) {
       <a class="similar-card" href="producto-detalle.html?id=${x.id}">
         <img src="${x.img || ''}" alt="${x.name}" onerror="this.style.display='none'">
         <div class="similar-card-name">${x.name}</div>
-        <div class="similar-card-price">$${x.price.toFixed(2)}</div>
+        <div class="similar-card-price-area">
+          ${x.oldPrice ? `
+            <div class="similar-price-row">
+              <span class="similar-card-price promo">$${x.price.toFixed(2)}</span>
+              <span class="similar-card-price-old">$${x.oldPrice.toFixed(2)}</span>
+            </div>
+            <div class="prod-savings-badge" style="font-size: 0.68rem; padding: 2px 6px; margin-top: 2px;">Ahorras $${(x.oldPrice - x.price).toFixed(2)}</div>
+          ` : `
+            <div class="similar-card-price">$${x.price.toFixed(2)}</div>
+          `}
+        </div>
       </a>
     `).join('');
   }
@@ -1182,7 +1220,17 @@ function renderSuggestedProductsGrid() {
           ${imgPart}
         </a>
         <a href="producto-detalle.html?id=${p.id}" class="ss-prod-name">${p.name}</a>
-        <div class="ss-prod-price">$${p.price.toFixed(2)}</div>
+        <div class="ss-prod-price-area" style="width: 100%; text-align: center; margin-bottom: 8px;">
+          ${p.oldPrice ? `
+            <div class="ss-price-row" style="display: flex; align-items: baseline; justify-content: center; gap: 6px;">
+              <span class="ss-prod-price promo">$${p.price.toFixed(2)}</span>
+              <span class="ss-prod-price-old">$${p.oldPrice.toFixed(2)}</span>
+            </div>
+            <div class="prod-savings-badge" style="font-size: 0.65rem; padding: 2px 6px; margin: 2px auto 0; display: inline-flex;">Ahorras $${(p.oldPrice - p.price).toFixed(2)}</div>
+          ` : `
+            <div class="ss-prod-price">$${p.price.toFixed(2)}</div>
+          `}
+        </div>
         <button class="ss-prod-add ${isAdded}" id="ssbtn-${p.id}" onclick="ssAddToCart(event, ${p.id})">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           ${addText}

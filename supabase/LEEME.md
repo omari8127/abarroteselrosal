@@ -1,9 +1,11 @@
 # Base de datos de la tienda (Supabase)
 
-El proyecto de Supabase anterior (`nyxzfboowawkldmhjmfe`) ya no existe. Mientras no
-se cree uno nuevo, la tienda sigue funcionando, pero los pedidos solo llegan por
-WhatsApp con el aviso **"Sin registrar en el sistema"**, y no funcionan las cuentas
-de cliente.
+Proyecto actual: `igjhhojtfwzyunymeopt` (ya configurado en `js/supabase-config.js`).
+El anterior (`nyxzfboowawkldmhjmfe`) quedó pausado y ya no se usa.
+
+Si la base de datos no responde (proyecto pausado, sin conexión o sin las tablas),
+la tienda sigue funcionando, pero los pedidos solo llegan por WhatsApp con el aviso
+**"Sin registrar en el sistema"**, y no funcionan las cuentas de cliente.
 
 ## 1. Crear el proyecto
 
@@ -12,9 +14,9 @@ de cliente.
    contraseña de la base de datos en un lugar seguro.
 3. Espera a que termine de crearse (1–2 minutos).
 
-> El plan gratuito **pausa el proyecto tras una semana sin uso**, y un proyecto
-> pausado mucho tiempo se puede perder (probablemente le pasó al anterior). Para la
-> tienda en operación conviene el plan Pro o revisar que no se pause.
+> El plan gratuito **pausa el proyecto tras una semana sin uso** (le pasó al
+> anterior). Para la tienda en operación conviene el plan Pro o revisar que no se
+> pause.
 
 ## 2. Crear las tablas y la seguridad
 

@@ -660,15 +660,8 @@ async function registerWithEmail() {
     return;
   }
 
-  // Crear perfil en la tabla "perfiles"
-  if (data.user) {
-    await window.supabaseClient.from('perfiles').upsert({
-      id: data.user.id,
-      nombre: name,
-      telefono: null,
-      direccion: null
-    });
-  }
+  // El perfil en "perfiles" lo crea la base de datos al registrarse
+  // (trigger on_auth_user_created en supabase/schema.sql)
 
   document.getElementById('reg-success').style.display = 'block';
   setTimeout(() => closeAuthModal(), 3000);

@@ -734,12 +734,12 @@
       container.innerHTML = `
         <div class="pedidos-table-wrap">
           <table class="pedidos-table">
-            <thead><tr><th>Fecha</th><th>Total</th><th>Estado</th></tr></thead>
+            <thead><tr><th>Folio</th><th>Fecha</th><th>Total</th><th>Estado</th></tr></thead>
             <tbody>
               ${pedidos.map(p => {
         const fecha = new Date(p.created_at).toLocaleDateString();
         const [cls, label] = statusMap[p.status] || ['status-pending', p.status];
-        return `<tr><td>${fecha}</td><td>$${Number(p.total).toFixed(2)}</td><td><span class="status-badge ${cls}">${label}</span></td></tr>`;
+        return `<tr><td>#${p.id}</td><td>${fecha}</td><td>$${Number(p.total).toFixed(2)}</td><td><span class="status-badge ${cls}">${label}</span></td></tr>`;
       }).join('')}
             </tbody>
           </table>

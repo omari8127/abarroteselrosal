@@ -11,7 +11,7 @@ let ckPayment = 'efectivo';  // 'efectivo' | 'transferencia'
 
 // ── INIT ─────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  ckCart = JSON.parse(localStorage.getItem('cart')) || {};
+  ckCart = syncCartWithCatalog(JSON.parse(localStorage.getItem('cart')) || {});
   renderSummary();
   if (Object.keys(ckCart).length === 0) showEmptyPage();
 });
@@ -170,10 +170,56 @@ function validateForm() {
   return ok;
 }
 
+// ── SERVIDOR (SUPABASE) ──────────────────────────────────────────
+// Al servidor solo se mandan IDs y cantidades: los precios y el total
+// los calcula la base de datos (ver supabase/schema.sql).
+function cartToServerItems() {
+  return Object.entries(ckCart).map(([key, i]) => ({
+    id: parseInt(key, 10),               // '701_kg' → 701
+    qty: Math.round(i.qty * 10) / 10,    // frutas por kg van en décimas
+    unit: i.unitLabel || null
+  }));
+}
+
+// { data } si salió bien, { error } si el servidor rechazó el pedido
+// (mensaje para el cliente) u { offline } si no se pudo conectar.
+async function callServer(fn, args) {
+  if (!window.supabaseClient) return { offline: true };
+  try {
+    const { data, error } = await window.supabaseClient.rpc(fn, args);
+    if (!error) return { data };
+    if (error.code === 'P0001') return { error: error.message };
+    console.error(`Supabase ${fn}:`, error);
+    return { offline: true };
+  } catch (err) {
+    console.error(`Supabase ${fn}:`, err);
+    return { offline: true };
+  }
+}
+
+// Mismo formato que devuelve el servidor, calculado con el carrito local.
+// Solo se usa si no hay conexión; el pedido se marca como no registrado.
+function localQuote() {
+  const items = cartToServerItems().map(({ id, qty, unit }, n) => {
+    const i = Object.values(ckCart)[n];
+    return { id, name: i.name, unit, qty, unit_price: i.price, line_total: i.price * qty, old_price: i.oldPrice };
+  });
+  const subtotal = items.reduce((s, i) => s + (i.old_price || i.unit_price) * i.qty, 0);
+  const itemsTotal = items.reduce((s, i) => s + i.line_total, 0);
+  const shipping = ckDelivery === 'domicilio' ? SHIPPING_FEE : 0;
+  return { items, subtotal, savings: subtotal - itemsTotal, shipping, total: itemsTotal + shipping };
+}
+
+function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+const money = n => `$${Number(n).toFixed(2)}`;
+const qtyLabel = i => i.unit ? `${i.qty} ${i.unit}` : `x${i.qty}`;
+
 // ── CONFIRM ORDER ────────────────────────────────────────────────
-function confirmOrder() {
-  const items = Object.values(ckCart);
-  if (!items.length) {
+async function confirmOrder() {
+  if (!Object.keys(ckCart).length) {
     alert('Tu carrito está vacío.');
     return;
   }
@@ -185,19 +231,9 @@ function confirmOrder() {
     return;
   }
 
-  // Build order object
   const nombre = getVal('inp-nombre');
   const tel = getVal('inp-tel');
   const notas = getVal('inp-notas');
-  const subtotal = items.reduce((s, i) => s + (i.oldPrice || i.price) * i.qty, 0);
-  let total = items.reduce((s, i) => s + i.price * i.qty, 0);
-  const savings = subtotal - total;
-
-  let shippingLine = '';
-  if (ckDelivery === 'domicilio') {
-    total += SHIPPING_FEE;
-    shippingLine = `• Pedido: $${SHIPPING_FEE.toFixed(2)}<br>`;
-  }
 
   let entregaLabel = 'Recoger en tienda';
   if (ckDelivery === 'domicilio') {
@@ -210,10 +246,20 @@ function confirmOrder() {
 
   const pagoLabel = ckPayment === 'efectivo' ? 'Efectivo' : 'Transferencia';
 
-  const itemsLines = items.map(i => {
-    const qty = i.unitLabel ? `${i.qty} ${i.unitLabel}` : `x${i.qty}`;
-    return `• ${i.name} <span style="color:#888">${qty}</span> — $${(i.price * i.qty).toFixed(2)}`;
-  }).join('<br>');
+  // Pedir al servidor el total real antes de mostrar el resumen
+  const btn = document.querySelector('.ck-confirm-btn');
+  const btnText = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.innerHTML = 'Calculando total...'; }
+  const res = await callServer('cotizar_pedido', { p_items: cartToServerItems(), p_delivery_type: ckDelivery });
+  if (btn) { btn.disabled = false; btn.innerHTML = btnText; }
+
+  if (res.error) {
+    alert(res.error);
+    return;
+  }
+  const quote = res.offline ? localQuote() : res.data;
+  const localTotal = localQuote().total;
+  const pricesChanged = !res.offline && Math.abs(Number(quote.total) - localTotal) > 0.005;
 
   // Fill modal
   document.getElementById('modal-cliente').textContent = `${nombre} · ${tel}`;
@@ -221,69 +267,25 @@ function confirmOrder() {
     ? ' Recoger en tienda'
     : ` ${entregaLabel}`;
   document.getElementById('modal-pago').textContent = pagoLabel;
-  document.getElementById('modal-items').innerHTML = itemsLines 
-    + (shippingLine ? '<br>' + shippingLine : '')
-    + (savings > 0 ? `<br><span style="color:#1a7a2e;font-weight:700">Ahorros: -$${savings.toFixed(2)}</span>` : '');
-  document.getElementById('modal-total').textContent = `$${total.toFixed(2)}`;
+  document.getElementById('modal-items').innerHTML = quote.items.map(i =>
+    `• ${escHtml(i.name)} <span style="color:#888">${qtyLabel(i)}</span> — ${money(i.line_total)}`
+  ).join('<br>')
+    + (Number(quote.shipping) > 0 ? `<br>• Envío: ${money(quote.shipping)}` : '')
+    + (Number(quote.savings) > 0 ? `<br><span style="color:#1a7a2e;font-weight:700">Ahorros: -${money(quote.savings)}</span>` : '');
+  document.getElementById('modal-total').textContent = money(quote.total);
+
+  const sub = document.querySelector('.ck-modal-header p');
+  if (sub) {
+    sub.textContent = pricesChanged
+      ? 'Algunos precios se actualizaron. Revisa el total antes de enviarlo.'
+      : 'Revisa los detalles antes de enviarlo';
+  }
 
   // Store for WA
-  window._ckOrder = { nombre, tel, notas, entregaLabel, pagoLabel, items, total, savings, subtotal, hasShipping: (ckDelivery === 'domicilio') };
+  window._ckOrder = { nombre, tel, notas, entregaLabel, pagoLabel, quote, offline: !!res.offline };
 
   // Open modal
   document.getElementById('ck-modal').classList.add('open');
-}
-
-// ── SUPABASE INTEGRATION ──────────────────────────────────────────
-async function saveOrderToSupabase(order) {
-  try {
-    // Obtener user_id si hay sesión activa
-    const { data: { session } } = await window.supabaseClient.auth.getSession();
-    const userId = session?.user?.id || null;
-
-    const { data: orderData, error: orderError } = await window.supabaseClient
-      .from('orders')
-      .insert([{
-        customer_name: order.nombre,
-        phone: order.tel,
-        delivery_type: ckDelivery,
-        address: ckDelivery === 'domicilio' ? order.entregaLabel : null,
-        payment_method: ckPayment,
-        subtotal: order.subtotal,
-        savings: order.savings,
-        total: order.total,
-        notes: order.notas,
-        status: 'pending',
-        user_id: userId
-      }])
-      .select();
-
-
-    if (orderError) throw orderError;
-
-    const orderId = orderData[0].id;
-
-    // Save items
-    const itemsToInsert = order.items.map(i => ({
-      order_id: orderId,
-      product_id: i.id,
-      product_name: i.name,
-      quantity: i.qty,
-      unit_price: i.price,
-      total_price: i.price * i.qty
-    }));
-
-    const { error: itemsError } = await window.supabaseClient
-      .from('order_items')
-      .insert(itemsToInsert);
-
-    if (itemsError) throw itemsError;
-
-    console.log('Pedido guardado en Supabase con ID:', orderId);
-    return true;
-  } catch (err) {
-    console.error('Error al guardar en Supabase:', err);
-    return false;
-  }
 }
 
 // ── WHATSAPP FINAL ───────────────────────────────────────────────
@@ -296,11 +298,34 @@ async function sendWAFinal() {
   btn.disabled = true;
   btn.innerHTML = '<span>Procesando...</span>';
 
-  // Guardar en Supabase (Opcional: puedes esperar a que termine o no)
-  // Aquí esperamos para asegurar que se guardó antes de redirigir
-  await saveOrderToSupabase({ ...o, subtotal: o.items.reduce((s, i) => s + (i.oldPrice || i.price) * i.qty, 0) });
+  // Guardar el pedido; el servidor devuelve el folio y el total oficial
+  let quote = o.quote;
+  let folio = null;
+  if (!o.offline) {
+    const res = await callServer('crear_pedido', {
+      p_items: cartToServerItems(),
+      p_delivery_type: ckDelivery,
+      p_payment_method: ckPayment,
+      p_customer_name: o.nombre,
+      p_phone: o.tel,
+      p_address: ckDelivery === 'domicilio' ? o.entregaLabel : null,
+      p_notes: o.notas || null
+    });
+    if (res.error) {
+      alert(res.error);
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+      return;
+    }
+    if (res.data) {
+      quote = res.data;
+      folio = res.data.order_id;
+    }
+  }
 
-  let msg = ` *Pedido – Abarrotes El Rosal*\n\n`;
+  let msg = folio
+    ? ` *Pedido #${folio} – Abarrotes El Rosal*\n\n`
+    : ` *Pedido – Abarrotes El Rosal*\n⚠️ _Sin registrar en el sistema (sin conexión). Confirmar precios._\n\n`;
   msg += ` *Cliente:* ${o.nombre}\n`;
   msg += `📞 *Teléfono:* ${o.tel}\n`;
 
@@ -315,15 +340,14 @@ async function sendWAFinal() {
   msg += `─────────────────────\n`;
   msg += `*Productos:*\n`;
 
-  o.items.forEach(i => {
-    const qty = i.unitLabel ? `${i.qty} ${i.unitLabel}` : `x${i.qty}`;
-    msg += `• ${i.name} ${qty} — $${(i.price * i.qty).toFixed(2)}\n`;
+  quote.items.forEach(i => {
+    msg += `• ${i.name} ${qtyLabel(i)} — ${money(i.line_total)}\n`;
   });
 
-  if (o.hasShipping) msg += `• Pedido: $${SHIPPING_FEE.toFixed(2)}\n`;
+  if (Number(quote.shipping) > 0) msg += `• Envío: ${money(quote.shipping)}\n`;
 
-  if (o.savings > 0) msg += `\n🎉 *Ahorros: -$${o.savings.toFixed(2)}*\n`;
-  msg += `\n *TOTAL: $${o.total.toFixed(2)}*\n`;
+  if (Number(quote.savings) > 0) msg += `\n🎉 *Ahorros: -${money(quote.savings)}*\n`;
+  msg += `\n *TOTAL: ${money(quote.total)}*\n`;
 
   if (o.notas) msg += `\n📝 *Notas:* ${o.notas}`;
 
@@ -333,10 +357,10 @@ async function sendWAFinal() {
     btn.innerHTML = originalText;
     // Limpiar carrito tras éxito
     localStorage.removeItem('cart');
+    window._ckOrder = null;
     window.location.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
   }, 1000);
 }
-
 
 // ── MODAL CONTROLS ────────────────────────────────────────────────
 function closeModal() {

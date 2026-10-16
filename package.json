@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "serve -l 3000 .",
-    "start": "serve -l 3000 ."
+    "start": "serve -l 3000 .",
+    "productos:sql": "node scripts/generar-sql-productos.js"
   },
   "devDependencies": {
     "serve": "^14.2.1"

@@ -1,6 +1,9 @@
 /* ================================================================
    ABARROTES EL ROSAL — Supabase Configuration
    Reemplaza las variables con tus credenciales de Supabase
+   (Project Settings → API). Ver supabase/LEEME.md.
+   OJO: el proyecto de abajo ya no existe; mientras no se cambie,
+   los pedidos llegan por WhatsApp marcados como "sin registrar".
    ================================================================ */
 
 const SUPABASE_URL  = 'https://nyxzfboowawkldmhjmfe.supabase.co';

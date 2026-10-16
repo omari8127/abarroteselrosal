@@ -2,7 +2,7 @@
 //  ABARROTES EL ROSAL - L├│gica General
 // ================================================================
 
-let cart = JSON.parse(localStorage.getItem('cart')) || {};
+let cart = syncCartWithCatalog(JSON.parse(localStorage.getItem('cart')) || {});
 let qtys = {};
 // State for frutas: { [id]: { mode: 'kg'|'unit', val: number } }
 let frutaModes = {};
@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Identificar en qué página estamos
     if (document.querySelector('.page-home')) initHome();
     if (document.querySelector('.page-productos')) initProductos();
-    if (document.querySelector('.page-detalle')) initDetalle();
     if (document.querySelector('.page-promociones')) initPromociones();
     
     // Cargar info de entrega si hay sesión

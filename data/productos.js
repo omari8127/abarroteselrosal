@@ -395,12 +395,12 @@ const allProducts = [
   { id: 497, cat: 'limpieza', name: 'Liquido Bref Cloro 2L', unit: '2 L', price: 50.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
   { id: 498, cat: 'limpieza', name: 'Cloralex Quita Manchas 950ml', unit: '950 ml', price: 26.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
   { id: 499, cat: 'limpieza', name: 'Detergente Liquido Blanca Nieves 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 600, cat: 'limpieza', name: 'Liquido Roma 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 601, cat: 'limpieza', name: 'Liquido Foca 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 602, cat: 'limpieza', name: 'Mas Oscura 830ml', unit: '830 ml', price: 44.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 603, cat: 'limpieza', name: 'Bold3 2L', unit: '2 L', price: 75.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 604, cat: 'limpieza', name: 'Suavitel 850ml', unit: '850 ml', price: 26.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 605, cat: 'limpieza', name: 'Downy 700ml', unit: '700 ml', price: 34.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1201, cat: 'limpieza', name: 'Liquido Roma 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1202, cat: 'limpieza', name: 'Liquido Foca 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1203, cat: 'limpieza', name: 'Mas Oscura 830ml', unit: '830 ml', price: 44.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1204, cat: 'limpieza', name: 'Bold3 2L', unit: '2 L', price: 75.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1205, cat: 'limpieza', name: 'Suavitel 850ml', unit: '850 ml', price: 26.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1206, cat: 'limpieza', name: 'Downy 700ml', unit: '700 ml', price: 34.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
 
 
   // ── BOTANAS ───────────────────────────────────────────────────
@@ -610,4 +610,26 @@ const allProducts = [
   { id: 1114, cat: 'dulces', name: 'Ricolino Panditas Rellenos 65g', unit: '65 g', price: 15.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/dulces/panditas-rellenos.jpg', desc: '' },
   { id: 1115, cat: 'dulces', name: 'Ricolino Pasitas 53g', unit: '53 g', price: 15.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/dulces/pasitas-53g.jpg', desc: '' },
 
-];
+]
+  // Productos sin precio (0.00) no se muestran ni se pueden vender
+  .filter(p => p.price > 0)
+  // Productos sin foto (img vacío o solo la carpeta) usan la imagen genérica
+  .map(p => (!p.img || p.img.endsWith('/')) ? { ...p, img: 'img/sin-foto.svg' } : p);
+
+// ── SINCRONIZAR CARRITO CON EL CATÁLOGO ──────────────────────────
+// El carrito guarda una copia de cada producto en localStorage. Al cargar
+// la página se actualizan precio, nombre e imagen desde el catálogo y se
+// quitan los productos que ya no existen, cambiaron de nombre o no tienen precio.
+function syncCartWithCatalog(cart) {
+  Object.keys(cart).forEach(key => {
+    const item = cart[key];
+    const p = allProducts.find(x => x.id === parseInt(key, 10)); // '701_kg' → 701
+    if (!p || p.name !== item.name || !(item.qty > 0)) {
+      delete cart[key];
+      return;
+    }
+    cart[key] = { ...item, price: p.price, oldPrice: p.oldPrice, img: p.img, unit: p.unit, cat: p.cat };
+  });
+  localStorage.setItem('cart', JSON.stringify(cart));
+  return cart;
+}

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel – Abarrotes El Rosal</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #004795;
+      --blue-dark: #002f6c;
+      --blue-soft: #eaf2fc;
+      --red: #ec1d25;
+      --green: #1a7a2e;
+      --green-soft: #e8f5ec;
+      --amber-soft: #fff6db;
+      --amber: #8a5a00;
+      --bg: #f4f5f7;
+      --text: #303030;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+    button, input, select { font-family: inherit; font-size: inherit; }
+    a { color: var(--blue); }
+    .hidden { display: none !important; }
+
+    /* ── Barra superior ───────────────────────────── */
+    .top {
+      background: #fff; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 20px; position: sticky; top: 0; z-index: 20;
+    }
+    .top img { height: 30px; }
+    .top-title { font-weight: 800; font-size: 1rem; padding-left: 12px; border-left: 1px solid var(--border); }
+    .top-right { margin-left: auto; display: flex; align-items: center; gap: 14px; font-size: 0.9rem; }
+    .top-user { color: var(--muted); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .link-btn { background: none; border: none; color: var(--blue); font-weight: 700; cursor: pointer; text-decoration: none; }
+    .link-btn:hover { text-decoration: underline; }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+    /* ── Acceso ───────────────────────────────────── */
+    .login {
+      max-width: 400px; margin: 10vh auto; background: #fff; border-radius: 20px;
+      padding: 32px 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); text-align: center;
+    }
+    .login img { height: 36px; margin-bottom: 16px; }
+    .login h1 { font-size: 1.35rem; font-weight: 800; }
+    .login p { color: var(--muted); font-size: 0.92rem; margin-top: 4px; }
+    .login form { text-align: left; margin-top: 22px; display: flex; flex-direction: column; gap: 14px; }
+    .field label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
+    .input {
+      width: 100%; height: 46px; padding: 0 14px; border: 1.5px solid var(--border); border-radius: 12px;
+      font-size: 0.95rem; color: var(--text); background: #fff; outline: none; transition: border-color .15s, box-shadow .15s;
+    }
+    .input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,71,149,.12); }
+    .btn {
+      height: 46px; border: none; border-radius: 999px; padding: 0 22px; font-weight: 800; cursor: pointer;
+      background: var(--blue); color: #fff; transition: background .15s;
+    }
+    .btn:hover { background: var(--blue-dark); }
+    .btn:disabled { opacity: .6; cursor: wait; }
+    .btn-soft { background: var(--blue-soft); color: var(--blue); }
+    .btn-soft:hover { background: #dbe8f8; }
+    .btn-sm { height: 36px; padding: 0 16px; font-size: 0.88rem; }
+    .msg-error { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; border-radius: 12px; padding: 10px 14px; font-size: .88rem; font-weight: 600; }
+
+    /* ── Pestañas ─────────────────────────────────── */
+    .tabs { display: inline-flex; background: #e9edf2; border-radius: 999px; padding: 4px; gap: 4px; margin-bottom: 18px; }
+    .tab {
+      border: none; background: transparent; border-radius: 999px; padding: 9px 20px; font-weight: 800; color: var(--muted); cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .tab.active { background: #fff; color: var(--blue); box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+    .count { background: var(--red); color: #fff; font-size: .72rem; border-radius: 999px; padding: 1px 7px; }
+
+    /* ── Barra de filtros ─────────────────────────── */
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+    .search { position: relative; flex: 1 1 260px; }
+    .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; }
+    .search .input { padding-left: 42px; }
+    .select { height: 46px; border: 1.5px solid var(--border); border-radius: 12px; padding: 0 12px; background: #fff; color: var(--text); }
+    .chips { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+    .chip {
+      height: 36px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--border); background: #fff;
+      font-weight: 700; font-size: .88rem; color: var(--muted); cursor: pointer;
+    }
+    .chip.active { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
+    .summary { color: var(--muted); font-size: .88rem; margin: 4px 2px 12px; }
+
+    /* ── Productos ────────────────────────────────── */
+    .list { background: #fff; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+    .list-head, .prod {
+      display: grid; grid-template-columns: 56px minmax(0, 1fr) 130px 150px 110px; gap: 14px; align-items: center; padding: 12px 16px;
+    }
+    .list-head { font-size: .78rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; border-bottom: 1px solid var(--border); background: #fafbfc; }
+    .prod { border-bottom: 1px solid #f0f1f3; }
+    .prod:last-child { border-bottom: none; }
+    .prod.off { background: #fafafa; }
+    .prod.off .prod-img, .prod.off .prod-name { opacity: .55; }
+    .prod-img { width: 56px; height: 56px; border-radius: 10px; border: 1px solid #f0f1f3; object-fit: contain; background: #fff; }
+    .prod-name { font-weight: 700; font-size: .95rem; line-height: 1.25; }
+    .prod-meta { color: var(--muted); font-size: .8rem; margin-top: 2px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .tag { font-size: .72rem; font-weight: 800; border-radius: 999px; padding: 2px 8px; }
+    .tag-offer { background: var(--red); color: #fff; }
+    .tag-out { background: #e5e7eb; color: #4b5563; }
+    .money { position: relative; }
+    .money span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-weight: 700; }
+    .money .input { height: 40px; padding-left: 26px; font-weight: 700; }
+    .money .input::placeholder { font-weight: 500; }
+    .cell-label { display: none; font-size: .75rem; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+    .quitar { display: block; margin-top: 4px; font-size: .78rem; }
+    .state { font-size: .78rem; font-weight: 700; min-height: 1em; margin-top: 4px; }
+    .state.ok { color: var(--green); }
+    .state.err { color: #b91c1c; }
+    .state.busy { color: var(--muted); }
+
+    /* Interruptor de disponible */
+    .switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: .85rem; font-weight: 700; user-select: none; }
+    .switch input { display: none; }
+    .switch .track { width: 42px; height: 24px; border-radius: 999px; background: #cbd5e1; position: relative; transition: background .15s; flex: 0 0 42px; }
+    .switch .track::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform .15s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    .switch input:checked + .track { background: var(--green); }
+    .switch input:checked + .track::after { transform: translateX(18px); }
+
+    .more { display: block; margin: 16px auto 0; }
+    .empty { padding: 40px 16px; text-align: center; color: var(--muted); }
+
+    /* ── Pedidos ──────────────────────────────────── */
+    .orders { display: grid; gap: 12px; }
+    .order { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 16px 18px; }
+    .order-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .order-folio { font-weight: 900; font-size: 1.1rem; }
+    .order-time { color: var(--muted); font-size: .88rem; }
+    .order-total { margin-left: auto; font-weight: 900; font-size: 1.15rem; }
+    .status { font-size: .75rem; font-weight: 800; border-radius: 999px; padding: 3px 10px; }
+    .status-pending { background: var(--amber-soft); color: var(--amber); }
+    .status-done { background: var(--green-soft); color: var(--green); }
+    .status-canceled { background: #f3f4f6; color: #4b5563; }
+    .order-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; font-size: .9rem; }
+    .order-grid .k { font-size: .75rem; font-weight: 800; color: var(--muted); margin-bottom: 2px; }
+    .order-items { margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 10px; font-size: .9rem; }
+    .order-items div { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; }
+    .order-items .q { color: var(--muted); }
+    .order-notes { margin-top: 8px; font-size: .88rem; background: #fafbfc; border-radius: 10px; padding: 8px 12px; }
+    .order-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    .btn-cancel { background: #fff; color: #b91c1c; border: 1.5px solid #fecaca; }
+    .btn-cancel:hover { background: #fef2f2; }
+
+    @media (max-width: 760px) {
+      .top { padding: 10px 14px; }
+      .top-title, .top-user { display: none; }
+      .wrap { padding: 14px; }
+      .tabs { display: flex; }
+      .tab { flex: 1; justify-content: center; }
+      .list-head { display: none; }
+      /* Foto y nombre arriba; los dos precios a la mitad; disponible abajo */
+      .prod { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 12px; }
+      .prod > :nth-child(1) { flex: 0 0 56px; }
+      .prod > :nth-child(2) { flex: 1 1 calc(100% - 68px); min-width: 0; align-self: center; }
+      .prod > :nth-child(3),
+      .prod > :nth-child(4) { flex: 1 1 calc(50% - 6px); min-width: 0; }
+      .prod > :nth-child(5) { flex: 1 1 100%; }
+      .cell-label { display: block; }
+      .order-grid { grid-template-columns: 1fr; gap: 8px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Acceso -->
+  <section id="view-login" class="hidden">
+    <div class="login">
+      <img src="img/logo.png" alt="El Rosal">
+      <h1>Panel de la tienda</h1>
+      <p>Entra con tu cuenta de administrador.</p>
+      <form id="login-form">
+        <div id="login-error" class="msg-error hidden" role="alert"></div>
+        <div class="field">
+          <label for="login-email">Correo electrónico</label>
+          <input class="input" type="email" id="login-email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="login-pass">Contraseña</label>
+          <input class="input" type="password" id="login-pass" autocomplete="current-password" required>
+        </div>
+        <button class="btn" type="submit" id="login-btn">Entrar</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Sin permiso -->
+  <section id="view-denied" class="hidden">
+    <div class="login">
+      <img src="img/logo.png" alt="El Rosal">
+      <h1>Esta cuenta no es de administrador</h1>
+      <p id="denied-email"></p>
+      <p style="margin-top:14px">Pide que la den de alta como administrador (ver supabase/LEEME.md).</p>
+      <button class="btn btn-soft" style="margin-top:20px" onclick="salir()">Usar otra cuenta</button>
+    </div>
+  </section>
+
+  <!-- Panel -->
+  <section id="view-panel" class="hidden">
+    <header class="top">
+      <img src="img/logo.png" alt="El Rosal">
+      <span class="top-title">Panel de la tienda</span>
+      <div class="top-right">
+        <span class="top-user" id="top-user"></span>
+        <a class="link-btn" href="index.html" target="_blank">Ver tienda</a>
+        <button class="link-btn" onclick="salir()">Salir</button>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="tabs" role="tablist">
+        <button class="tab active" id="tab-productos" onclick="mostrarTab('productos')">Productos</button>
+        <button class="tab" id="tab-pedidos" onclick="mostrarTab('pedidos')">Pedidos <span class="count hidden" id="pend-count"></span></button>
+      </div>
+
+      <!-- PRODUCTOS -->
+      <div id="panel-productos">
+        <div class="toolbar">
+          <div class="search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input class="input" id="buscar" type="search" placeholder="Buscar producto…" autocomplete="off">
+          </div>
+          <select class="select" id="categoria" aria-label="Categoría"></select>
+          <div class="chips" id="filtro-prod">
+            <button class="chip active" data-f="todos">Todos</button>
+            <button class="chip" data-f="oferta">En oferta</button>
+            <button class="chip" data-f="agotado">No disponibles</button>
+          </div>
+        </div>
+        <p class="summary" id="prod-summary">Cargando productos…</p>
+        <div class="list">
+          <div class="list-head">
+            <span></span><span>Producto</span><span>Precio</span><span>Precio antes (oferta)</span><span>Disponible</span>
+          </div>
+          <div id="prod-list"></div>
+        </div>
+        <button class="btn btn-soft more hidden" id="prod-more">Mostrar más</button>
+      </div>
+
+      <!-- PEDIDOS -->
+      <div id="panel-pedidos" class="hidden">
+        <div class="toolbar">
+          <div class="chips" id="filtro-ped">
+            <button class="chip active" data-f="pending">Pendientes</button>
+            <button class="chip" data-f="done">Entregados</button>
+            <button class="chip" data-f="canceled">Cancelados</button>
+            <button class="chip" data-f="todos">Todos</button>
+          </div>
+          <button class="btn btn-soft btn-sm" style="margin-left:auto" onclick="cargarPedidos()">Actualizar</button>
+        </div>
+        <p class="summary" id="ped-summary"></p>
+        <div class="orders" id="ped-list"></div>
+      </div>
+    </main>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="data/productos.js?v=4"></script>
+  <script src="js/admin.js?v=1"></script>
+</body>
+
+</html>

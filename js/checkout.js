@@ -10,7 +10,9 @@ let ckDelivery = 'domicilio'; // 'domicilio' | 'tienda'
 let ckPayment = 'efectivo';  // 'efectivo' | 'transferencia'
 
 // ── INIT ─────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Esperar los precios de la base de datos (js/catalogo.js)
+  await (window.catalogReady || Promise.resolve());
   ckCart = syncCartWithCatalog(JSON.parse(localStorage.getItem('cart')) || {});
   renderSummary();
   if (Object.keys(ckCart).length === 0) showEmptyPage();
@@ -264,21 +266,27 @@ async function confirmOrder() {
   // Fill modal
   document.getElementById('modal-cliente').textContent = `${nombre} · ${tel}`;
   document.getElementById('modal-entrega').textContent = ckDelivery === 'tienda'
-    ? ' Recoger en tienda'
-    : ` ${entregaLabel}`;
+    ? 'Recoger en tienda · Anexa 20 de Noviembre'
+    : entregaLabel;
   document.getElementById('modal-pago').textContent = pagoLabel;
+  const row = (label, value, cls = '') =>
+    `<div class="ck-mi ${cls}"><span>${label}</span><span class="ck-mi-price">${value}</span></div>`;
   document.getElementById('modal-items').innerHTML = quote.items.map(i =>
-    `• ${escHtml(i.name)} <span style="color:#888">${qtyLabel(i)}</span> — ${money(i.line_total)}`
-  ).join('<br>')
-    + (Number(quote.shipping) > 0 ? `<br>• Envío: ${money(quote.shipping)}` : '')
-    + (Number(quote.savings) > 0 ? `<br><span style="color:#1a7a2e;font-weight:700">Ahorros: -${money(quote.savings)}</span>` : '');
+    row(`${escHtml(i.name)}<span class="ck-mi-qty">${qtyLabel(i)}</span>`, money(i.line_total))
+  ).join('');
+  // Productos (precio normal) − Ahorros + Envío = Total
+  document.getElementById('modal-totals').innerHTML =
+    row('Productos', money(quote.subtotal))
+    + (Number(quote.savings) > 0 ? row('Ahorros', `-${money(quote.savings)}`, 'savings') : '')
+    + (Number(quote.shipping) > 0 ? row('Envío', money(quote.shipping)) : '');
   document.getElementById('modal-total').textContent = money(quote.total);
 
-  const sub = document.querySelector('.ck-modal-header p');
+  const sub = document.getElementById('ck-modal-sub');
   if (sub) {
     sub.textContent = pricesChanged
-      ? 'Algunos precios se actualizaron. Revisa el total antes de enviarlo.'
+      ? 'Algunos precios se actualizaron. Revisa el total.'
       : 'Revisa los detalles antes de enviarlo';
+    sub.classList.toggle('changed', pricesChanged);
   }
 
   // Store for WA
@@ -324,32 +332,31 @@ async function sendWAFinal() {
   }
 
   let msg = folio
-    ? ` *Pedido #${folio} – Abarrotes El Rosal*\n\n`
-    : ` *Pedido – Abarrotes El Rosal*\n⚠️ _Sin registrar en el sistema (sin conexión). Confirmar precios._\n\n`;
-  msg += ` *Cliente:* ${o.nombre}\n`;
-  msg += `📞 *Teléfono:* ${o.tel}\n`;
+    ? `*Pedido #${folio} – Abarrotes El Rosal*\n\n`
+    : `*Pedido – Abarrotes El Rosal*\n*ATENCIÓN:* _sin registrar en el sistema (sin conexión). Confirmar precios._\n\n`;
+  msg += `*Cliente:* ${o.nombre}\n`;
+  msg += `*Teléfono:* ${o.tel}\n`;
 
   if (ckDelivery === 'domicilio') {
-    msg += `📍 *Entrega:* ${o.entregaLabel}\n`;
+    msg += `*Entrega:* ${o.entregaLabel}\n`;
   } else {
-    msg += `📍 *Entrega:* Recoger en tienda (Anexa 20 de Noviembre)\n`;
-    msg += `🕒 *Tiempo estimado:* Pasar por el producto en 10-20 minutos.\n`;
+    msg += `*Entrega:* Recoger en tienda (Anexa 20 de Noviembre)\n`;
+    msg += `*Tiempo estimado:* Pasar por el producto en 10-20 minutos.\n`;
   }
 
-  msg += `💳 *Pago:* ${o.pagoLabel}\n\n`;
-  msg += `─────────────────────\n`;
-  msg += `*Productos:*\n`;
+  msg += `*Pago:* ${o.pagoLabel}\n\n`;
+  msg += `*Productos*\n`;
 
   quote.items.forEach(i => {
     msg += `• ${i.name} ${qtyLabel(i)} — ${money(i.line_total)}\n`;
   });
 
-  if (Number(quote.shipping) > 0) msg += `• Envío: ${money(quote.shipping)}\n`;
+  msg += `\nProductos: ${money(quote.subtotal)}\n`;
+  if (Number(quote.savings) > 0) msg += `Ahorros: -${money(quote.savings)}\n`;
+  if (Number(quote.shipping) > 0) msg += `Envío: ${money(quote.shipping)}\n`;
+  msg += `*TOTAL: ${money(quote.total)}*\n`;
 
-  if (Number(quote.savings) > 0) msg += `\n🎉 *Ahorros: -${money(quote.savings)}*\n`;
-  msg += `\n *TOTAL: ${money(quote.total)}*\n`;
-
-  if (o.notas) msg += `\n📝 *Notas:* ${o.notas}`;
+  if (o.notas) msg += `\n*Notas:* ${o.notas}`;
 
   // Restaurar botón después de un momento
   setTimeout(() => {

@@ -54,29 +54,62 @@ En **Authentication → URL Configuration**:
 Para "Continuar con Google": **Authentication → Sign In / Providers → Google**, con
 un Client ID de Google Cloud. Si no lo configuras, ese botón no funcionará.
 
-## Cambiar precios o productos
+## Panel de la tienda (admin.html)
 
-1. Edita [`data/productos.js`](../data/productos.js).
-2. Ejecuta `npm run productos:sql` (regenera `productos.sql`).
-3. Pega `productos.sql` en el SQL Editor y ejecútalo.
+En el panel cambias **precios, ofertas y disponibilidad** de los productos y atiendes
+los **pedidos** (marcar entregado o cancelado, escribirle al cliente por WhatsApp).
+Los cambios se ven en la tienda en cuanto el cliente recarga la página.
 
-Si te saltas el paso 3, el cliente verá un precio en la página pero el pedido se
-cobrará con el de la base de datos (el resumen le avisa que "algunos precios se
-actualizaron").
+### Activarlo (una sola vez)
 
-## Ver y atender pedidos
+1. En **SQL Editor**, vuelve a ejecutar todo [`schema.sql`](schema.sql) y después
+   todo [`productos.sql`](productos.sql). No se pierde nada: agregan los permisos
+   del panel y los 2 productos que estaban sin precio (quedan como no disponibles).
+2. Crea la cuenta del administrador: **Authentication → Users → Add user → Create new
+   user**, con su correo y una contraseña segura, y marca **Auto Confirm User**.
+3. Dale permiso de administrador en **SQL Editor** (cambia el correo):
 
-Por ahora, en **Table Editor → orders** (y `order_items` para ver los productos).
-El `id` es el folio que aparece en el WhatsApp del cliente (`Pedido #123`).
-Cambia `status` a `done` (entregado) o `canceled` (cancelado); el cliente lo ve en
-**Mi cuenta → Mis pedidos**.
+   ```sql
+   insert into public.admins (user_id)
+   select id from auth.users where email = 'correo-del-admin@ejemplo.com';
+   ```
+
+4. Entra a `/admin.html` de la tienda (por ejemplo `http://localhost:3000/admin.html`)
+   con ese correo y contraseña. La página no aparece en el menú de la tienda.
+
+Para quitarle el acceso a alguien:
+
+```sql
+delete from public.admins
+where user_id = (select id from auth.users where email = 'correo-del-admin@ejemplo.com');
+```
+
+### Cómo se usa
+
+- **Precio**: escribe el precio y presiona Enter (o sal del campo). Se guarda solo.
+- **Poner en oferta**: en *Precio antes* escribe el precio normal y en *Precio* el de
+  oferta. La tienda muestra el descuento y el producto aparece en **Ofertas**.
+- **Quitar oferta**: botón *Quitar oferta*; el producto vuelve a su precio normal.
+- **Agotado**: apaga *Disponible*. Deja de mostrarse y no se puede pedir.
+
+## Agregar productos nuevos o cambiar nombres y fotos
+
+Eso sigue en [`data/productos.js`](../data/productos.js) (nombre, foto, descripción):
+
+1. Edita `data/productos.js` (para un producto nuevo usa un `id` que no exista).
+2. Ejecuta `npm run productos:sql` y después ejecuta `productos.sql` en el SQL Editor.
+
+`productos.sql` agrega los productos nuevos con su precio, pero **no cambia** precios,
+ofertas ni disponibilidad de los que ya existen: eso se maneja desde el panel.
 
 ## Qué protege la base de datos
 
 - El total se calcula en el servidor con los precios de la tabla `products`; lo que
   mande el navegador del cliente no cuenta.
-- Nadie puede crear, cambiar ni borrar pedidos o precios desde la página, solo con
-  `crear_pedido`, que revisa productos, cantidades, teléfono, dirección y pago.
+- Los clientes no pueden crear, cambiar ni borrar pedidos o precios: los pedidos solo
+  entran con `crear_pedido`, que revisa productos, cantidades, teléfono, dirección y pago.
+- Solo las cuentas en la tabla `admins` pueden usar el panel, y aun así solo pueden
+  cambiar precio, oferta y disponibilidad de productos y el estado de los pedidos.
 - Cada cliente ve solo su perfil y sus pedidos.
 - Máximo 5 pedidos por teléfono por hora, para frenar pedidos falsos en serie.
 - El envío a domicilio ($10.00) está en `private.calcular_pedido` (`c_envio`); si

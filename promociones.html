@@ -5,11 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Promociones - Abarrotes El Rosal</title>
+  <meta name="description" content="Promociones y ofertas de la semana en Abarrotes El Rosal. Ahorra en tus productos favoritos.">
+  <meta name="theme-color" content="#004795">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Abarrotes El Rosal">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:title" content="Promociones - Abarrotes El Rosal">
+  <meta property="og:description" content="Promociones y ofertas de la semana en Abarrotes El Rosal. Ahorra en tus productos favoritos.">
+  <meta property="og:image" content="img/logo.png">
+  <meta name="twitter:card" content="summary">
   <link rel="icon" type="image/png" href="img/favicon.png">
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style-new.css">
+  <link rel="stylesheet" href="css/style-new.css?v=7">
   <style>
     .promo-layout {
       display: grid;
@@ -280,12 +289,18 @@
           <span class="arrow">▼</span>
         </div>
         <div class="sidebar-content">
-          <div class="price-slider-wrap">
-            <input type="range" id="side-price-slider" min="0" max="1000" value="1000" oninput="updateFilters()">
-            <div class="price-vals">
-              <span>$0</span>
-              <span id="side-price-max">$500+</span>
+          <div class="price-range" id="price-range">
+            <div class="pr-slider">
+              <div class="pr-rail"></div>
+              <div class="pr-fill" id="pr-fill"></div>
+              <input type="range" id="price-min" min="0" max="1000" value="0" oninput="onPriceInput('min')" aria-label="Precio mínimo">
+              <input type="range" id="price-max" min="0" max="1000" value="1000" oninput="onPriceInput('max')" aria-label="Precio máximo">
             </div>
+            <div class="price-vals">
+              <span id="price-min-label">$0</span>
+              <span id="price-max-label">$0</span>
+            </div>
+            <div class="pr-current">Precio: <strong id="price-current-label">$0 – $0</strong></div>
           </div>
         </div>
       </div>
@@ -474,7 +489,7 @@
     <script src="js/supabase-config.js"></script>
     <script src="js/auth.js"></script>
     <script src="data/productos.js"></script>
-    <script src="js/app.js?v=3"></script>
+    <script src="js/app.js?v=7"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         initPromociones();

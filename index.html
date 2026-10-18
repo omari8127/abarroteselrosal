@@ -5,11 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tienda | El Rosal en linea</title>
+  <meta name="description" content="Abarrotes El Rosal en línea: pide despensa, frutas, lácteos, cerveza y más con entrega a domicilio el mismo día en Tijuana.">
+  <meta name="theme-color" content="#004795">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Abarrotes El Rosal">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:title" content="Tienda | El Rosal en linea">
+  <meta property="og:description" content="Abarrotes El Rosal en línea: pide despensa, frutas, lácteos, cerveza y más con entrega a domicilio el mismo día en Tijuana.">
+  <meta property="og:image" content="img/logo.png">
+  <meta name="twitter:card" content="summary">
   <link rel="icon" type="image/png" href="img/favicon.png">
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Barlow+Condensed:wght@700;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style-new.css">
+  <link rel="stylesheet" href="css/style-new.css?v=7">
 </head>
 
 <body class="page-home">
@@ -42,6 +51,7 @@
           <span>Mi Cuenta</span>
         </div>
         <div class="cart-action" onclick="toggleCart()">
+          <span class="cart-badge" id="hdr-count">0</span>
           <span class="cart-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
               style="vertical-align: text-bottom; margin-right: 4px;">
@@ -335,6 +345,9 @@
         position: relative;
         display: flex;
         align-items: center;
+        border-top: 1px solid #e0e0e0;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 0.5rem 0;
       }
 
       .cat-explorer-track {
@@ -360,7 +373,7 @@
         gap: 0.6rem;
         text-decoration: none;
         flex-shrink: 0;
-        width: 110px;
+        width: 120px;
         padding: 12px 6px;
         border-radius: 16px;
         transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -398,7 +411,7 @@
       }
 
       .cat-explorer-label {
-        font-size: 0.7rem;
+        font-size: 0.8rem;
         font-weight: 800;
         color: #222;
         text-align: center;
@@ -406,7 +419,7 @@
         font-family: 'Inter', sans-serif;
         text-transform: uppercase;
         letter-spacing: 0.02em;
-        max-width: 95px;
+        max-width: 110px;
       }
 
       .cat-explorer-arrow {
@@ -487,6 +500,9 @@
     </div>
     <div class="products-grid" id="recientes-products"></div>
   </div>
+
+  <!-- ── CARRUSELES TEMÁTICOS (generados por app.js) ── -->
+  <section id="home-rails"></section>
 
   <div id="search-results" style="display:none">
     <div class="section-wrap">
@@ -641,7 +657,7 @@
   <script src="js/supabase-config.js"></script>
   <script src="js/auth.js"></script>
   <script src="data/productos.js"></script>
-  <script src="js/app.js?v=3"></script>
+  <script src="js/app.js?v=7"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Show only a few featured products

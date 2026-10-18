@@ -3,6 +3,8 @@
 // ================================================================
 
 let cart = JSON.parse(localStorage.getItem('cart')) || {};
+let favs = [];
+try { favs = JSON.parse(localStorage.getItem('favs')) || []; } catch (e) { favs = []; }
 let qtys = {};
 // State for frutas: { [id]: { mode: 'kg'|'unit', val: number } }
 let frutaModes = {};
@@ -16,22 +18,204 @@ window.currentDeliveryMode = 'domicilio'; // 'domicilio' | 'pickup'
 let visibleProductsLimit = 24;
 
 // INICIALIZACI├ôN
+// ===== INDICADOR DE CARGA GLOBAL (búsqueda / navegación) =====
+function startPageLoader(btn) {
+  let bar = document.getElementById('page-progress-bar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'page-progress-bar';
+    document.body.appendChild(bar);
+  }
+  // Reinicia y anima
+  bar.classList.add('active');
+  bar.style.width = '0';
+  requestAnimationFrame(() => { bar.style.width = '75%'; });
+  window._loaderTimer = setTimeout(() => { bar.style.width = '90%'; }, 400);
+
+  if (btn) btn.classList.add('searching');
+  const input = document.getElementById('search-input');
+  if (input) input.blur();
+}
+
+function stopPageLoader() {
+  const bar = document.getElementById('page-progress-bar');
+  if (bar) {
+    clearTimeout(window._loaderTimer);
+    bar.style.width = '100%';
+    setTimeout(() => {
+      bar.classList.remove('active');
+      bar.style.width = '0';
+    }, 300);
+  }
+  document.querySelectorAll('.search-bar button.searching')
+    .forEach(b => b.classList.remove('searching'));
+}
+
+// Oculta el loader al terminar de cargar y al volver con el botón "atrás" (bfcache)
+window.addEventListener('pageshow', stopPageLoader);
+window.addEventListener('load', stopPageLoader);
+
+// Normaliza texto: minúsculas, sin acentos, sin espacios extra
+function normalizeText(s) {
+  return (s || '')
+    .toLowerCase()
+    .replace(/[áàäâ]/g, 'a')
+    .replace(/[éèëê]/g, 'e')
+    .replace(/[íìïî]/g, 'i')
+    .replace(/[óòöô]/g, 'o')
+    .replace(/[úùüû]/g, 'u')
+    .replace(/ñ/g, 'n')
+    .trim();
+}
+
+// Si la búsqueda corresponde a una categoría (p. ej. "cerveza", "lacteos",
+// "galletas", "verduras"), devuelve su id; si no, null.
+function resolveCategoryFromQuery(q) {
+  if (typeof categories === 'undefined') return null;
+  const nq = normalizeText(q);
+  if (!nq) return null;
+  // quita una "s" final para tolerar singular/plural
+  const nqSing = nq.replace(/s$/, '');
+
+  for (const c of categories) {
+    const id = normalizeText(c.id);
+    const label = normalizeText(c.label);
+    if (nq === id || nqSing === id.replace(/s$/, '')) return c.id;
+    if (nq === label) return c.id;
+    // palabras significativas de la etiqueta ("frutas", "verduras", "galletas", "panaderia")
+    const words = label.split(/\s+/).filter(w => w.length >= 4 && w !== 'para');
+    if (words.some(w => w === nq || w.replace(/s$/, '') === nqSing)) return c.id;
+  }
+  return null;
+}
+
+// Escapa texto para insertarlo como HTML de forma segura
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+// ¿Un producto coincide con la búsqueda? Si el término es una categoría
+// (p. ej. "cerveza"), devuelve TODOS los productos de esa categoría.
+function productMatchesQuery(p, rawQuery) {
+  const q = (rawQuery || '').trim().toLowerCase();
+  if (!q) return true;
+  const catId = resolveCategoryFromQuery(q);
+  if (catId) return p.cat === catId;
+  return (p.name + ' ' + p.cat).toLowerCase().includes(q);
+}
+
+// Estado del filtro de precio (rango min–max)
+let priceState = { min: 0, max: 0, boundMin: 0, boundMax: 0, ctxKey: null, touched: false };
+
 document.addEventListener('DOMContentLoaded', () => {
+  initFavHeader();
   if (typeof allProducts !== 'undefined') {
     allProducts.forEach(p => { if (!qtys[p.id]) qtys[p.id] = 1; });
     initDropdown();
     updateCartUI();
+    updateFavUI();
 
     // Identificar en qué página estamos
     if (document.querySelector('.page-home')) initHome();
     if (document.querySelector('.page-productos')) initProductos();
-    if (document.querySelector('.page-detalle')) initDetalle();
+    if (document.querySelector('.page-detalle') && typeof initDetalle === 'function') initDetalle();
     if (document.querySelector('.page-promociones')) initPromociones();
-    
+    if (document.querySelector('.page-favoritos')) renderFavoritos();
+
     // Cargar info de entrega si hay sesión
     if (typeof updateDeliveryInfo === 'function') updateDeliveryInfo();
   }
 });
+
+// ============================================================
+//  FAVORITOS / LISTA DE DESEOS
+// ============================================================
+function saveFavs() {
+  try { localStorage.setItem('favs', JSON.stringify(favs)); } catch (e) {}
+}
+
+function isFav(id) {
+  return favs.includes(Number(id));
+}
+
+function favBtnHTML(id) {
+  return `<button class="fav-btn${isFav(id) ? ' is-fav' : ''}" id="fav-${id}"
+      onclick="toggleFav(${id}, event)" aria-label="Guardar en favoritos" title="Guardar en favoritos">
+      <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    </button>`;
+}
+
+function toggleFav(id, ev) {
+  if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+  id = Number(id);
+  const i = favs.indexOf(id);
+  if (i === -1) favs.push(id); else favs.splice(i, 1);
+  saveFavs();
+  updateFavUI();
+
+  // Si estamos en la página de favoritos, refrescar la lista
+  if (document.querySelector('.page-favoritos')) renderFavoritos();
+}
+
+function updateFavUI() {
+  // Botones de corazón en tarjetas / ficha
+  document.querySelectorAll('.fav-btn').forEach(btn => {
+    const id = Number(btn.id.replace('fav-', ''));
+    btn.classList.toggle('is-fav', isFav(id));
+  });
+  // Contador en el header
+  const c = document.getElementById('hdr-fav-count');
+  if (c) {
+    c.textContent = favs.length;
+    c.style.display = favs.length ? 'flex' : 'none';
+  }
+}
+
+// Inserta el acceso a Favoritos en el header (sin tocar el HTML de cada página)
+function initFavHeader() {
+  const actions = document.querySelector('.header-actions');
+  if (!actions || document.getElementById('hdr-fav-link')) return;
+  const a = document.createElement('a');
+  a.id = 'hdr-fav-link';
+  a.href = 'favoritos.html';
+  a.className = 'header-action hdr-fav';
+  a.setAttribute('aria-label', 'Favoritos');
+  a.innerHTML = `
+    <span class="icon" style="position:relative">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      <span class="hdr-fav-count" id="hdr-fav-count" style="display:none">0</span>
+    </span>
+    <span>Favoritos</span>`;
+  const cart = actions.querySelector('.cart-action');
+  actions.insertBefore(a, cart || null);
+  updateFavUI();
+}
+
+function renderFavoritos() {
+  const grid = document.getElementById('favoritos-grid');
+  const empty = document.getElementById('favoritos-empty');
+  const countEl = document.getElementById('favoritos-count');
+  if (!grid) return;
+
+  const items = favs.map(id => allProducts.find(p => p.id === id)).filter(Boolean);
+  if (countEl) countEl.textContent = `${items.length} ${items.length === 1 ? 'producto' : 'productos'}`;
+
+  if (!items.length) {
+    grid.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  grid.innerHTML = items.map(p => cardHTML(p)).join('');
+  if (typeof refreshAllAddBtns === 'function') refreshAllAddBtns();
+  updateFavUI();
+}
 
 // --- DROPDOWN LOGIC ---
 function initDropdown() {
@@ -78,9 +262,92 @@ function selectCategory(id) {
 // --- HOME PAGE LOGIC ---
 function initHome() {
   buildCatStrip('cat-strip-home');
-  renderFeatured(8);
-  renderRecientes(5);
   initHeroCarousel();
+
+  // Skeleton breve -> contenido real (sensación de carga profesional)
+  skeletonInto('featured-products', 5);
+  skeletonInto('recientes-products', 5);
+  renderHomeRails(true); // pinta contenedores + skeleton
+
+  setTimeout(() => {
+    renderFeatured(8);
+    renderRecientes(5);
+    renderHomeRails(false);
+  }, 350);
+}
+
+// Inserta tarjetas "esqueleto" en un contenedor mientras carga
+function skeletonInto(id, n) {
+  const c = document.getElementById(id);
+  if (!c) return;
+  c.classList.add('skeleton-grid');
+  c.innerHTML = Array.from({ length: n }).map(() => `
+    <div class="skeleton-card">
+      <div class="sk-img"></div>
+      <div class="sk-line"></div>
+      <div class="sk-line short"></div>
+    </div>`).join('');
+}
+function skeletonDone(id) {
+  const c = document.getElementById(id);
+  if (c) c.classList.remove('skeleton-grid');
+}
+
+// Carruseles temáticos del home (estilo Calimax)
+const HOME_RAILS = [
+  { key: 'cerveza',  title: 'Cerveza bien fría',        pick: p => p.cat === 'cerveza' },
+  { key: 'despensa', title: 'Básicos de la despensa',   pick: p => p.cat === 'despensa' && !p.oldPrice },
+  { key: 'botanas',  title: 'Antojos y botanas',        pick: p => p.cat === 'botanas' },
+  { key: 'dulces',   title: 'Para el gusto dulce',      pick: p => p.cat === 'dulces' }
+];
+
+function renderHomeRails(loading) {
+  const host = document.getElementById('home-rails');
+  if (!host || typeof allProducts === 'undefined') return;
+
+  if (loading) {
+    host.innerHTML = HOME_RAILS.map(r => `
+      <div class="section-wrap home-rail">
+        <div class="cat-explorer-header" style="margin-bottom:1.25rem;">
+          <h2 class="cat-explorer-title">${r.title}</h2>
+          <a href="productos.html?cat=${r.key}" class="cat-explorer-link">Ver todos &rarr;</a>
+        </div>
+        <div class="home-rail-track skeleton-grid">
+          ${Array.from({ length: 5 }).map(() => `
+            <div class="skeleton-card" style="min-width:190px">
+              <div class="sk-img"></div><div class="sk-line"></div><div class="sk-line short"></div>
+            </div>`).join('')}
+        </div>
+      </div>`).join('');
+    return;
+  }
+
+  const blocks = HOME_RAILS.map(r => {
+    const prods = allProducts.filter(r.pick).slice(0, 12);
+    if (prods.length < 4) return '';
+    return `
+      <div class="section-wrap home-rail">
+        <div class="cat-explorer-header" style="margin-bottom:1.25rem;">
+          <h2 class="cat-explorer-title">${r.title}</h2>
+          <a href="productos.html?cat=${r.key}" class="cat-explorer-link">Ver todos &rarr;</a>
+        </div>
+        <div class="home-rail-wrap">
+          <button class="home-rail-arrow left" aria-label="Anterior" onclick="scrollRail(this,-1)">&#8249;</button>
+          <div class="home-rail-track">
+            ${prods.map(p => `<div class="home-rail-item">${cardHTML(p)}</div>`).join('')}
+          </div>
+          <button class="home-rail-arrow right" aria-label="Siguiente" onclick="scrollRail(this,1)">&#8250;</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  host.innerHTML = blocks;
+  if (typeof refreshAllAddBtns === 'function') refreshAllAddBtns();
+}
+
+function scrollRail(btn, dir) {
+  const track = btn.parentElement.querySelector('.home-rail-track');
+  if (track) track.scrollBy({ left: dir * Math.max(320, track.clientWidth * 0.8), behavior: 'smooth' });
 }
 
 let slideIndex = 0;
@@ -145,15 +412,49 @@ function initProductos() {
 
   if (cat) {
     // If arriving with a category, pre-check it
-    const checkbox = document.querySelector(`.cat-check[value="${cat}"]`);
-    if (checkbox) checkbox.checked = true;
+    document.querySelectorAll(`.cat-check[value="${cat}"]`).forEach(cb => { cb.checked = true; });
   }
 
   if (q) {
     document.getElementById('search-input').value = q;
   }
 
-  updateFilters();
+  // Muestra un skeleton de carga breve al llegar desde una búsqueda o categoría
+  if (q || cat) {
+    runCatalogSearch();
+  } else {
+    updateFilters();
+    stopPageLoader();
+  }
+}
+
+// Muestra la barra de carga + skeleton y luego filtra el catálogo (sin recargar la página)
+function runCatalogSearch() {
+  const container = document.getElementById('main-content');
+  if (!container) {
+    if (typeof updateFilters === 'function') updateFilters();
+    return;
+  }
+
+  startPageLoader(document.querySelector('.search-bar button'));
+
+  container.innerHTML = Array.from({ length: 8 }).map(() => `
+    <div class="skeleton-card">
+      <div class="sk-img"></div>
+      <div class="sk-line"></div>
+      <div class="sk-line short"></div>
+    </div>`).join('');
+  container.classList.add('skeleton-grid');
+
+  const countEl = document.getElementById('results-count');
+  if (countEl) countEl.textContent = 'CARGANDO PRODUCTOS...';
+
+  clearTimeout(window._catalogSearchTimer);
+  window._catalogSearchTimer = setTimeout(() => {
+    container.classList.remove('skeleton-grid');
+    updateFilters();
+    stopPageLoader();
+  }, 450);
 }
 
 function initPromociones() {
@@ -213,26 +514,26 @@ function updateFilters(isPromoPage = false, keepLimit = false) {
   // Sync state from UI
   activeFilters.cats = Array.from(document.querySelectorAll('.cat-check:checked')).map(cb => cb.value);
   activeFilters.brands = Array.from(document.querySelectorAll('.brand-check:checked')).map(cb => cb.value);
-  const slider = document.getElementById('side-price-slider');
-  if (slider) {
-    activeFilters.price = parseInt(slider.value);
-    document.getElementById('side-price-max').textContent = activeFilters.price >= 1000 ? '$500+' : '$' + activeFilters.price;
-  }
   const sortSel = document.getElementById('sort-select');
   if (sortSel) activeFilters.sort = sortSel.value;
 
   // Search query
-  const q = document.getElementById('search-input')?.value.toLowerCase() || '';
+  const rawQuery = document.getElementById('search-input')?.value.trim() || '';
+  const q = rawQuery.toLowerCase();
 
-  // Filter
-  let filtered = allProducts.filter(p => {
+  // --- Filtro de precio (rango min–max) ---
+  // Productos que cumplen todo MENOS el precio (para calcular los límites del slider)
+  const ctx = allProducts.filter(p => {
     const matchesCat = activeFilters.cats.length === 0 || activeFilters.cats.includes(p.cat);
     const matchesBrand = activeFilters.brands.length === 0 || activeFilters.brands.includes(extractBrand(p.name));
-    const matchesPrice = p.price <= activeFilters.price;
     const matchesPromo = !isPromoPage || p.oldPrice !== null;
-    const matchesSearch = !q || (p.name + p.cat).toLowerCase().includes(q);
-    return matchesCat && matchesBrand && matchesPrice && matchesPromo && matchesSearch;
+    const matchesSearch = productMatchesQuery(p, q);
+    return matchesCat && matchesBrand && matchesPromo && matchesSearch;
   });
+  syncPriceSlider(ctx);
+
+  // Filter
+  let filtered = ctx.filter(p => p.price >= priceState.min && p.price <= priceState.max);
 
   // Sort
   if (activeFilters.sort === 'price-asc') filtered.sort((a, b) => a.price - b.price);
@@ -249,7 +550,20 @@ function updateFilters(isPromoPage = false, keepLimit = false) {
   const noRes = document.getElementById('no-results');
 
   const totalCount = filtered.length;
-  if (countEl) countEl.textContent = `${totalCount} PRODUCTOS`;
+  if (countEl) countEl.textContent = `${totalCount} ${totalCount === 1 ? 'producto' : 'productos'}`;
+
+  // Título dinámico "Coincidencias para ..."
+  const titleEl = document.getElementById('listing-title');
+  if (titleEl) {
+    if (rawQuery) {
+      titleEl.innerHTML = `Coincidencias para “<span class="lt-term">${escapeHtml(rawQuery)}</span>”`;
+    } else if (activeFilters.cats.length === 1 && typeof categories !== 'undefined') {
+      const c = categories.find(x => x.id === activeFilters.cats[0]);
+      titleEl.textContent = c ? c.label : 'Catálogo de Productos';
+    } else {
+      titleEl.textContent = 'Catálogo de Productos';
+    }
+  }
 
   if (!container) return;
 
@@ -277,10 +591,92 @@ function updateFilters(isPromoPage = false, keepLimit = false) {
   if (typeof refreshAllAddBtns === 'function') refreshAllAddBtns();
 }
 
+// Ajusta los límites del slider de precio al conjunto de productos actual
+// y refresca los controles visuales.
+function syncPriceSlider(ctxProducts) {
+  const lo = document.getElementById('price-min');
+  const hi = document.getElementById('price-max');
+
+  const prices = ctxProducts.map(p => p.price).filter(n => typeof n === 'number' && !isNaN(n) && n > 0);
+  const boundMin = prices.length ? Math.floor(Math.min(...prices)) : 0;
+  const boundMax = prices.length ? Math.ceil(Math.max(...prices)) : 0;
+
+  // Clave de contexto: si cambia (nueva búsqueda / categoría), se reinicia el rango
+  const ctxKey = JSON.stringify([activeFilters.cats, activeFilters.brands,
+    (document.getElementById('search-input')?.value.trim().toLowerCase() || '')]);
+
+  if (ctxKey !== priceState.ctxKey) {
+    priceState.ctxKey = ctxKey;
+    priceState.touched = false;
+    priceState.min = boundMin;
+    priceState.max = boundMax;
+  }
+  priceState.boundMin = boundMin;
+  priceState.boundMax = boundMax;
+
+  // Si el usuario no ha tocado el slider, seguir los límites; si lo tocó, mantener dentro de rango
+  if (!priceState.touched) {
+    priceState.min = boundMin;
+    priceState.max = boundMax;
+  } else {
+    priceState.min = Math.min(Math.max(priceState.min, boundMin), boundMax);
+    priceState.max = Math.max(Math.min(priceState.max, boundMax), boundMin);
+  }
+
+  if (lo && hi) {
+    lo.min = hi.min = String(boundMin);
+    lo.max = hi.max = String(boundMax);
+    lo.value = String(priceState.min);
+    hi.value = String(priceState.max);
+  }
+
+  const minLbl = document.getElementById('price-min-label');
+  const maxLbl = document.getElementById('price-max-label');
+  const curLbl = document.getElementById('price-current-label');
+  if (minLbl) minLbl.textContent = '$' + priceState.min;
+  if (maxLbl) maxLbl.textContent = '$' + priceState.max;
+  if (curLbl) curLbl.textContent = `$${priceState.min} – $${priceState.max}`;
+
+  const fill = document.getElementById('pr-fill');
+  if (fill) {
+    const span = boundMax - boundMin || 1;
+    const l = ((priceState.min - boundMin) / span) * 100;
+    const r = ((priceState.max - boundMin) / span) * 100;
+    fill.style.left = l + '%';
+    fill.style.width = Math.max(0, r - l) + '%';
+  }
+
+  const wrap = document.getElementById('price-range');
+  if (wrap) wrap.classList.toggle('is-empty', boundMax === 0);
+}
+
+// Handler de los dos controles del rango de precio
+function onPriceInput(which) {
+  const lo = document.getElementById('price-min');
+  const hi = document.getElementById('price-max');
+  if (!lo || !hi) return;
+  let vMin = parseInt(lo.value, 10);
+  let vMax = parseInt(hi.value, 10);
+  if (vMin > vMax) {
+    if (which === 'min') vMin = vMax; else vMax = vMin;
+  }
+  priceState.min = vMin;
+  priceState.max = vMax;
+  priceState.touched = true;
+  updateFilters(document.querySelector('.page-promociones') !== null);
+}
+
+// Enlace "Limpiar" del bloque de precio
+function clearPrice() {
+  priceState.touched = false;
+  priceState.ctxKey = null;
+  updateFilters(document.querySelector('.page-promociones') !== null);
+}
+
 function resetFilters() {
   document.querySelectorAll('.cat-check, .brand-check').forEach(cb => cb.checked = false);
-  const slider = document.getElementById('side-price-slider');
-  if (slider) slider.value = 1000;
+  priceState.touched = false;
+  priceState.ctxKey = null;
   const sortSel = document.getElementById('sort-select');
   if (sortSel) sortSel.value = 'relevance';
   updateFilters(document.querySelector('.page-promociones') !== null);
@@ -339,6 +735,7 @@ function buildMain() {
 function renderFeatured(limit) {
   const container = document.getElementById('featured-products');
   if (!container) return;
+  skeletonDone('featured-products');
   const filtered = allProducts.filter(p => p.badge).slice(0, limit);
   container.innerHTML = filtered.map(p => cardHTML(p)).join('');
   if (typeof refreshAllAddBtns === 'function') refreshAllAddBtns();
@@ -347,6 +744,7 @@ function renderFeatured(limit) {
 function renderRecientes(limit) {
   const container = document.getElementById('recientes-products');
   if (!container) return;
+  skeletonDone('recientes-products');
   // Show recently added: products without badge (not on sale), shuffled for variety
   const nonSale = allProducts.filter(p => !p.badge);
   // Pick a spread of categories for variety
@@ -360,6 +758,7 @@ function cardHTML(p) {
   const isPromoPage = document.querySelector('.page-promociones') !== null;
   const discount = p.oldPrice ? Math.round((1 - p.price / p.oldPrice) * 100) : 0;
   const badge = discount > 0 ? `<div class="prod-badge">-${discount}%</div>` : (p.badge ? `<div class="prod-badge">${p.badge}</div>` : '');
+  const fav = favBtnHTML(p.id);
 
   const imgPart = p.img
     ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="prod-emoji" style="display:none">${p.emoji}</span>`
@@ -374,8 +773,9 @@ function cardHTML(p) {
     return `
     <div class="prod-card">
       ${badge}
+      ${fav}
       <a href="producto-detalle.html?id=${p.id}" class="prod-img-wrap">${imgPart}</a>
-      
+
       <div class="frutas-qty-row">
         <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},-1)">-</button>
         <span class="frutas-qty-val" id="frutas-qty-${p.id}">${displayVal}</span>
@@ -412,8 +812,9 @@ function cardHTML(p) {
   return `
     <div class="prod-card">
       ${badge}
+      ${fav}
       <a href="producto-detalle.html?id=${p.id}" class="prod-img-wrap">${imgPart}</a>
-      
+
       <div class="prod-qty-row">
         <div class="prod-qty-ctrl">
           <button onclick="changeQty(${p.id},-1)">-</button>
@@ -568,12 +969,33 @@ function renderDetalle(id) {
             `}
           </div>
 
-          <button class="btn-agregar" onclick="addToCart(${p.id})">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Agregar
-          </button>
+          ${p.cat !== 'frutas' ? `
+          <div class="detalle-qty-row">
+            <span class="detalle-qty-label">Cantidad</span>
+            <div class="detalle-qty-ctrl">
+              <button type="button" onclick="changeQty(${p.id},-1,true)" aria-label="Disminuir">&minus;</button>
+              <span id="det-qty-${p.id}">${qtys[p.id] || 1}</span>
+              <button type="button" onclick="changeQty(${p.id},1,true)" aria-label="Aumentar">+</button>
+            </div>
+          </div>` : ''}
+
+          <div class="detalle-cta-row">
+            <button class="btn-agregar" onclick="addToCart(${p.id})">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Agregar
+            </button>
+            <button class="detalle-fav-btn fav-btn${isFav(p.id) ? ' is-fav' : ''}" id="fav-${p.id}" onclick="toggleFav(${p.id}, event)" aria-label="Guardar en favoritos" title="Guardar en favoritos">
+              <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+          </div>
 
           <hr class="detalle-divider">
+
+          ${p.desc ? `
+          <div class="detalle-desc">
+            <h2 class="detalle-desc-title">Descripción</h2>
+            <p>${escapeHtml(p.desc)}</p>
+          </div>` : ''}
 
           ${p.oldPrice ? `
           <div class="detalle-promos-label">Promociones</div>
@@ -596,6 +1018,27 @@ function renderDetalle(id) {
         </div>
         <div class="similares-scroll" id="similares-scroll"></div>
       </div>
+
+      <!-- Categorías relacionadas -->
+      <div class="rel-cats">
+        <h2 class="rel-cats-title">Categorías relacionadas</h2>
+        <div class="rel-cats-row">
+          ${categories.filter(c => c.id !== p.cat).map(c => `
+            <a href="productos.html?cat=${c.id}" class="rel-cat-chip">${c.label}</a>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra fija de compra (solo móvil) -->
+    <div class="detalle-sticky-bar" id="detalle-sticky-bar">
+      <div class="dsb-info">
+        <span class="dsb-name">${p.name}</span>
+        <span class="dsb-price">$${p.price.toFixed(2)}</span>
+      </div>
+      <button class="dsb-add" onclick="addToCart(${p.id})">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Agregar
+      </button>
     </div>
   `;
 
@@ -981,6 +1424,7 @@ function refreshAllAddBtns() {
       btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Agregar';
     }
   });
+  if (typeof updateFavUI === 'function') updateFavUI();
 }
 
 function toggleCart() {
@@ -1108,16 +1552,18 @@ function searchProducts(q, forceDetail = false) {
     return;
   }
 
-  const res = allProducts.filter(p => (p.name + p.cat).toLowerCase().includes(q.toLowerCase()));
+  const res = allProducts.filter(p => productMatchesQuery(p, q));
 
-  if (forceDetail && res.length > 0) {
+  if (forceDetail && res.length > 0 && !resolveCategoryFromQuery(q)) {
     const bestMatch = res.find(p => p.name.toLowerCase().startsWith(q.toLowerCase())) || res[0];
+    startPageLoader(document.querySelector('.search-bar button'));
     window.location.href = `producto-detalle.html?id=${bestMatch.id}`;
     return;
   }
 
   if (!sr || !sg) {
     if (event && event.type === 'input') return;
+    startPageLoader(document.querySelector('.search-bar button'));
     window.location.href = `productos.html?q=${encodeURIComponent(q)}${forceDetail ? '&jump=true' : ''}`;
     return;
   }
@@ -1133,17 +1579,27 @@ function searchProducts(q, forceDetail = false) {
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && e.target.id === 'search-input') {
-    // Hide dropdown on enter
+    const val = e.target.value;
+    if (!val.trim()) return;
+
+    // Ocultar el dropdown de sugerencias
     const dd = document.getElementById('search-suggestions-dropdown');
     if (dd) dd.classList.remove('active');
-    
-    // Jump directly if we have forceDetail logic, or just let searchProducts handle it
-    searchProducts(e.target.value, false); 
-    // Wait, the original was: searchProducts(e.target.value, true);
-    // But "forceDetail=true" jumps to the first product detail page if there is a match!
-    // The user said: "no cargue automaticamente y le tengan que dar enter para cargar la otra pagina".
-    // Let's go to `productos.html?q=...` instead of detail page.
-    window.location.href = `productos.html?q=${encodeURIComponent(e.target.value)}`;
+
+    // Si ya estamos en la página de productos, filtrar en el sitio (con barra de carga, sin recargar)
+    if (document.querySelector('.page-productos')) {
+      startPageLoader(document.querySelector('.search-bar button'));
+      // Búsqueda nueva: limpiar filtros previos de categoría/marca
+      document.querySelectorAll('.cat-check:checked, .brand-check:checked')
+        .forEach(cb => { cb.checked = false; });
+      window.history.replaceState({}, '', `productos.html?q=${encodeURIComponent(val)}`);
+      runCatalogSearch();
+      return;
+    }
+
+    // Mostrar indicador de carga y navegar a resultados
+    startPageLoader(document.querySelector('.search-bar button'));
+    window.location.href = `productos.html?q=${encodeURIComponent(val)}`;
   }
 });
 

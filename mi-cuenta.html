@@ -7,17 +7,11 @@
   <title>Mi Cuenta — Abarrotes El Rosal</title>
   <link rel="icon" type="image/png" href="img/favicon.png">
   <meta name="description" content="Gestiona tu perfil y consulta el historial de pedidos en Abarrotes El Rosal.">
-  <<<<<<< Updated upstream <link
+  <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-    <link rel="stylesheet" href="css/style-new.css">
-    =======
-    <link
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
-      rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    >>>>>>> Stashed changes
-    <style>
+  <link rel="stylesheet" href="css/style-new.css?v=7">
+  <style>
       /* ──────────────────────────────────────────────────────
        MI CUENTA — Estilos Originales (Revertidos)
     ────────────────────────────────────────────────────── */
@@ -337,7 +331,7 @@
         <img src="img/logo.png" alt="Abarrotes El Rosal" class="brand-logo">
       </a>
       <div class="search-bar">
-        <input type="search" id="search-input" placeholder="Busca tus productos aquí" <<<<<<< Updated upstream
+        <input type="search" id="search-input" placeholder="Busca tus productos aquí"
           oninput="showSuggestions(this.value)">
         <button onclick="searchProducts && searchProducts(document.getElementById('search-input').value, true)"><svg
             width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -345,15 +339,6 @@
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg></button>
-        =======
-        oninput="searchProducts && searchProducts(this.value)">
-        <button onclick="searchProducts && searchProducts(document.getElementById('search-input').value, true)"><svg
-            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg></button>
-        >>>>>>> Stashed changes
       </div>
       <div class="header-actions">
         <div class="header-action" id="account-btn">
@@ -614,6 +599,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/auth.js"></script>
+  <script src="data/productos.js"></script>
+  <script src="js/app.js?v=7"></script>
 
   <script>
     /* ── Lógica específica de mi-cuenta.html ──────────────── */

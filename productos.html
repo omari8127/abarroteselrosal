@@ -5,11 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo de Productos - Abarrotes El Rosal</title>
+  <meta name="description" content="Explora todo el catálogo de Abarrotes El Rosal: despensa, bebidas, limpieza, botanas y más, con entrega a domicilio.">
+  <meta name="theme-color" content="#004795">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Abarrotes El Rosal">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:title" content="Catálogo de Productos - Abarrotes El Rosal">
+  <meta property="og:description" content="Explora todo el catálogo de Abarrotes El Rosal: despensa, bebidas, limpieza, botanas y más, con entrega a domicilio.">
+  <meta property="og:image" content="img/logo.png">
+  <meta name="twitter:card" content="summary">
   <link rel="icon" type="image/png" href="img/favicon.png">
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style-new.css">
+  <link rel="stylesheet" href="css/style-new.css?v=7">
 </head>
 
 <body class="page-productos">
@@ -110,11 +119,9 @@
     a 9:00 pm · Entregas rápidas el mismo día</div>
 
   <div class="section-wrap" style="padding-top:1rem">
-    <div class="breadcrumb-nav" style="margin: 0 0 1rem 0">
+    <div class="breadcrumb-nav" style="margin: 0 0 0.5rem 0">
       <a href="index.html">Inicio</a> <span>›</span> <span class="curr">Productos</span>
     </div>
-    <h1 style="font-family:'Barlow Condensed',sans-serif; font-size: 2.5rem; font-weight: 900; margin-bottom: 1.5rem;">
-      Catálogo de Productos</h1>
   </div>
 
   <div class="ecommerce-layout">
@@ -133,19 +140,28 @@
       </div>
 
 
-      <!-- Precio Slider -->
+      <!-- Precio (rango min–max) -->
       <div class="sidebar-section">
         <div class="sidebar-header" onclick="this.parentElement.classList.toggle('collapsed')">
           <h3>Precio</h3>
-          <span class="arrow">▼</span>
+          <div class="sh-right">
+            <a class="sidebar-clear" onclick="event.stopPropagation(); clearPrice();">Limpiar</a>
+            <span class="arrow">▼</span>
+          </div>
         </div>
         <div class="sidebar-content">
-          <div class="price-slider-wrap">
-            <input type="range" id="side-price-slider" min="0" max="1000" value="1000" oninput="updateFilters()">
-            <div class="price-vals">
-              <span>$0</span>
-              <span id="side-price-max">$500+</span>
+          <div class="price-range" id="price-range">
+            <div class="pr-slider">
+              <div class="pr-rail"></div>
+              <div class="pr-fill" id="pr-fill"></div>
+              <input type="range" id="price-min" min="0" max="1000" value="0" oninput="onPriceInput('min')" aria-label="Precio mínimo">
+              <input type="range" id="price-max" min="0" max="1000" value="1000" oninput="onPriceInput('max')" aria-label="Precio máximo">
             </div>
+            <div class="price-vals">
+              <span id="price-min-label">$0</span>
+              <span id="price-max-label">$0</span>
+            </div>
+            <div class="pr-current">Precio: <strong id="price-current-label">$0 – $0</strong></div>
           </div>
         </div>
       </div>
@@ -153,7 +169,10 @@
 
     <main class="product-listing">
       <div class="listing-header">
-        <div class="results-count" id="results-count">Cargando productos...</div>
+        <div class="listing-headline">
+          <h1 class="listing-title" id="listing-title">Catálogo de Productos</h1>
+          <div class="results-count" id="results-count">Cargando productos...</div>
+        </div>
         <div class="sort-box">
           ORDENAR POR
           <select id="sort-select" onchange="updateFilters()">
@@ -348,7 +367,7 @@
   <script src="js/supabase-config.js"></script>
   <script src="js/auth.js"></script>
   <script src="data/productos.js"></script>
-  <script src="js/app.js?v=3"></script>
+  <script src="js/app.js?v=7"></script>
 </body>
 
 </html>

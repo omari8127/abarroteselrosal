@@ -5,11 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ofertas - Abarrotes El Rosal</title>
+  <meta name="description" content="Ofertas especiales de Abarrotes El Rosal. Descuentos por tiempo limitado en despensa, bebidas y más.">
+  <meta name="theme-color" content="#004795">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Abarrotes El Rosal">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:title" content="Ofertas - Abarrotes El Rosal">
+  <meta property="og:description" content="Ofertas especiales de Abarrotes El Rosal. Descuentos por tiempo limitado en despensa, bebidas y más.">
+  <meta property="og:image" content="img/logo.png">
+  <meta name="twitter:card" content="summary">
   <link rel="icon" type="image/png" href="img/favicon.png">
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style-new.css">
+  <link rel="stylesheet" href="css/style-new.css?v=7">
   <style>
     .page-ofertas .cat-explorer-header::before {
       background: var(--red);
@@ -38,6 +47,7 @@
           <span>Mi Cuenta</span>
         </div>
         <div class="cart-action" onclick="toggleCart()">
+          <span class="cart-badge" id="hdr-count">0</span>
           <span class="cart-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg></span>
           <span id="hdr-total">$0.00</span>
         </div>
@@ -142,12 +152,18 @@
           <span class="arrow">▼</span>
         </div>
         <div class="sidebar-content">
-          <div class="price-slider-wrap">
-            <input type="range" id="side-price-slider" min="0" max="1000" value="1000" oninput="updateFilters()">
-            <div class="price-vals">
-              <span>$0</span>
-              <span id="side-price-max">$500+</span>
+          <div class="price-range" id="price-range">
+            <div class="pr-slider">
+              <div class="pr-rail"></div>
+              <div class="pr-fill" id="pr-fill"></div>
+              <input type="range" id="price-min" min="0" max="1000" value="0" oninput="onPriceInput('min')" aria-label="Precio mínimo">
+              <input type="range" id="price-max" min="0" max="1000" value="1000" oninput="onPriceInput('max')" aria-label="Precio máximo">
             </div>
+            <div class="price-vals">
+              <span id="price-min-label">$0</span>
+              <span id="price-max-label">$0</span>
+            </div>
+            <div class="pr-current">Precio: <strong id="price-current-label">$0 – $0</strong></div>
           </div>
         </div>
       </div>
@@ -316,7 +332,7 @@
   <script src="js/supabase-config.js"></script>
   <script src="js/auth.js"></script>
   <script src="data/productos.js"></script>
-  <script src="js/app.js?v=3"></script>
+  <script src="js/app.js?v=7"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       initPromociones();

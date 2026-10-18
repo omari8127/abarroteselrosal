@@ -18,7 +18,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style-new.css?v=8">
+  <link rel="stylesheet" href="css/style-new.css?v=12">
 </head>
 
 <body class="page-home">
@@ -176,13 +176,10 @@
     <div class="hero-carousel">
       <div class="carousel-container">
         <div class="carousel-slide active">
-          <img src="img/hero/hero1.png">
+          <img src="img/hero/ofertas-1.webp" alt="Ofertas exclusivas El Rosal: Sabritas, Leche Lala, Huevos San Juan, Pan Bimbo y Café Legal">
         </div>
         <div class="carousel-slide">
-          <img src="img/hero/hero2.png">
-        </div>
-        <div class="carousel-slide">
-          <img src="img/hero/hero3.png">
+          <img src="img/hero/ofertas-2.webp" alt="Ofertas exclusivas El Rosal: Aceite 1-2-3, Atún Dolores, Arroz Verde Valle y Coca-Cola">
         </div>
       </div>
 
@@ -192,7 +189,6 @@
       <div class="carousel-dots">
         <span class="dot active" onclick="currentSlide(0)"></span>
         <span class="dot" onclick="currentSlide(1)"></span>
-        <span class="dot" onclick="currentSlide(2)"></span>
       </div>
     </div>
 
@@ -288,7 +284,7 @@
 
     <style>
       .cat-explorer {
-        max-width: 1650px;
+        max-width: 1840px;
         margin: 0 auto 0.5rem;
         padding: 1.5rem 1.5rem 0.75rem;
       }
@@ -492,12 +488,24 @@
       }
     </style>
 
+    <!-- ── BANNER PROMOCIONAL (franja ancha, estilo Calimax) ── -->
+    <a class="promo-strip" href="promociones.html" aria-label="Ofertas exclusivas: hasta 45% de descuento en productos participantes">
+      <img src="img/hero/promo-45.png" alt="Ofertas exclusivas solo en tiendas en línea. Hasta 45% de descuento en productos participantes" loading="lazy">
+    </a>
+
     <div class="section-wrap">
       <div class="cat-explorer-header" style="margin-bottom: 1.5rem;">
-        <h2 class="cat-explorer-title">¡Ofertas de Hoy!</h2>
+        <div class="cat-explorer-titles">
+          <h2 class="cat-explorer-title">¡Ofertas de Hoy!</h2>
+          <p class="cat-explorer-sub">No te lo puedes perder</p>
+        </div>
         <a href="promociones.html" class="cat-explorer-link">Ver todas &rarr;</a>
       </div>
-      <div class="products-grid" id="featured-products"></div>
+      <div class="home-rail-wrap hr-desktop">
+        <button class="home-rail-arrow left" aria-label="Anterior" onclick="scrollRail(this,-1)">&#8249;</button>
+        <div class="products-grid home-rail-track" id="featured-products"></div>
+        <button class="home-rail-arrow right" aria-label="Siguiente" onclick="scrollRail(this,1)">&#8250;</button>
+      </div>
       <div style="text-align: center; margin: 2rem 0;">
 
       </div>
@@ -509,10 +517,17 @@
   <!-- ── SECCION: RECIEN AGREGADOS ── -->
   <div class="section-wrap" id="recientes-section">
     <div class="cat-explorer-header" style="margin-bottom: 1.5rem;">
-      <h2 class="cat-explorer-title">Recién Agregados</h2>
+      <div class="cat-explorer-titles">
+        <h2 class="cat-explorer-title">Recién Agregados</h2>
+        <p class="cat-explorer-sub">Lo más nuevo de nuestro catálogo</p>
+      </div>
       <a href="productos.html" class="cat-explorer-link">Ver todos &rarr;</a>
     </div>
-    <div class="products-grid" id="recientes-products"></div>
+    <div class="home-rail-wrap hr-desktop">
+        <button class="home-rail-arrow left" aria-label="Anterior" onclick="scrollRail(this,-1)">&#8249;</button>
+        <div class="products-grid home-rail-track" id="recientes-products"></div>
+        <button class="home-rail-arrow right" aria-label="Siguiente" onclick="scrollRail(this,1)">&#8250;</button>
+      </div>
   </div>
 
   <!-- ── CARRUSELES TEMÁTICOS (generados por app.js) ── -->
@@ -661,11 +676,11 @@
   <script src="js/auth.js?v=3"></script>
   <script src="data/productos.js?v=4"></script>
   <script src="js/catalogo.js?v=1"></script>
-  <script src="js/app.js?v=8"></script>
+  <script src="js/app.js?v=11"></script>
   <script>
     onCatalogReady(() => {
       // Show only a few featured products
-      renderFeatured(5);
+      renderFeatured(14);
     });
 
     function scrollCatExplorer(dir) {

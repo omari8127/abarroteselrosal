@@ -272,9 +272,10 @@ function initHome() {
   renderHomeRails(true); // pinta contenedores + skeleton
 
   setTimeout(() => {
-    renderFeatured(8);
-    renderRecientes(5);
+    renderFeatured(14);
+    renderRecientes(12);
     renderHomeRails(false);
+    updateRailArrows();
   }, 350);
 }
 
@@ -297,10 +298,10 @@ function skeletonDone(id) {
 
 // Carruseles temáticos del home (estilo Calimax)
 const HOME_RAILS = [
-  { key: 'cerveza',  title: 'Cerveza bien fría',        pick: p => p.cat === 'cerveza' },
-  { key: 'despensa', title: 'Básicos de la despensa',   pick: p => p.cat === 'despensa' && !p.oldPrice },
-  { key: 'botanas',  title: 'Antojos y botanas',        pick: p => p.cat === 'botanas' },
-  { key: 'dulces',   title: 'Para el gusto dulce',      pick: p => p.cat === 'dulces' }
+  { key: 'cerveza',  title: 'Cerveza bien fría', sub: 'Para tu reunión o tu fin de semana', pick: p => p.cat === 'cerveza' },
+  { key: 'despensa', title: 'Básicos de la despensa', sub: 'Lo esencial para tu cocina', pick: p => p.cat === 'despensa' && !p.oldPrice },
+  { key: 'botanas',  title: 'Antojos y botanas', sub: 'Para compartir y disfrutar', pick: p => p.cat === 'botanas' },
+  { key: 'dulces',   title: 'Para el gusto dulce', sub: 'Un gustito para ti', pick: p => p.cat === 'dulces' }
 ];
 
 function renderHomeRails(loading) {
@@ -311,7 +312,7 @@ function renderHomeRails(loading) {
     host.innerHTML = HOME_RAILS.map(r => `
       <div class="section-wrap home-rail">
         <div class="cat-explorer-header" style="margin-bottom:1.25rem;">
-          <h2 class="cat-explorer-title">${r.title}</h2>
+          <div class="cat-explorer-titles"><h2 class="cat-explorer-title">${r.title}</h2><p class="cat-explorer-sub">${r.sub}</p></div>
           <a href="productos.html?cat=${r.key}" class="cat-explorer-link">Ver todos &rarr;</a>
         </div>
         <div class="home-rail-track skeleton-grid">
@@ -330,7 +331,7 @@ function renderHomeRails(loading) {
     return `
       <div class="section-wrap home-rail">
         <div class="cat-explorer-header" style="margin-bottom:1.25rem;">
-          <h2 class="cat-explorer-title">${r.title}</h2>
+          <div class="cat-explorer-titles"><h2 class="cat-explorer-title">${r.title}</h2><p class="cat-explorer-sub">${r.sub}</p></div>
           <a href="productos.html?cat=${r.key}" class="cat-explorer-link">Ver todos &rarr;</a>
         </div>
         <div class="home-rail-wrap">
@@ -347,6 +348,17 @@ function renderHomeRails(loading) {
   if (typeof refreshAllAddBtns === 'function') refreshAllAddBtns();
 }
 
+
+// Oculta las flechas de una fila horizontal cuando todo cabe sin desplazar
+function updateRailArrows() {
+  document.querySelectorAll('.home-rail-wrap').forEach(w => {
+    const t = w.querySelector('.home-rail-track');
+    if (!t) return;
+    const overflow = t.scrollWidth > t.clientWidth + 4;
+    w.querySelectorAll('.home-rail-arrow').forEach(a => { a.style.visibility = overflow ? '' : 'hidden'; });
+  });
+}
+window.addEventListener('resize', updateRailArrows);
 function scrollRail(btn, dir) {
   const track = btn.parentElement.querySelector('.home-rail-track');
   if (track) track.scrollBy({ left: dir * Math.max(320, track.clientWidth * 0.8), behavior: 'smooth' });
@@ -738,7 +750,7 @@ function renderFeatured(limit) {
   const container = document.getElementById('featured-products');
   if (!container) return;
   skeletonDone('featured-products');
-  const filtered = allProducts.filter(p => p.badge).slice(0, limit);
+  const filtered = allProducts.filter(p => p.badge || p.oldPrice).slice(0, limit);
   container.innerHTML = filtered.map(p => cardHTML(p)).join('');
   if (typeof refreshAllAddBtns === 'function') refreshAllAddBtns();
 }

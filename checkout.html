@@ -8,9 +8,9 @@
   <link rel="icon" type="image/png" href="img/favicon.png">
   <meta name="description" content="Confirma tu pedido en Abarrotes El Rosal. Entrega a domicilio o recoge en tienda.">
   <link
-    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style-new.css?v=7">
+  <link rel="stylesheet" href="css/style-new.css?v=8">
   <style>
     /* ─── CHECKOUT LAYOUT ──────────────────────────────────── */
     .ck-page {
@@ -23,14 +23,14 @@
       margin: 0 auto;
       padding: 2rem 1.5rem 4rem;
       display: grid;
-      grid-template-columns: 1fr 380px;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
       gap: 2rem;
       align-items: start;
     }
 
     @media (max-width: 860px) {
       .ck-wrap {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
 
       .ck-summary {
@@ -39,12 +39,11 @@
     }
 
     .ck-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 2rem;
-      font-weight: 900;
-      color: #222;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #303030;
       margin-bottom: 1.5rem;
-      letter-spacing: -0.5px;
     }
 
     /* ─── CARDS ────────────────────────────────────────────── */
@@ -57,10 +56,10 @@
     }
 
     .ck-card-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #333;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #303030;
       margin-bottom: 1.25rem;
       display: flex;
       align-items: center;
@@ -94,7 +93,7 @@
 
     @media (max-width: 560px) {
       .ck-form-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
     }
 
@@ -122,7 +121,7 @@
       border-radius: 8px;
       padding: 11px 14px;
       font-size: 0.95rem;
-      font-family: 'Barlow', sans-serif;
+      font-family: 'Nunito', sans-serif;
       color: #333;
       transition: border-color 0.2s, box-shadow 0.2s;
       outline: none;
@@ -157,7 +156,7 @@
     .ck-toggle {
       display: flex;
       background: #f0f4f8;
-      border-radius: 10px;
+      border-radius: 999px;
       padding: 4px;
       gap: 4px;
     }
@@ -166,11 +165,11 @@
       flex: 1;
       border: none;
       background: transparent;
-      border-radius: 7px;
+      border-radius: 999px;
       padding: 10px 8px;
       font-size: 0.9rem;
       font-weight: 700;
-      font-family: 'Barlow', sans-serif;
+      font-family: 'Nunito', sans-serif;
       color: #777;
       cursor: pointer;
       transition: all 0.22s ease;
@@ -181,7 +180,7 @@
     }
 
     .ck-toggle-btn .tog-icon {
-      font-size: 1.1rem;
+      display: flex;
     }
 
     .ck-toggle-btn:hover:not(.ck-active) {
@@ -214,6 +213,12 @@
 
     #address-block .full {
       grid-column: 1 / -1;
+    }
+
+    @media (max-width: 560px) {
+      #address-block {
+        grid-template-columns: minmax(0, 1fr);
+      }
     }
 
     /* ─── PAYMENT OPTIONS ──────────────────────────────────── */
@@ -267,7 +272,15 @@
     }
 
     .pay-opt-icon {
-      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      flex: 0 0 40px;
+      border-radius: 50%;
+      background: #eaf2fc;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     #transfer-note {
@@ -279,16 +292,30 @@
       color: #795548;
       margin-top: 12px;
       display: none;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    #transfer-note svg {
+      flex: 0 0 18px;
+      margin-top: 1px;
     }
 
     #transfer-note.show {
-      display: block;
+      display: flex;
     }
 
     /* ─── ORDER SUMMARY CARD ───────────────────────────────── */
     .ck-summary {
       position: sticky;
       top: 118px;
+    }
+
+    /* En una sola columna el resumen va arriba y no se queda pegado */
+    @media (max-width: 860px) {
+      .ck-summary {
+        position: static;
+      }
     }
 
     .ck-sum-card {
@@ -299,10 +326,13 @@
     }
 
     .ck-sum-header {
-      background: var(--blue);
-      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #303030;
+      border-bottom: 1px solid #eef0f3;
       padding: 1rem 1.25rem;
-      font-family: 'Barlow Condensed', sans-serif;
+      font-family: 'Nunito', sans-serif;
       font-size: 1.2rem;
       font-weight: 700;
     }
@@ -415,14 +445,12 @@
       background: var(--blue);
       color: #fff;
       border: none;
-      border-radius: 10px;
+      border-radius: 999px;
       padding: 15px;
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 800;
-      font-family: 'Barlow', sans-serif;
+      font-family: 'Nunito', sans-serif;
       cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 1px;
       transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
       box-shadow: 0 4px 14px rgba(0, 103, 177, 0.3);
       margin-top: 1rem;
@@ -447,7 +475,7 @@
       padding: 14px;
       font-size: 0.95rem;
       font-weight: 800;
-      font-family: 'Barlow', sans-serif;
+      font-family: 'Nunito', sans-serif;
       cursor: pointer;
       text-transform: uppercase;
       letter-spacing: 0.8px;
@@ -473,7 +501,7 @@
     .ck-modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.55);
+      background: rgba(17, 24, 39, 0.5);
       z-index: 99999;
       display: none;
       align-items: center;
@@ -487,92 +515,189 @@
 
     .ck-modal {
       background: #fff;
-      border-radius: 16px;
-      max-width: 480px;
+      border-radius: 20px;
+      max-width: 460px;
       width: 100%;
-      overflow: hidden;
-      animation: modalPop 0.35s cubic-bezier(.34, 1.56, .64, 1) both;
+      max-height: calc(100vh - 2rem);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22);
+      animation: modalIn 0.22s ease-out both;
     }
 
-    @keyframes modalPop {
+    @keyframes modalIn {
       from {
-        transform: scale(0.8);
+        transform: translateY(12px);
         opacity: 0;
       }
 
       to {
-        transform: scale(1);
+        transform: translateY(0);
         opacity: 1;
       }
     }
 
     .ck-modal-header {
-      background: var(--green);
-      color: #fff;
-      padding: 1.5rem;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid #eef0f3;
     }
 
-    .ck-modal-header .modal-icon {
-      font-size: 3rem;
-      display: block;
-      margin-bottom: 6px;
+    .ck-modal-badge {
+      width: 44px;
+      height: 44px;
+      flex: 0 0 44px;
+      border-radius: 50%;
+      background: #eaf2fc;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ck-modal-heading {
+      flex: 1;
+      min-width: 0;
     }
 
     .ck-modal-header h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.8rem;
-      font-weight: 900;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #303030;
+      line-height: 1.25;
     }
 
     .ck-modal-header p {
-      font-size: 0.9rem;
-      opacity: 0.9;
-      margin-top: 4px;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    .ck-modal-header p.changed {
+      color: #b45309;
+      font-weight: 700;
+    }
+
+    .ck-modal-x {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: #6b7280;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .ck-modal-x:hover {
+      background: #f3f4f6;
+      color: #303030;
     }
 
     .ck-modal-body {
-      padding: 1.5rem;
+      padding: 16px 20px;
+      overflow-y: auto;
     }
 
-    .ck-modal-section {
-      margin-bottom: 1rem;
+    .ck-modal-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eef0f3;
+    }
+
+    .ck-modal-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .ck-modal-row svg {
+      flex: 0 0 18px;
+      margin-top: 2px;
+      color: var(--blue);
     }
 
     .ck-modal-label {
-      font-size: 0.72rem;
-      font-weight: 800;
-      color: #aaa;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #6b7280;
     }
 
     .ck-modal-value {
       font-size: 0.95rem;
       font-weight: 600;
-      color: #333;
+      color: #303030;
+      line-height: 1.35;
     }
 
-    .ck-modal-items {
-      font-size: 0.85rem;
-      color: #555;
-      line-height: 1.9;
+    .ck-modal-products-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #6b7280;
+      margin: 16px 0 6px;
+    }
+
+    .ck-mi {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      padding: 6px 0;
+      font-size: 0.9rem;
+      color: #303030;
+    }
+
+    .ck-mi-qty {
+      color: #6b7280;
+      font-weight: 600;
+      margin-left: 4px;
+      white-space: nowrap;
+    }
+
+    .ck-mi-price {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .ck-modal-totals {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #e5e7eb;
+    }
+
+    .ck-modal-totals .ck-mi {
+      color: #6b7280;
+      padding: 3px 0;
+    }
+
+    .ck-modal-totals .ck-mi.savings {
+      color: var(--green);
+      font-weight: 700;
     }
 
     .ck-modal-total {
       display: flex;
       justify-content: space-between;
-      font-size: 1.1rem;
-      font-weight: 900;
-      color: #222;
-      padding: 10px 0;
-      border-top: 2px solid #f0f0f0;
-      margin-top: 6px;
+      align-items: baseline;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #303030;
+      padding: 12px 0 4px;
+      margin-top: 8px;
+      border-top: 1px solid #eef0f3;
     }
 
     .ck-modal-footer {
-      padding: 0 1.5rem 1.5rem;
+      padding: 16px 20px 20px;
+      border-top: 1px solid #eef0f3;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -580,42 +705,67 @@
 
     .ck-modal-wa {
       width: 100%;
-      background: #25D366;
+      background: var(--blue);
       color: #fff;
       border: none;
-      border-radius: 10px;
-      padding: 14px;
+      border-radius: 999px;
+      padding: 14px 20px;
       font-size: 1rem;
       font-weight: 800;
-      font-family: 'Barlow', sans-serif;
+      font-family: 'Nunito', sans-serif;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       transition: background 0.2s;
     }
 
     .ck-modal-wa:hover {
-      background: #1eba56;
+      background: var(--blue-dark);
+    }
+
+    .ck-modal-wa:disabled {
+      opacity: 0.7;
+      cursor: wait;
     }
 
     .ck-modal-close {
       width: 100%;
-      background: #f5f5f5;
-      color: #555;
+      background: #eaf2fc;
+      color: var(--blue);
       border: none;
-      border-radius: 10px;
-      padding: 12px;
-      font-size: 0.9rem;
+      border-radius: 999px;
+      padding: 12px 20px;
+      font-size: 0.95rem;
       font-weight: 700;
-      font-family: 'Barlow', sans-serif;
+      font-family: 'Nunito', sans-serif;
       cursor: pointer;
       transition: background 0.2s;
     }
 
     .ck-modal-close:hover {
-      background: #eee;
+      background: #dbe8f8;
+    }
+
+    .ck-modal-note {
+      font-size: 0.8rem;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    /* En celular la confirmación sale desde abajo */
+    @media (max-width: 560px) {
+      .ck-modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
+
+      .ck-modal {
+        max-width: none;
+        max-height: 92vh;
+        border-radius: 20px 20px 0 0;
+      }
     }
 
     /* ─── MISC ─────────────────────────────────────────────── */
@@ -738,10 +888,10 @@
         </div>
         <div class="ck-toggle">
           <button class="ck-toggle-btn ck-active" id="btn-domicilio" onclick="setDelivery('domicilio')">
-            <span class="tog-icon"></span> Entrega a domicilio
+            <span class="tog-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></span> Entrega a domicilio
           </button>
           <button class="ck-toggle-btn" id="btn-tienda" onclick="setDelivery('tienda')">
-            <span class="tog-icon"></span> Recoger en tienda
+            <span class="tog-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/><path d="M10 20v-5h4v5"/></svg></span> Recoger en tienda
           </button>
         </div>
 
@@ -786,7 +936,7 @@
         <div class="pay-options">
           <label class="pay-opt selected" id="pay-efectivo">
             <input type="radio" name="pay" value="efectivo" checked onchange="setPayment('efectivo')">
-            <span class="pay-opt-icon"></span>
+            <span class="pay-opt-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></span>
             <div class="pay-opt-content">
               <div class="pay-opt-name">Efectivo</div>
               <div class="pay-opt-desc">Paga al momento de recibir tu pedido</div>
@@ -794,7 +944,7 @@
           </label>
           <label class="pay-opt" id="pay-transferencia">
             <input type="radio" name="pay" value="transferencia" onchange="setPayment('transferencia')">
-            <span class="pay-opt-icon"></span>
+            <span class="pay-opt-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg></span>
             <div class="pay-opt-content">
               <div class="pay-opt-name">Transferencia</div>
               <div class="pay-opt-desc">Pago electrónico antes de la entrega</div>
@@ -802,8 +952,9 @@
           </label>
         </div>
         <div id="transfer-note">
-          ℹ️ <strong>Datos de pago:</strong> Te enviaremos el número de cuenta por WhatsApp después de confirmar tu
-          pedido.
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <span><strong>Datos de pago:</strong> Te enviaremos el número de cuenta por WhatsApp después de confirmar tu
+          pedido.</span>
         </div>
       </div>
 
@@ -816,7 +967,7 @@
     <!-- RIGHT: ORDER SUMMARY -->
     <div class="ck-summary">
       <div class="ck-sum-card">
-        <div class="ck-sum-header">🧾 Resumen del pedido</div>
+        <div class="ck-sum-header"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg> Resumen del pedido</div>
         <div class="ck-sum-items" id="ck-sum-items">
           <div class="ck-empty-cart">Tu carrito está vacío</div>
         </div>
@@ -826,11 +977,11 @@
             <span id="ck-subtotal">$0.00</span>
           </div>
           <div class="ck-sum-row savings" id="ck-savings-row" style="display:none">
-            <span>Ahorros 🎉</span>
+            <span>Ahorros</span>
             <span id="ck-savings">-$0.00</span>
           </div>
           <div class="ck-sum-row" id="ck-shipping-row">
-            <span>Pedido</span>
+            <span>Envío</span>
             <span id="ck-shipping">$10.00</span>
           </div>
           <div class="ck-sum-divider"></div>
@@ -849,43 +1000,61 @@
 
   <!-- ─── CONFIRMATION MODAL ────────────────────────────────── -->
   <div class="ck-modal-overlay" id="ck-modal" onclick="closeModalOutside(event)">
-    <div class="ck-modal">
+    <div class="ck-modal" role="dialog" aria-modal="true" aria-labelledby="ck-modal-title">
       <div class="ck-modal-header">
-        <span class="modal-icon">🎉</span>
-        <h2>¡Pedido listo!</h2>
-        <p>Revisa los detalles antes de enviarlo</p>
+        <div class="ck-modal-badge">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>
+        </div>
+        <div class="ck-modal-heading">
+          <h2 id="ck-modal-title">Confirma tu pedido</h2>
+          <p id="ck-modal-sub">Revisa los detalles antes de enviarlo</p>
+        </div>
+        <button class="ck-modal-x" onclick="closeModal()" aria-label="Cerrar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
       </div>
       <div class="ck-modal-body">
-        <div class="ck-modal-section">
-          <div class="ck-modal-label">Cliente</div>
-          <div class="ck-modal-value" id="modal-cliente">—</div>
-        </div>
-        <div class="ck-modal-section">
-          <div class="ck-modal-label">Entrega</div>
-          <div class="ck-modal-value" id="modal-entrega">—</div>
-        </div>
-        <div class="ck-modal-section">
-          <div class="ck-modal-label">Pago</div>
-          <div class="ck-modal-value" id="modal-pago">—</div>
-        </div>
-        <div class="ck-modal-section">
-          <div class="ck-modal-label">Productos</div>
-          <div class="ck-modal-items" id="modal-items">—</div>
-          <div class="ck-modal-total">
-            <span>Total</span>
-            <span id="modal-total">$0.00</span>
+        <div class="ck-modal-info">
+          <div class="ck-modal-row">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <div>
+              <div class="ck-modal-label">Cliente</div>
+              <div class="ck-modal-value" id="modal-cliente">—</div>
+            </div>
           </div>
+          <div class="ck-modal-row">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div>
+              <div class="ck-modal-label">Entrega</div>
+              <div class="ck-modal-value" id="modal-entrega">—</div>
+            </div>
+          </div>
+          <div class="ck-modal-row">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            <div>
+              <div class="ck-modal-label">Pago</div>
+              <div class="ck-modal-value" id="modal-pago">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="ck-modal-products-title">Productos</div>
+        <div id="modal-items"></div>
+        <div class="ck-modal-totals" id="modal-totals"></div>
+        <div class="ck-modal-total">
+          <span>Total</span>
+          <span id="modal-total">$0.00</span>
         </div>
       </div>
       <div class="ck-modal-footer">
         <button class="ck-modal-wa" id="modal-wa-btn" onclick="sendWAFinal()">
-          <svg class="wa-svg" viewBox="0 0 24 24">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path
               d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
           </svg>
-          Enviar pedido por WhatsApp
+          <span>Enviar pedido</span>
         </button>
-        <button class="ck-modal-close" onclick="closeModal()">Revisar pedido</button>
+        <button class="ck-modal-close" onclick="closeModal()">Seguir revisando</button>
+        <p class="ck-modal-note">Se abrirá WhatsApp con tu pedido para confirmarlo con la tienda.</p>
       </div>
     </div>
   </div>
@@ -910,7 +1079,7 @@
             <a href="#" class="sf-soc" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" /></svg></a>
             <a href="#" class="sf-soc" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg></a>
             <a href="#" class="sf-soc" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1.04-.1z"/></svg></a>
-            <a href="https://wa.me/526643944760" target="_blank" class="sf-soc" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" /></svg></a>
+            <a href="https://wa.me/526645187312" target="_blank" class="sf-soc" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" /></svg></a>
           </div>
           <p class="sf-apps-title" style="margin-top:2rem; font-size:0.9rem; margin-bottom:1rem; color:#fff;">Descargue nuestras aplicaciones</p>
           <div class="sf-apps-row" style="display:flex; gap:10px;">
@@ -953,7 +1122,7 @@
             <ul class="sf-links">
               <li class="sf-link-text">Lunes a Domingo</li>
               <li class="sf-link-text">9:00 AM a 9:00 PM</li>
-              <li><a href="https://wa.me/526643944760" target="_blank">WhatsApp: 664-394-4760</a></li>
+              <li><a href="https://wa.me/526645187312" target="_blank">WhatsApp: 664-518-7312</a></li>
             </ul>
           </div>
           <div class="sf-col">
@@ -984,18 +1153,11 @@
       </div>
     </div>
   </footer>
-
-
-
-
-
-
-  
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
-  <script src="data/productos.js"></script>
-  <script src="js/checkout.js"></script>
+  <script src="data/productos.js?v=4"></script>
+  <script src="js/catalogo.js?v=1"></script>
+  <script src="js/checkout.js?v=4"></script>
 
 </body>
 

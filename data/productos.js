@@ -11,7 +11,10 @@ const categories = [
   { id: 'dulces', label: 'Dulces', emoji: '', color: '#e91e63' },
 ];
 
-const allProducts = [
+// Lista completa: nombre, foto y descripción de cada producto.
+// Precio, precio antes (oferta) y disponibilidad se toman de la base de datos
+// (panel admin.html) al cargar la página; los de aquí son el respaldo sin conexión.
+const catalogoBase = [
   // ── LÁCTEOS ──────────────────────────────────────────────────
   { id: 101, cat: 'lacteos', name: 'Leche Entera Lala 1L', unit: '1 litro', price: 38.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/lacteos/Leche-Entera-Lala-1L.jpg', desc: 'Leche entera pasteurizada y homogeneizada, adicionada con vitaminas A y D. Ideal para el desayuno y nutrición diaria de toda la familia.' },
   { id: 102, cat: 'lacteos', name: 'Leche Deslactosada Lala 1L', unit: '1 litro', price: 0.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/lacteos/Leche-Deslactosada-Lala-1L.jpg', desc: 'De fácil digestión, ideal para personas intolerantes a la lactosa. Conserva los nutrientes esenciales de la leche.' },
@@ -73,7 +76,7 @@ const allProducts = [
   { id: 209, cat: 'bebidas', name: 'Agua Mineral Peñafiel 600ml', unit: '600 ml', price: 12.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/Agua-Mineral-Penafiel-600ml.jpg' },
   { id: 210, cat: 'bebidas', name: 'Café Nescafé Clásico 100g', unit: '100 g', price: 52.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/Cafe-Nescafe-Clasico-100g.jpg' },
   { id: 211, cat: 'bebidas', name: 'Café Dolca 200g', unit: '200 g', price: 48.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/Cafe-Dolca-200g.jpg' },
-  { id: 212, cat: 'bebidas', name: 'Té Lipton Manzanilla 25 sobres', unit: '25 sobres', price: 24.90, oldPrice: null, badge: null, emoji: '🍵', img: 'img/productos/bebidas/Te-Lipton-Manzanilla.jpg' },
+  { id: 212, cat: 'bebidas', name: 'Té Lipton Manzanilla 25 sobres', unit: '25 sobres', price: 24.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/Te-Lipton-Manzanilla.jpg' },
   { id: 213, cat: 'bebidas', name: 'Tang Naranja Sobre 30g', unit: '30 g', price: 6.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/Tang-Naranja-Sobre-30g.jpg' },
   { id: 214, cat: 'bebidas', name: 'Clamato Jumex 1L', unit: '1 litro', price: 38.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/Clamato-Jumex-1L.jpg' },
   { id: 215, cat: 'bebidas', name: 'Cerveza Corona 6pk 355ml', unit: '6pk 355ml', price: 22.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/bebidas/Cerveza-Corona-6pk-355ml.jpg' },
@@ -210,28 +213,28 @@ const allProducts = [
   { id: 319, cat: 'despensa', name: 'Harina Maseca 1kg', unit: '1 kg', price: 26.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/Harina-Maseca-1kg.jpg' },
   { id: 320, cat: 'despensa', name: 'Harina Selecta 1kg', unit: '1 kg', price: 26.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/Harina-Selecta-1kg.jpg' },
   { id: 321, cat: 'despensa', name: 'Avena Quaker 1kg', unit: '1 kg', price: 88.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/Avena-Quaker-1kg.jpg' },
-  { id: 322, cat: 'despensa', name: 'Sopa Maruchan Pollo', unit: '540 g', price: 18.00, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/Chocolate-Abuelita-540g.jpg' },
-  { id: 323, cat: 'despensa', name: 'Chocolate Abuelita 1 pz', unit: '1 pz', price: 23.00, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/Chocolate-Abuelita-540g.jpg' },
-  { id: 324, cat: 'despensa', name: 'Aceite 123 500ml', unit: '500 ml', price: 88.80, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/aceite123.jpg' },
+  { id: 322, cat: 'despensa', name: 'Sopa Maruchan Pollo', unit: '540 g', price: 18.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/Chocolate-Abuelita-540g.jpg' },
+  { id: 323, cat: 'despensa', name: 'Chocolate Abuelita 1 pz', unit: '1 pz', price: 23.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/Chocolate-Abuelita-540g.jpg' },
+  { id: 324, cat: 'despensa', name: 'Aceite 123 500ml', unit: '500 ml', price: 88.80, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/aceite123.jpg' },
   { id: 325, cat: 'despensa', name: 'Aceite Cristal Maiz 1L', unit: '1 L', price: 70.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/aceite-cristal-maiz.jpg' },
   { id: 326, cat: 'despensa', name: 'Aceite Cristal Vegetal 1L', unit: '1 L', price: 75.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/aceite-cristal-vegetal.jpg' },
-  { id: 327, cat: 'despensa', name: 'Aceite Nutrioli 800ml', unit: '800 ml', price: 88.90, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/aceite-nutrioli.jpg' },
-  { id: 328, cat: 'despensa', name: 'Aceite Nutrioli Soya 946ml', unit: '946 ml', price: 88.90, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/aceite-nutrioli-soya.jpg' },
-  { id: 329, cat: 'despensa', name: 'Aceite Sabrosano 850ml', unit: '850 ml', price: 88.90, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/aceite-sabrosano.jpg' },
-  { id: 330, cat: 'despensa', name: 'Aceitunas Bufalo Sin Huesos', unit: '150 g', price: 88.90, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/aceitunas-bufalo-sinhueso.jpg' },
-  { id: 331, cat: 'despensa', name: 'Arroz Blanco Verde Valle', unit: '1 kg', price: 88.90, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/arroz.jpg' },
-  { id: 332, cat: 'despensa', name: 'Atun Dolores Agua', unit: '140 g', price: 30.00, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/atun.jpg' },
+  { id: 327, cat: 'despensa', name: 'Aceite Nutrioli 800ml', unit: '800 ml', price: 88.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/aceite-nutrioli.jpg' },
+  { id: 328, cat: 'despensa', name: 'Aceite Nutrioli Soya 946ml', unit: '946 ml', price: 88.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/aceite-nutrioli-soya.jpg' },
+  { id: 329, cat: 'despensa', name: 'Aceite Sabrosano 850ml', unit: '850 ml', price: 88.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/aceite-sabrosano.jpg' },
+  { id: 330, cat: 'despensa', name: 'Aceitunas Bufalo Sin Huesos', unit: '150 g', price: 88.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/aceitunas-bufalo-sinhueso.jpg' },
+  { id: 331, cat: 'despensa', name: 'Arroz Blanco Verde Valle', unit: '1 kg', price: 88.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/arroz.jpg' },
+  { id: 332, cat: 'despensa', name: 'Atun Dolores Agua', unit: '140 g', price: 30.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/atun.jpg' },
   { id: 333, cat: 'despensa', name: 'Aunt Jemina Original', unit: '540 g', price: 75.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/auntjemina-original.jpg' },
-  { id: 334, cat: 'despensa', name: 'Avena Quaker 3 Minutos', unit: '400 g', price: 45.00, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/avena-quaker-400g.jpg' },
-  { id: 335, cat: 'despensa', name: 'Avena Quaker Oats Integral', unit: '800 g', price: 69.00, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/avenas-hojuelas.jpg' },
-  { id: 336, cat: 'despensa', name: 'La costena Chipotles 220g', unit: '220 g', price: 28.00, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/chipotles-en-adobo.jpg' },
-  { id: 337, cat: 'despensa', name: 'Clemente Jacques Chipotles', unit: '220 g', price: 35.90, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/clemente-jacques-chipotles.jpg' },
-  { id: 338, cat: 'despensa', name: 'Del Fuerte Pure de Tomate', unit: '1 kg', price: 12.00, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/delfuerte-puretomate.jpg' },
-  { id: 339, cat: 'despensa', name: 'Del Monte Champinones Rebanados', unit: '186 g', price: 35.00, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/delmonte-champinonesrebanados.jpg' },
-  { id: 340, cat: 'despensa', name: 'Del Monte Chicharos', unit: '410 g', price: 35.00, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/delmonte-chicharos.jpg' },
-  { id: 341, cat: 'despensa', name: 'Del Monte Elote Dorados Granos', unit: '540 g', price: 23.00, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/delmonte-elotedorado-engranos.jpg' },
-  { id: 342, cat: 'despensa', name: 'Del Monte Ensaladas de Verduras', unit: '400 g', price: 15.00, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/delmonte-ensaladaverduras.jpg' },
-  { id: 343, cat: 'despensa', name: 'Del Monte Garbanzos', unit: '400 g', price: 88.80, oldPrice: null, badge: null, emoji: '🍫', img: 'img/productos/despensa/delmonte-garbanzos.jpg' },
+  { id: 334, cat: 'despensa', name: 'Avena Quaker 3 Minutos', unit: '400 g', price: 45.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/avena-quaker-400g.jpg' },
+  { id: 335, cat: 'despensa', name: 'Avena Quaker Oats Integral', unit: '800 g', price: 69.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/avenas-hojuelas.jpg' },
+  { id: 336, cat: 'despensa', name: 'La costena Chipotles 220g', unit: '220 g', price: 28.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/chipotles-en-adobo.jpg' },
+  { id: 337, cat: 'despensa', name: 'Clemente Jacques Chipotles', unit: '220 g', price: 35.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/clemente-jacques-chipotles.jpg' },
+  { id: 338, cat: 'despensa', name: 'Del Fuerte Pure de Tomate', unit: '1 kg', price: 12.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/delfuerte-puretomate.jpg' },
+  { id: 339, cat: 'despensa', name: 'Del Monte Champinones Rebanados', unit: '186 g', price: 35.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/delmonte-champinonesrebanados.jpg' },
+  { id: 340, cat: 'despensa', name: 'Del Monte Chicharos', unit: '410 g', price: 35.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/delmonte-chicharos.jpg' },
+  { id: 341, cat: 'despensa', name: 'Del Monte Elote Dorados Granos', unit: '540 g', price: 23.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/delmonte-elotedorado-engranos.jpg' },
+  { id: 342, cat: 'despensa', name: 'Del Monte Ensaladas de Verduras', unit: '400 g', price: 15.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/delmonte-ensaladaverduras.jpg' },
+  { id: 343, cat: 'despensa', name: 'Del Monte Garbanzos', unit: '400 g', price: 88.80, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/delmonte-garbanzos.jpg' },
   { id: 344, cat: 'despensa', name: 'DGari Maple', unit: '', price: 45.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/DGari-Maple.jpg' },
   { id: 345, cat: 'despensa', name: 'Del Monte Salsa Catsup', unit: '220 g', price: 19.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/catsup.jpg' },
   { id: 346, cat: 'despensa', name: 'Tajin Clasico Polvo', unit: '400 g', price: 88.90, oldPrice: null, badge: null, emoji: '', img: 'img/productos/despensa/chilepolvo-tajin.jpg' },
@@ -395,12 +398,12 @@ const allProducts = [
   { id: 497, cat: 'limpieza', name: 'Liquido Bref Cloro 2L', unit: '2 L', price: 50.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
   { id: 498, cat: 'limpieza', name: 'Cloralex Quita Manchas 950ml', unit: '950 ml', price: 26.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
   { id: 499, cat: 'limpieza', name: 'Detergente Liquido Blanca Nieves 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 600, cat: 'limpieza', name: 'Liquido Roma 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 601, cat: 'limpieza', name: 'Liquido Foca 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 602, cat: 'limpieza', name: 'Mas Oscura 830ml', unit: '830 ml', price: 44.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 603, cat: 'limpieza', name: 'Bold3 2L', unit: '2 L', price: 75.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 604, cat: 'limpieza', name: 'Suavitel 850ml', unit: '850 ml', price: 26.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
-  { id: 605, cat: 'limpieza', name: 'Downy 700ml', unit: '700 ml', price: 34.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1201, cat: 'limpieza', name: 'Liquido Roma 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1202, cat: 'limpieza', name: 'Liquido Foca 500ml', unit: '500 ml', price: 20.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1203, cat: 'limpieza', name: 'Mas Oscura 830ml', unit: '830 ml', price: 44.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1204, cat: 'limpieza', name: 'Bold3 2L', unit: '2 L', price: 75.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1205, cat: 'limpieza', name: 'Suavitel 850ml', unit: '850 ml', price: 26.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
+  { id: 1206, cat: 'limpieza', name: 'Downy 700ml', unit: '700 ml', price: 34.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/limpieza/', desc: '' },
 
 
   // ── BOTANAS ───────────────────────────────────────────────────
@@ -610,4 +613,28 @@ const allProducts = [
   { id: 1114, cat: 'dulces', name: 'Ricolino Panditas Rellenos 65g', unit: '65 g', price: 15.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/dulces/panditas-rellenos.jpg', desc: '' },
   { id: 1115, cat: 'dulces', name: 'Ricolino Pasitas 53g', unit: '53 g', price: 15.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/dulces/pasitas-53g.jpg', desc: '' },
 
-];
+]
+  // Productos sin foto (img vacío o solo la carpeta) usan la imagen genérica
+  .map(p => (!p.img || p.img.endsWith('/')) ? { ...p, img: 'img/sin-foto.svg' } : p);
+
+// Productos a la venta. Los que no tienen precio (0.00) no se muestran ni se pueden vender.
+// js/catalogo.js reemplaza su contenido con los precios de la base de datos.
+const allProducts = catalogoBase.filter(p => p.price > 0);
+
+// ── SINCRONIZAR CARRITO CON EL CATÁLOGO ──────────────────────────
+// El carrito guarda una copia de cada producto en localStorage. Al cargar
+// la página se actualizan precio, nombre e imagen desde el catálogo y se
+// quitan los productos que ya no existen, cambiaron de nombre o no tienen precio.
+function syncCartWithCatalog(cart) {
+  Object.keys(cart).forEach(key => {
+    const item = cart[key];
+    const p = allProducts.find(x => x.id === parseInt(key, 10)); // '701_kg' → 701
+    if (!p || p.name !== item.name || !(item.qty > 0)) {
+      delete cart[key];
+      return;
+    }
+    cart[key] = { ...item, price: p.price, oldPrice: p.oldPrice, img: p.img, unit: p.unit, cat: p.cat };
+  });
+  localStorage.setItem('cart', JSON.stringify(cart));
+  return cart;
+}

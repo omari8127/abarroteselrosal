@@ -2,7 +2,7 @@
 //  ABARROTES EL ROSAL - L├│gica General
 // ================================================================
 
-let cart = JSON.parse(localStorage.getItem('cart')) || {};
+let cart = syncCartWithCatalog(JSON.parse(localStorage.getItem('cart')) || {});
 let favs = [];
 try { favs = JSON.parse(localStorage.getItem('favs')) || []; } catch (e) { favs = []; }
 let qtys = {};
@@ -109,9 +109,12 @@ function productMatchesQuery(p, rawQuery) {
 // Estado del filtro de precio (rango min–max)
 let priceState = { min: 0, max: 0, boundMin: 0, boundMax: 0, ctxKey: null, touched: false };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   initFavHeader();
+  // Esperar los precios de la base de datos (js/catalogo.js)
+  await (window.catalogReady || Promise.resolve());
   if (typeof allProducts !== 'undefined') {
+    cart = syncCartWithCatalog(cart);
     allProducts.forEach(p => { if (!qtys[p.id]) qtys[p.id] = 1; });
     initDropdown();
     updateCartUI();
@@ -120,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Identificar en qué página estamos
     if (document.querySelector('.page-home')) initHome();
     if (document.querySelector('.page-productos')) initProductos();
-    if (document.querySelector('.page-detalle') && typeof initDetalle === 'function') initDetalle();
     if (document.querySelector('.page-promociones')) initPromociones();
     if (document.querySelector('.page-favoritos')) renderFavoritos();
 
@@ -1093,7 +1095,7 @@ async function injectDeliveryDrawer() {
         <div class="delivery-drawer" id="delivery-drawer">
           <div class="delivery-header">
             <h2>¿Cómo recibirás tu pedido?</h2>
-            <button class="delivery-close" onclick="closeDeliveryModal()">✕</button>
+            <button class="delivery-close" onclick="closeDeliveryModal()" aria-label="Cerrar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
           </div>
           
           <div class="delivery-tabs-nav">
@@ -1291,7 +1293,7 @@ function updateCartUI() {
   if (!cb) return;
 
   if (!items.length) {
-    cb.innerHTML = '<div class="cart-empty">Tu carrito está vacío 📦</div>';
+    cb.innerHTML = '<div class="cart-empty"><div style="color:#9aa9bd;margin-bottom:8px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></div>Tu carrito está vacío</div>';
     if (cf) cf.style.display = 'none';
     return;
   }
@@ -1302,7 +1304,7 @@ function updateCartUI() {
     const brand = extractBrand(i.name);
     const imgHtml = i.img
       ? `<img src="${i.img}" alt="${i.name}" onerror="this.style.display='none'">`
-      : `<span style="font-size:2rem">${i.emoji || '📦'}</span>`;
+      : `<img src="img/sin-foto.svg" alt="${i.name}">`;
     const oldPriceHtml = i.oldPrice
       ? `<span class="cr-old-price">$${(i.oldPrice * i.qty).toFixed(2)}</span>` : '';
     return `
@@ -1533,7 +1535,7 @@ function _executeWAFinal(nombre, direccion) {
   msg += `🕒 Fecha: ${fechaStr}\n\n`;
   msg += `Por favor, confirmar disponibilidad. ¡Gracias!`;
 
-  const waUrl = `https://wa.me/526643944760?text=${encodeURIComponent(msg)}`;
+  const waUrl = `https://wa.me/526645187312?text=${encodeURIComponent(msg)}`;
   window.open(waUrl, '_blank');
 }
 

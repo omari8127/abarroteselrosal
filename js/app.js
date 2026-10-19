@@ -364,6 +364,29 @@ function scrollRail(btn, dir) {
   if (track) track.scrollBy({ left: dir * Math.max(320, track.clientWidth * 0.8), behavior: 'smooth' });
 }
 
+// Oculta las flechas de las filas (categorías y productos) cuando todo ya cabe
+function updateScrollArrows() {
+  document.querySelectorAll('.home-rail-wrap, .cat-explorer-track-wrap').forEach(wrap => {
+    const track = wrap.querySelector('.home-rail-track, .cat-explorer-track');
+    if (track) wrap.classList.toggle('no-scroll', track.scrollWidth <= track.clientWidth + 2);
+  });
+}
+window.addEventListener('resize', updateScrollArrows);
+
+// En celular los filtros del catálogo empiezan plegados, para ver primero los productos
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.matchMedia('(max-width: 950px)').matches) {
+    document.querySelectorAll('.filter-sidebar .sidebar-section').forEach(s => s.classList.add('collapsed'));
+  }
+});
+document.addEventListener('DOMContentLoaded', () => {
+  updateScrollArrows();
+  // Las filas se llenan después de cargar el catálogo
+  const obs = new MutationObserver(updateScrollArrows);
+  document.querySelectorAll('.home-rail-track, .cat-explorer-track, #home-rails')
+    .forEach(el => obs.observe(el, { childList: true, subtree: true }));
+});
+
 let slideIndex = 0;
 let slideInterval;
 
@@ -797,7 +820,7 @@ function cardHTML(p) {
         <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},1)">+</button>
       </div>
 
-      <button class="add-btn${cart[p.id] ? ' added' : ''}" id="abtn-${p.id}" onclick="addToCart(${p.id})"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> ${cart[p.id] ? 'Agregado' : 'Agregar'}</button>
+      <button class="add-btn${inCart(p.id) ? ' added' : ''}" id="abtn-${p.id}" onclick="toggleAddBtn(${p.id})"${inCart(p.id) ? ' title="Quitar del carrito"' : ''}>${addBtnLabel(inCart(p.id))}</button>
       
       <div class="frutas-seg-ctrl" id="seg-${p.id}">
         <button class="seg-btn${fm.mode === 'kg' ? ' seg-active' : ''}" onclick="setFrutaMode(${p.id},'kg')">Kilogramos</button>
@@ -837,7 +860,7 @@ function cardHTML(p) {
         </div>
       </div>
 
-      <button class="add-btn${cart[p.id] ? ' added' : ''}" id="abtn-${p.id}" onclick="addToCart(${p.id})"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> ${cart[p.id] ? 'Agregado' : 'Agregar'}</button>
+      <button class="add-btn${inCart(p.id) ? ' added' : ''}" id="abtn-${p.id}" onclick="toggleAddBtn(${p.id})"${inCart(p.id) ? ' title="Quitar del carrito"' : ''}>${addBtnLabel(inCart(p.id))}</button>
 
       <a href="producto-detalle.html?id=${p.id}" class="prod-name">${p.name}</a>
       
@@ -1373,6 +1396,31 @@ function changeQty(id, delta, isDetalle = false) {
   }
 }
 
+// ¿El producto está en el carrito? (las frutas se guardan como id_kg o id_unit)
+function inCart(id) {
+  return !!(cart[id] || cart[id + '_kg'] || cart[id + '_unit']);
+}
+
+const _ICO_PLUS = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>';
+const _ICO_CHECK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+const _ICO_X = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+
+// Texto del botón: "Agregar", o "Agregado" (que en computadora cambia a "Quitar" al pasar el mouse)
+function addBtnLabel(added) {
+  return added
+    ? `<span class="ab-on">${_ICO_CHECK} Agregado</span><span class="ab-off">${_ICO_X} Quitar</span>`
+    : `${_ICO_PLUS} Agregar`;
+}
+
+// Botón de las tarjetas: si el producto ya está en el carrito, lo quita; si no, lo agrega
+function toggleAddBtn(id) {
+  if (!inCart(id)) return addToCart(id);
+  [id, id + '_kg', id + '_unit'].forEach(k => { delete cart[k]; });
+  saveCart();
+  updateCartUI();
+  refreshAllAddBtns();
+}
+
 function addToCart(id) {
   const p = allProducts.find(x => x.id === id);
 
@@ -1427,16 +1475,10 @@ function refreshAllAddBtns() {
     const id = parseInt(btn.id.replace('abtn-', ''), 10);
     // Un producto est├í en el carrito si existe cart[id]
     // Para frutas, el key incluye sufijo (_kg/_unit), chequeamos ambos
-    const inCart = cart[id] ||
-      cart[id + '_kg'] ||
-      cart[id + '_unit'];
-    if (inCart) {
-      btn.classList.add('added');
-      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Agregado';
-    } else {
-      btn.classList.remove('added');
-      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Agregar';
-    }
+    const added = inCart(id);
+    btn.classList.toggle('added', added);
+    btn.innerHTML = addBtnLabel(added);
+    if (added) btn.title = 'Quitar del carrito'; else btn.removeAttribute('title');
   });
   if (typeof updateFavUI === 'function') updateFavUI();
 }
@@ -1681,8 +1723,8 @@ function renderSuggestedProductsGrid() {
   
   grid.innerHTML = visibleProds.map(p => {
     const imgPart = p.img ? `<img src="${p.img}" alt="${p.name}" class="ss-prod-img" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="prod-emoji" style="display:none">${p.emoji}</span>` : `<div style="font-size:2rem;height:70px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;">${p.emoji}</div>`;
-    const isAdded = cart[p.id] ? 'added' : '';
-    const addText = cart[p.id] ? 'Agregado' : 'Agregar';
+    const isAdded = inCart(p.id) ? 'added' : '';
+    const addText = inCart(p.id) ? 'Agregado' : 'Agregar';
     
     return `
       <div class="ss-prod-card">
@@ -1795,8 +1837,8 @@ function showSuggestions(q) {
 window.ssAddToCart = function(e, id) {
   e.preventDefault();
   e.stopPropagation();
-  addToCart(id);
-  // Re-render suggestions to update "Agregar" to "Agregado"
+  toggleAddBtn(id);
+  // Re-render suggestions to update "Agregar" / "Agregado"
   const input = document.getElementById('search-input');
   if (input) showSuggestions(input.value);
 };

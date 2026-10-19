@@ -2186,3 +2186,133 @@ nav{background:#fff;border-bottom:1px solid #e8e8e8;box-shadow:0 2px 4px rgba(0,
 
 .cat-explorer-titles { display: flex; flex-direction: column; gap: 2px; }
 .cat-explorer-sub { margin: 0; font-size: 0.85rem; font-weight: 600; color: var(--muted); text-transform: none; letter-spacing: 0; }
+
+/* Filas de productos: si las tarjetas no llenan el ancho, se ensanchan para que la
+   fila empiece y termine en las mismas orillas que las demás secciones */
+@media (min-width: 769px) {
+  .page-home .home-rail-wrap.no-scroll .home-rail-track > * {
+    flex: 1 1 0;
+    min-width: clamp(185px, 12.4vw, 235px); /* nunca más angostas que en las otras filas */
+    max-width: 300px;
+  }
+}
+.home-rail-wrap.no-scroll .home-rail-arrow { display: none; }
+
+/* ================================================================
+   AJUSTES PARA CELULAR (revisión de escalado)
+   ================================================================ */
+/* Las columnas pueden encogerse al ancho de la pantalla; antes el contenido
+   más ancho estiraba la página y aparecía desplazamiento lateral */
+@media (max-width: 950px) {
+  .ecommerce-layout { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 1100px) {
+  .products-grid, #featured-products, #recientes-products { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .products-grid, #featured-products, #recientes-products { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+
+@media (max-width: 768px) {
+  /* 16px o más en los campos: el iPhone no hace zoom al tocarlos */
+  input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=button]):not([type=submit]),
+  select,
+  textarea { font-size: 16px !important; }
+
+  /* Áreas para tocar de al menos 40px */
+  .header-action { min-width: 40px; min-height: 40px; justify-content: center; }
+  .cart-close { min-width: 40px; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; }
+  .prod-qty-ctrl button { width: 34px; height: 36px; }
+  .cat-explorer-link { display: inline-block; padding: 10px 0; }
+  .auth-forgot-link { padding: 6px 0; }
+  .carousel-dots .dot { position: relative; }
+  .carousel-dots .dot::after { content: ''; position: absolute; inset: -12px; }
+
+  .prod-savings-badge { font-size: 12px; }
+
+  /* Encabezado: 16px de margen (antes 48px) para que logo e iconos quepan en un renglón */
+  header { padding: 0; }
+  .header-inner { padding: 8px 16px; }
+  .header-actions { gap: 0.5rem; }
+
+  /* Carrito: botones de cantidad y borrar más fáciles de tocar */
+  .cr-qty-btn { width: 34px; height: 34px; }
+  .cr-delete { min-width: 36px; min-height: 36px; }
+}
+
+/* Encabezado del catálogo: en celular, título arriba y "Ordenar por" abajo */
+@media (max-width: 768px) {
+  .listing-header { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+  .listing-title { font-size: 1.6rem; }
+  .sort-box { justify-content: space-between; }
+  .sort-box select { max-width: 70%; }
+}
+
+/* Páginas informativas (contacto, acerca, cómo comprar, preguntas): menos margen
+   en celular para que el texto no quede en una columna angosta */
+@media (max-width: 768px) {
+  body .container { padding-left: 1rem; padding-right: 1rem; }
+  body .contact-info-card,
+  body .contact-form-card { padding: 1.5rem 1.25rem; }
+}
+
+/* Teléfonos chicos: el precio anterior baja de renglón si no cabe, y los
+   enlaces de texto tienen más área para tocar */
+.prod-price-row { flex-wrap: wrap; row-gap: 0; }
+@media (max-width: 1024px) {
+  .sidebar-clear,
+  .breadcrumb a,
+  .breadcrumb-nav a,
+  .ver-todos-link,
+  .cm-content a { display: inline-block; padding: 8px 0; }
+}
+/* En tablet (iPad) también: 16px en campos para que no haga zoom */
+@media (max-width: 1024px) {
+  input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=button]):not([type=submit]),
+  select,
+  textarea { font-size: 16px !important; }
+}
+
+/* ================================================================
+   PRECIOS DE OFERTA: etiqueta amarilla con número azul oscuro
+   (antes todo en rojo). El rojo queda solo en la etiqueta de descuento.
+   ================================================================ */
+.prod-price.promo,
+#featured-products .prod-price.promo,
+.ss-prod-price.promo,
+.similar-card-price.promo,
+.detalle-main-price.promo {
+  color: var(--blue-dark) !important;
+  background: var(--yellow);
+  padding: 0 0.35em;
+  border-radius: 6px;
+  line-height: 1.3;
+  display: inline-block;
+}
+.prod-savings-badge {
+  background: rgba(0, 71, 149, 0.08);
+  color: var(--blue);
+}
+
+/* En celular el logo no necesita margen a la derecha: los iconos ya se alinean a la derecha */
+@media (max-width: 768px) {
+  .brand { margin-right: 0 !important; } /* el HTML trae margin-right: 2rem en línea */
+}
+/* Teléfonos muy chicos (320–380px): logo, iconos y carrito en un solo renglón */
+@media (max-width: 380px) {
+  .header-actions { gap: 4px; }
+  .cart-action { padding: 8px 12px; }
+}
+
+/* Botón "Agregado": tocarlo quita el producto del carrito.
+   En computadora, al pasar el mouse cambia a "Quitar" para que se entienda. */
+.add-btn { gap: 6px; }
+.add-btn svg { flex-shrink: 0; }
+.add-btn .ab-on,
+.add-btn .ab-off { display: inline-flex; align-items: center; gap: 6px; }
+.add-btn .ab-off { display: none; }
+@media (hover: hover) {
+  .add-btn.added:hover { background: #f3f4f6 !important; color: #374151; box-shadow: inset 0 0 0 1.5px #d1d5db; }
+  .add-btn.added:hover .ab-on { display: none; }
+  .add-btn.added:hover .ab-off { display: inline-flex; }
+}

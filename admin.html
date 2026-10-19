@@ -153,6 +153,11 @@
     .btn-cancel { background: #fff; color: #b91c1c; border: 1.5px solid #fecaca; }
     .btn-cancel:hover { background: #fef2f2; }
 
+    /* 16px en campos hasta tablet: el iPhone/iPad no hace zoom al tocarlos */
+    @media (max-width: 1024px) {
+      .input, .select { font-size: 16px; }
+    }
+
     @media (max-width: 760px) {
       .top { padding: 10px 14px; }
       .top-title, .top-user { display: none; }

@@ -12,7 +12,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style-new.css?v=12">
+  <link rel="stylesheet" href="css/style-new.css?v=29">
   <style>
     .nf-wrap { max-width: 640px; margin: 0 auto; padding: 5rem 1.5rem 6rem; text-align: center; }
     .nf-code { font-family: 'Nunito', sans-serif; font-size: 7rem; font-weight: 900; line-height: 1; color: var(--blue); letter-spacing: -0.03em; }
@@ -83,7 +83,7 @@
   <div class="cart-overlay" id="cart-overlay" onclick="typeof outsideClose==='function' && outsideClose(event)">
     <div class="cart-drawer">
       <div class="cart-header">
-        <h2>Mi Carrito</h2><button class="cart-close" onclick="typeof toggleCart==='function' && toggleCart()">✕</button>
+        <h2>Mi Carrito</h2><button class="cart-close" onclick="typeof toggleCart==='function' && toggleCart()" aria-label="Cerrar carrito"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
       </div>
       <div class="cart-body" id="cart-body">
         <div class="cart-empty">Tu carrito está vacío</div>
@@ -156,7 +156,7 @@
   <script src="js/supabase-config.js"></script>
   <script src="data/productos.js?v=4"></script>
   <script src="js/catalogo.js?v=1"></script>
-  <script src="js/app.js?v=11"></script>
+  <script src="js/app.js?v=14"></script>
 </body>
 
 </html>

@@ -18,7 +18,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style-new.css?v=12">
+  <link rel="stylesheet" href="css/style-new.css?v=29">
 </head>
 
 <body class="page-home">
@@ -486,6 +486,39 @@
           display: none;
         }
       }
+
+      /* Escritorio: los círculos crecen con la pantalla (con tope) y el grupo
+         queda centrado; si no caben, la fila se desplaza con las flechas */
+      @media (min-width: 601px) {
+        .cat-explorer-track {
+          justify-content: flex-start;
+          gap: clamp(0.5rem, 1.3vw, 1.5rem);
+        }
+
+        .cat-explorer-item {
+          flex: 1 1 0;
+          width: auto;
+          min-width: 104px;
+          max-width: 150px;
+        }
+
+        .cat-explorer-item:first-child { margin-left: auto; }
+        .cat-explorer-item:last-child { margin-right: auto; }
+
+        .cat-explorer-circle {
+          width: min(108px, 86%);
+          height: auto;
+          aspect-ratio: 1;
+        }
+
+        .cat-explorer-label {
+          max-width: 100%;
+          font-size: clamp(0.7rem, 0.62rem + 0.2vw, 0.8rem);
+        }
+      }
+
+      /* Sin nada más que ver, no se muestran las flechas */
+      .no-scroll > .cat-explorer-arrow { display: none; }
     </style>
 
     <!-- ── BANNER PROMOCIONAL (franja ancha, estilo Calimax) ── -->
@@ -676,7 +709,7 @@
   <script src="js/auth.js?v=3"></script>
   <script src="data/productos.js?v=4"></script>
   <script src="js/catalogo.js?v=1"></script>
-  <script src="js/app.js?v=11"></script>
+  <script src="js/app.js?v=14"></script>
   <script>
     onCatalogReady(() => {
       // Show only a few featured products

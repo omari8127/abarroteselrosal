@@ -76,7 +76,12 @@ En tu computadora, con `npm run dev`, el panel está en `http://localhost:3000/a
 
 ### Verificación en dos pasos
 
-Ejecuta una vez [`migracion-panel-dos-pasos.sql`](migracion-panel-dos-pasos.sql) en el
+Si al ejecutar una migración sale `relation "public.admins" does not exist`, tu base
+se creó con la primera versión de `schema.sql`: ejecuta
+[`activar-panel.sql`](activar-panel.sql) (con tu correo al final) y listo, ya trae
+todo lo del panel, los avisos en tiempo real y la verificación en dos pasos.
+
+Si no, ejecuta una vez [`migracion-panel-dos-pasos.sql`](migracion-panel-dos-pasos.sql) en el
 SQL Editor (las bases nuevas ya la traen en `schema.sql`). La primera vez que entres
 al panel te mostrará un código QR: escanéalo con **Google Authenticator** o
 **Microsoft Authenticator** y escribe el código de 6 dígitos. Después, cada vez que

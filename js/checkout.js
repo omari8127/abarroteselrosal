@@ -7,7 +7,9 @@ const SHIPPING_FEE = 10.00;
 
 let ckCart = {};
 let ckDelivery = 'domicilio'; // 'domicilio' | 'tienda'
-let ckPayment = 'efectivo';  // 'efectivo' | 'transferencia'
+let ckPayment = 'efectivo';  // 'efectivo' | 'tarjeta' | 'transferencia'
+
+const PAGO_LABELS = { efectivo: 'Efectivo', tarjeta: 'Tarjeta (débito o crédito)', transferencia: 'Transferencia' };
 
 // ── INIT ─────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
@@ -119,8 +121,8 @@ function setDelivery(mode) {
 // ── PAYMENT TOGGLE ───────────────────────────────────────────────
 function setPayment(method) {
   ckPayment = method;
-  document.getElementById('pay-efectivo').classList.toggle('selected', method === 'efectivo');
-  document.getElementById('pay-transferencia').classList.toggle('selected', method === 'transferencia');
+  Object.keys(PAGO_LABELS).forEach(m =>
+    document.getElementById(`pay-${m}`).classList.toggle('selected', method === m));
   const note = document.getElementById('transfer-note');
   note.classList.toggle('show', method === 'transferencia');
 }
@@ -246,7 +248,7 @@ async function confirmOrder() {
     entregaLabel = `${calle} ${num}, Col. ${colonia}${refs ? ' — ' + refs : ''}`;
   }
 
-  const pagoLabel = ckPayment === 'efectivo' ? 'Efectivo' : 'Transferencia';
+  const pagoLabel = PAGO_LABELS[ckPayment];
 
   // Pedir al servidor el total real antes de mostrar el resumen
   const btn = document.querySelector('.ck-confirm-btn');
@@ -268,9 +270,12 @@ async function confirmOrder() {
   setText('modal-cliente', nombre);
   setText('modal-tel', tel);
   setText('modal-pago', pagoLabel);
-  setText('modal-pago-sub', ckPayment === 'efectivo'
-    ? (ckDelivery === 'tienda' ? 'Pagas al recoger' : 'Pagas al recibir')
-    : 'Te enviamos los datos por WhatsApp');
+  const alEntregar = ckDelivery === 'tienda' ? 'Pagas al recoger' : 'Pagas al recibir';
+  setText('modal-pago-sub', {
+    efectivo: alEntregar,
+    tarjeta: `Sin comisión · ${alEntregar.toLowerCase()}`,
+    transferencia: 'Te enviamos los datos por WhatsApp'
+  }[ckPayment]);
   const tag = document.getElementById('modal-entrega-tag');
   if (ckDelivery === 'tienda') {
     setText('modal-entrega', 'Abarrotes El Rosal · Anexa 20 de Noviembre');

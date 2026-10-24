@@ -292,7 +292,7 @@ function tarjetaPedido(o) {
       <div class="order-grid">
         <div><div class="k">Cliente</div>${esc(o.customer_name)}<br><a href="${waCliente(o)}" target="_blank" rel="noopener">${esc(o.phone)}</a></div>
         <div><div class="k">Entrega</div>${o.delivery_type === 'domicilio' ? esc(o.address) : 'Recoge en tienda'}</div>
-        <div><div class="k">Pago</div>${o.payment_method === 'efectivo' ? 'Efectivo' : 'Transferencia'}${Number(o.shipping) > 0 ? ` · envío ${money(o.shipping)}` : ''}</div>
+        <div><div class="k">Pago</div>${{ efectivo: 'Efectivo', tarjeta: 'Tarjeta', transferencia: 'Transferencia' }[o.payment_method] || o.payment_method}${Number(o.shipping) > 0 ? ` · envío ${money(o.shipping)}` : ''}</div>
       </div>
       <div class="order-items">${items}</div>
       ${o.notes ? `<div class="order-notes"><strong>Notas:</strong> ${esc(o.notes)}</div>` : ''}

@@ -102,6 +102,13 @@ Eso sigue en [`data/productos.js`](../data/productos.js) (nombre, foto, descripc
 `productos.sql` agrega los productos nuevos con su precio, pero **no cambia** precios,
 ofertas ni disponibilidad de los que ya existen: eso se maneja desde el panel.
 
+## Pago con tarjeta
+
+Si tu base se creó antes de que existiera el pago con tarjeta, ejecuta una vez
+[`migracion-pago-tarjeta.sql`](migracion-pago-tarjeta.sql) en el SQL Editor.
+Sin ella, los pedidos con tarjeta se rechazan con "Método de pago inválido".
+Las bases nuevas no la necesitan: `schema.sql` ya incluye la tarjeta.
+
 ## Qué protege la base de datos
 
 - El total se calcula en el servidor con los precios de la tabla `products`; lo que

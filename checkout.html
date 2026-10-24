@@ -228,29 +228,43 @@
       gap: 10px;
     }
 
+    /* Cada método tiene su color: --pay (fuerte) y --pay-soft (fondo) */
     .pay-opt {
+      --pay: #1a7a2e;
+      --pay-soft: #e8f5eb;
       display: flex;
       align-items: center;
       gap: 12px;
-      border: 1.5px solid #ddd;
-      border-radius: 10px;
+      border: 1.5px solid #e2e5ea;
+      border-radius: 12px;
       padding: 14px 16px;
       cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .pay-opt.pay-tarjeta {
+      --pay: #d4570b;
+      --pay-soft: #fff0e3;
+    }
+
+    .pay-opt.pay-transferencia {
+      --pay: #6d3fc0;
+      --pay-soft: #f1ebfb;
     }
 
     .pay-opt:hover {
-      border-color: var(--blue);
-      background: rgba(0, 103, 177, 0.04);
+      border-color: #c5cad3;
+      background: #fafbfc;
     }
 
     .pay-opt.selected {
-      border-color: var(--blue);
-      background: rgba(0, 103, 177, 0.07);
+      border-color: var(--pay);
+      background: #fff;
+      box-shadow: 0 0 0 3px var(--pay-soft);
     }
 
     .pay-opt input[type="radio"] {
-      accent-color: var(--blue);
+      accent-color: var(--pay);
       width: 18px;
       height: 18px;
     }
@@ -272,15 +286,28 @@
     }
 
     .pay-opt-icon {
-      width: 40px;
-      height: 40px;
-      flex: 0 0 40px;
-      border-radius: 50%;
-      background: #eaf2fc;
-      color: var(--blue);
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      border-radius: 12px;
+      background: var(--pay-soft);
+      color: var(--pay);
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .pay-opt-badge {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e8f5eb;
+      color: #1a7a2e;
+      font-size: 0.7rem;
+      font-weight: 800;
+      vertical-align: 1px;
+      white-space: nowrap;
     }
 
     #transfer-note {
@@ -1262,7 +1289,15 @@
               <div class="pay-opt-desc">Paga al momento de recibir tu pedido</div>
             </div>
           </label>
-          <label class="pay-opt" id="pay-transferencia">
+          <label class="pay-opt pay-tarjeta" id="pay-tarjeta">
+            <input type="radio" name="pay" value="tarjeta" onchange="setPayment('tarjeta')">
+            <span class="pay-opt-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></span>
+            <div class="pay-opt-content">
+              <div class="pay-opt-name">Tarjeta <span class="pay-opt-badge">Sin comisión</span></div>
+              <div class="pay-opt-desc">Débito o crédito al recibir tu pedido</div>
+            </div>
+          </label>
+          <label class="pay-opt pay-transferencia" id="pay-transferencia">
             <input type="radio" name="pay" value="transferencia" onchange="setPayment('transferencia')">
             <span class="pay-opt-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg></span>
             <div class="pay-opt-content">
@@ -1508,7 +1543,7 @@
   <script src="js/supabase-config.js"></script>
   <script src="data/productos.js?v=7"></script>
   <script src="js/catalogo.js?v=1"></script>
-  <script src="js/checkout.js?v=5"></script>
+  <script src="js/checkout.js?v=6"></script>
 
 </body>
 

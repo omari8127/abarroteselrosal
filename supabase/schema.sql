@@ -43,7 +43,7 @@ create table if not exists public.orders (
   phone           text not null,  -- solo dígitos
   delivery_type   text not null check (delivery_type in ('domicilio', 'tienda')),
   address         text,
-  payment_method  text not null check (payment_method in ('efectivo', 'transferencia')),
+  payment_method  text not null check (payment_method in ('efectivo', 'tarjeta', 'transferencia')),
   notes           text,
   subtotal        numeric(10,2) not null,  -- antes de descuentos
   savings         numeric(10,2) not null default 0,
@@ -263,7 +263,7 @@ begin
   if length(v_phone) < 7 or length(v_phone) > 15 then
     raise exception 'Escribe un teléfono válido.';
   end if;
-  if p_payment_method is null or p_payment_method not in ('efectivo', 'transferencia') then
+  if p_payment_method is null or p_payment_method not in ('efectivo', 'tarjeta', 'transferencia') then
     raise exception 'Método de pago inválido.';
   end if;
   if p_delivery_type = 'domicilio' and (v_address is null or length(v_address) < 5) then

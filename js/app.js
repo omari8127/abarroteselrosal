@@ -1485,7 +1485,9 @@ function refreshAllAddBtns() {
 
 function toggleCart() {
   const overlay = document.getElementById('cart-overlay');
-  if (overlay) overlay.classList.toggle('open');
+  if (!overlay) return;
+  const open = overlay.classList.toggle('open');
+  document.documentElement.classList.toggle('cart-open', open);
 }
 
 function outsideClose(e) {

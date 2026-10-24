@@ -264,22 +264,60 @@ async function confirmOrder() {
   const pricesChanged = !res.offline && Math.abs(Number(quote.total) - localTotal) > 0.005;
 
   // Fill modal
-  document.getElementById('modal-cliente').textContent = `${nombre} · ${tel}`;
-  document.getElementById('modal-entrega').textContent = ckDelivery === 'tienda'
-    ? 'Recoger en tienda · Anexa 20 de Noviembre'
-    : entregaLabel;
-  document.getElementById('modal-pago').textContent = pagoLabel;
+  const setText = (id, text) => { document.getElementById(id).textContent = text; };
+  setText('modal-cliente', nombre);
+  setText('modal-tel', tel);
+  setText('modal-pago', pagoLabel);
+  setText('modal-pago-sub', ckPayment === 'efectivo'
+    ? (ckDelivery === 'tienda' ? 'Pagas al recoger' : 'Pagas al recibir')
+    : 'Te enviamos los datos por WhatsApp');
+  const tag = document.getElementById('modal-entrega-tag');
+  if (ckDelivery === 'tienda') {
+    setText('modal-entrega', 'Abarrotes El Rosal · Anexa 20 de Noviembre');
+    tag.textContent = 'Recoger en tienda · listo en 10-20 min';
+    tag.classList.add('green');
+  } else {
+    setText('modal-entrega', entregaLabel);
+    tag.textContent = 'Entrega a domicilio';
+    tag.classList.remove('green');
+  }
+
+  // Foto y precio anterior salen del carrito; el precio que cuenta es el del servidor
+  const fromCart = {};
+  Object.entries(ckCart).forEach(([key, i]) => { fromCart[parseInt(key, 10)] = i; });
+  const piezas = quote.items.reduce((s, i) => s + (i.unit ? 1 : Number(i.qty)), 0);
+  setText('modal-count', `${quote.items.length} ${quote.items.length === 1 ? 'producto' : 'productos'} · ${piezas} ${piezas === 1 ? 'pieza' : 'piezas'}`);
+  document.getElementById('modal-items').innerHTML = quote.items.map(i => {
+    const c = fromCart[i.id] || {};
+    const img = c.img
+      ? `<img src="${escHtml(c.img)}" alt="" onerror="this.remove()">`
+      : '';
+    const old = Number(c.oldPrice) > Number(i.unit_price) ? `<s>${money(c.oldPrice)}</s>` : '';
+    const badge = i.unit ? `${i.qty}${i.unit}` : `x${i.qty}`;
+    return `
+      <div class="ck-mp">
+        <div class="ck-mp-img">${img}<span class="ck-mp-qty">${escHtml(badge)}</span></div>
+        <div class="ck-mp-info">
+          <div class="ck-mp-name">${escHtml(i.name)}</div>
+          <div class="ck-mp-meta">${qtyLabel(i)} · ${money(i.unit_price)} c/u${old}</div>
+        </div>
+        <div class="ck-mp-price">${money(i.line_total)}</div>
+      </div>`;
+  }).join('');
+
+  // Productos (precio normal) − Ahorros + Envío = Total
   const row = (label, value, cls = '') =>
     `<div class="ck-mi ${cls}"><span>${label}</span><span class="ck-mi-price">${value}</span></div>`;
-  document.getElementById('modal-items').innerHTML = quote.items.map(i =>
-    row(`${escHtml(i.name)}<span class="ck-mi-qty">${qtyLabel(i)}</span>`, money(i.line_total))
-  ).join('');
-  // Productos (precio normal) − Ahorros + Envío = Total
+  const hasSavings = Number(quote.savings) > 0;
   document.getElementById('modal-totals').innerHTML =
     row('Productos', money(quote.subtotal))
-    + (Number(quote.savings) > 0 ? row('Ahorros', `-${money(quote.savings)}`, 'savings') : '')
-    + (Number(quote.shipping) > 0 ? row('Envío', money(quote.shipping)) : '');
-  document.getElementById('modal-total').textContent = money(quote.total);
+    + (hasSavings ? row('Ahorros', `-${money(quote.savings)}`, 'savings') : '')
+    + (Number(quote.shipping) > 0 ? row('Envío', money(quote.shipping)) : row('Envío', 'Sin costo'));
+  document.getElementById('modal-savings').hidden = !hasSavings;
+  setText('modal-savings-amount', money(quote.savings));
+  setText('modal-total', money(quote.total));
+  setText('modal-wa-total', money(quote.total));
+  setText('modal-total-note', Number(quote.shipping) > 0 ? 'Incluye envío a domicilio' : 'Recoges en tienda');
 
   const sub = document.getElementById('ck-modal-sub');
   if (sub) {

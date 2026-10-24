@@ -1,7 +1,7 @@
 /* ================================================================
    ABARROTES EL ROSAL — Catálogo en vivo
    Precio, precio antes (oferta) y disponibilidad salen de la base de
-   datos, que es lo que se cambia en el panel (admin.html). Nombre,
+   datos, que es lo que se cambia en el panel de administrador. Nombre,
    foto y descripción siguen en data/productos.js.
    Si la base de datos no responde, se usan los precios de productos.js.
    Requiere cargar antes: supabase-config.js y data/productos.js

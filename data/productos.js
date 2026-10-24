@@ -13,7 +13,7 @@ const categories = [
 
 // Lista completa: nombre, foto y descripción de cada producto.
 // Precio, precio antes (oferta) y disponibilidad se toman de la base de datos
-// (panel admin.html) al cargar la página; los de aquí son el respaldo sin conexión.
+// (panel de administrador) al cargar la página; los de aquí son el respaldo sin conexión.
 const catalogoBase = [
   // ── LÁCTEOS ──────────────────────────────────────────────────
   { id: 101, cat: 'lacteos', name: 'Leche Entera Lala 1L', unit: '1 litro', price: 38.00, oldPrice: null, badge: null, emoji: '', img: 'img/productos/lacteos/Leche-Entera-Lala-1L.jpg', desc: 'Leche entera pasteurizada y homogeneizada, adicionada con vitaminas A y D. Ideal para el desayuno y nutrición diaria de toda la familia.' },

@@ -306,7 +306,7 @@ revoke all on function public.crear_pedido(jsonb, text, text, text, text, text, 
 grant execute on function public.crear_pedido(jsonb, text, text, text, text, text, text) to anon, authenticated;
 
 -- ================================================================
---  PANEL DE ADMINISTRACIÓN (admin.html)
+--  PANEL DE ADMINISTRACIÓN (sitio aparte: carpeta admin/)
 --  Los administradores pueden cambiar precio, precio antes (oferta)
 --  y disponibilidad de productos, y el estado de los pedidos.
 --  Para dar acceso a alguien, ver supabase/LEEME.md.
@@ -318,7 +318,9 @@ create table if not exists public.admins (
 alter table public.admins enable row level security;
 revoke all on public.admins from anon, authenticated;
 
-create or replace function public.es_admin()
+-- ¿La cuenta con sesión está dada de alta como administrador? Solo lo usa
+-- el panel para saber si debe pedir el segundo paso; no da ningún permiso.
+create or replace function public.es_cuenta_admin()
 returns boolean
 language sql
 stable
@@ -326,6 +328,22 @@ security definer
 set search_path = ''
 as $$
   select exists (select 1 from public.admins where user_id = auth.uid());
+$$;
+revoke all on function public.es_cuenta_admin() from public;
+grant execute on function public.es_cuenta_admin() to anon, authenticated;
+
+-- Permiso real del panel: administrador Y sesión con verificación en dos
+-- pasos (aal2 = contraseña + código de la app). Con solo la contraseña,
+-- todas las reglas de abajo niegan el acceso.
+create or replace function public.es_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists (select 1 from public.admins where user_id = auth.uid())
+     and coalesce(auth.jwt() ->> 'aal', '') = 'aal2';
 $$;
 revoke all on function public.es_admin() from public;
 grant execute on function public.es_admin() to anon, authenticated;
@@ -379,3 +397,15 @@ create policy "Admin cambia estado de pedidos" on public.orders
 drop policy if exists "Admin ve productos de pedidos" on public.order_items;
 create policy "Admin ve productos de pedidos" on public.order_items
   for select to authenticated using ((select public.es_admin()));
+
+-- Pedidos en tiempo real para el panel de administrador: Supabase le avisa al
+-- panel en cuanto entra un pedido. Solo lo reciben quienes pueden ver el
+-- pedido según las reglas de arriba, es decir, los administradores.
+do $$
+begin
+  if exists (select 1 from pg_publication where pubname = 'supabase_realtime')
+     and not exists (select 1 from pg_publication_tables
+                     where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'orders') then
+    alter publication supabase_realtime add table public.orders;
+  end if;
+end $$;

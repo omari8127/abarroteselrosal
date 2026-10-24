@@ -54,11 +54,37 @@ En **Authentication → URL Configuration**:
 Para "Continuar con Google": **Authentication → Sign In / Providers → Google**, con
 un Client ID de Google Cloud. Si no lo configuras, ese botón no funcionará.
 
-## Panel de la tienda (admin.html)
+## Panel de la tienda (sitio aparte, carpeta `admin/`)
 
 En el panel cambias **precios, ofertas y disponibilidad** de los productos y atiendes
 los **pedidos** (marcar entregado o cancelado, escribirle al cliente por WhatsApp).
 Los cambios se ven en la tienda en cuanto el cliente recarga la página.
+
+Por seguridad el panel **no está dentro de la tienda**: es otro sitio en Vercel,
+conectado a la misma base de datos, y para entrar pide contraseña **y** un código
+de la app de autenticación del celular (verificación en dos pasos).
+
+### Publicar el panel en Vercel (una sola vez)
+
+1. En Vercel: **Add New → Project** e importa el mismo repositorio de GitHub.
+2. En **Root Directory** elige `admin` y ponle un nombre al proyecto
+   (por ejemplo `rosal-panel`). Deja Framework Preset en **Other** y dale **Deploy**.
+3. El panel queda en su propia dirección (por ejemplo `rosal-panel.vercel.app`).
+   La tienda (`abarroteselrosal.vercel.app/admin`) ya no muestra nada.
+
+En tu computadora, con `npm run dev`, el panel está en `http://localhost:3000/admin/index.html`.
+
+### Verificación en dos pasos
+
+Ejecuta una vez [`migracion-panel-dos-pasos.sql`](migracion-panel-dos-pasos.sql) en el
+SQL Editor (las bases nuevas ya la traen en `schema.sql`). La primera vez que entres
+al panel te mostrará un código QR: escanéalo con **Google Authenticator** o
+**Microsoft Authenticator** y escribe el código de 6 dígitos. Después, cada vez que
+entres te pedirá el código que muestre la app.
+
+Si pierdes el celular: en Supabase ve a **Authentication → Users**, abre la cuenta del
+administrador y borra su factor de MFA. Al entrar de nuevo al panel podrás configurar
+el celular nuevo.
 
 ### Activarlo (una sola vez)
 
@@ -74,8 +100,8 @@ Los cambios se ven en la tienda en cuanto el cliente recarga la página.
    select id from auth.users where email = 'correo-del-admin@ejemplo.com';
    ```
 
-4. Entra a `/admin.html` de la tienda (por ejemplo `http://localhost:3000/admin.html`)
-   con ese correo y contraseña. La página no aparece en el menú de la tienda.
+4. Entra al panel (su dirección de Vercel, o `http://localhost:3000/admin/index.html`) con ese
+   correo y contraseña, y configura la verificación en dos pasos.
 
 Para quitarle el acceso a alguien:
 
@@ -109,14 +135,27 @@ Si tu base se creó antes de que existiera el pago con tarjeta, ejecuta una vez
 Sin ella, los pedidos con tarjeta se rechazan con "Método de pago inválido".
 Las bases nuevas no la necesitan: `schema.sql` ya incluye la tarjeta.
 
+## Pedidos al instante en el panel
+
+Para que los pedidos nuevos lleguen solos al panel de administrador (con campana y aviso),
+ejecuta una vez [`migracion-pedidos-en-vivo.sql`](migracion-pedidos-en-vivo.sql)
+en el SQL Editor. Las bases nuevas no la necesitan: ya viene en `schema.sql`.
+
+En el panel, toca **Activar avisos** una vez: el navegador pide permiso para
+mostrar notificaciones y suena la campana de prueba. Arriba debe decir
+**En vivo**; si dice "Revisando cada 30 s", el panel igual avisa, pero con
+hasta 30 segundos de retraso.
+
 ## Qué protege la base de datos
 
 - El total se calcula en el servidor con los precios de la tabla `products`; lo que
   mande el navegador del cliente no cuenta.
 - Los clientes no pueden crear, cambiar ni borrar pedidos o precios: los pedidos solo
   entran con `crear_pedido`, que revisa productos, cantidades, teléfono, dirección y pago.
-- Solo las cuentas en la tabla `admins` pueden usar el panel, y aun así solo pueden
-  cambiar precio, oferta y disponibilidad de productos y el estado de los pedidos.
+- Solo las cuentas en la tabla `admins` **que además pasaron la verificación en dos
+  pasos** pueden usar el panel, y aun así solo pueden cambiar precio, oferta y
+  disponibilidad de productos y el estado de los pedidos. Con la pura contraseña la
+  base de datos no deja ver pedidos ni cambiar precios.
 - Cada cliente ve solo su perfil y sus pedidos.
 - Máximo 5 pedidos por teléfono por hora, para frenar pedidos falsos en serie.
 - El envío a domicilio ($10.00) está en `private.calcular_pedido` (`c_envio`); si

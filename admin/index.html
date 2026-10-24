@@ -50,7 +50,7 @@
       max-width: 400px; margin: 10vh auto; background: #fff; border-radius: 20px;
       padding: 32px 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); text-align: center;
     }
-    .login img { height: 36px; margin-bottom: 16px; }
+    .login > img { height: 36px; margin-bottom: 16px; }
     .login h1 { font-size: 1.35rem; font-weight: 800; }
     .login p { color: var(--muted); font-size: 0.92rem; margin-top: 4px; }
     .login form { text-align: left; margin-top: 22px; display: flex; flex-direction: column; gap: 14px; }
@@ -69,6 +69,14 @@
     .btn-soft { background: var(--blue-soft); color: var(--blue); }
     .btn-soft:hover { background: #dbe8f8; }
     .btn-sm { height: 36px; padding: 0 16px; font-size: 0.88rem; }
+    /* ── Verificación en dos pasos ────────────────── */
+    .mfa-badge { display: flex; width: 48px; height: 48px; margin: 0 auto 10px; border-radius: 14px; background: var(--green-soft); color: var(--green); align-items: center; justify-content: center; }
+    .mfa-setup { text-align: left; margin: 18px 0 4px; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; font-size: .9rem; color: #4b5563; }
+    .mfa-setup strong { color: var(--text); }
+    .mfa-qr { display: block; width: 180px; height: 180px; margin: 10px auto 6px; padding: 8px; background: #fff; border: 1px solid var(--border); border-radius: 12px; }
+    .mfa-secret-label { display: block; font-size: .78rem; text-align: center; color: var(--muted); }
+    .mfa-secret { display: block; margin-top: 4px; text-align: center; font-size: .82rem; font-weight: 700; letter-spacing: .04em; background: #f4f5f7; border-radius: 8px; padding: 6px 8px; word-break: break-all; }
+    .mfa-code { height: 56px; text-align: center; font-size: 1.6rem !important; font-weight: 800; letter-spacing: .35em; }
     .msg-error { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; border-radius: 12px; padding: 10px 14px; font-size: .88rem; font-weight: 600; }
 
     /* ── Pestañas ─────────────────────────────────── */
@@ -152,6 +160,39 @@
     .order-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
     .btn-cancel { background: #fff; color: #b91c1c; border: 1.5px solid #fecaca; }
     .btn-cancel:hover { background: #fef2f2; }
+    .status-new { background: var(--red); color: #fff; }
+    .order.nuevo { border-color: #f5c400; box-shadow: 0 0 0 3px #fff3b0; animation: llego 1.2s ease-out 3; }
+    @keyframes llego { 0% { box-shadow: 0 0 0 0 rgba(245, 196, 0, .7); } 100% { box-shadow: 0 0 0 14px rgba(245, 196, 0, 0); } }
+
+    /* ── Avisos de pedidos nuevos ─────────────────── */
+    .live { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 700; color: var(--muted); white-space: nowrap; }
+    .live-dot { width: 9px; height: 9px; border-radius: 50%; background: #cbd5e1; }
+    .live.on { color: var(--green); }
+    .live.on .live-dot { background: #22a447; animation: latido 2s ease-out infinite; }
+    @keyframes latido { 0% { box-shadow: 0 0 0 0 rgba(34, 164, 71, .55); } 100% { box-shadow: 0 0 0 8px rgba(34, 164, 71, 0); } }
+    .avisos-btn {
+      display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 999px;
+      border: 1.5px solid #f3d27a; background: var(--amber-soft); color: var(--amber); font-weight: 800; font-size: .82rem; cursor: pointer; white-space: nowrap;
+    }
+    .avisos-btn.on { border-color: #b9e2c3; background: var(--green-soft); color: var(--green); }
+    .avisos-btn.pendiente { border-color: #f3d27a; background: #fff; }
+    .avisos-banner {
+      display: flex; align-items: center; gap: 12px; background: #fff; border: 1.5px solid #f3d27a; border-radius: 16px;
+      padding: 12px 14px; margin-bottom: 16px; font-size: .9rem;
+    }
+    .avisos-banner p { flex: 1; min-width: 0; color: #4b5563; }
+    .avisos-banner strong { color: var(--text); }
+    .toasts { position: fixed; right: 16px; bottom: 16px; z-index: 100; display: flex; flex-direction: column; gap: 10px; width: min(380px, calc(100vw - 32px)); }
+    .toast {
+      display: flex; align-items: center; gap: 12px; background: #fff; border-radius: 16px; padding: 12px 12px 12px 14px;
+      border-left: 5px solid #f5c400; box-shadow: 0 12px 32px rgba(0, 0, 0, .18); animation: entra .3s ease-out both;
+    }
+    .toast.out { opacity: 0; transform: translateX(20px); transition: opacity .25s, transform .25s; }
+    @keyframes entra { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    .toast-ico { width: 40px; height: 40px; flex: 0 0 40px; border-radius: 12px; background: #fff3b0; color: #8a6d00; display: flex; align-items: center; justify-content: center; }
+    .toast-body { flex: 1; min-width: 0; display: flex; flex-direction: column; font-size: .85rem; color: var(--muted); }
+    .toast-body strong { color: var(--text); font-size: .95rem; }
+    .toast-x { background: none; border: none; font-size: 1.3rem; line-height: 1; color: #9ca3af; cursor: pointer; padding: 4px; }
 
     /* 16px en campos hasta tablet: el iPhone/iPad no hace zoom al tocarlos */
     @media (max-width: 1024px) {
@@ -174,6 +215,12 @@
       .prod > :nth-child(5) { flex: 1 1 100%; }
       .cell-label { display: block; }
       .order-grid { grid-template-columns: 1fr; gap: 8px; }
+      .top-right { gap: 10px; }
+      #live-text { display: none; }
+      .avisos-btn.on #avisos-text { display: none; }
+      .avisos-banner { flex-wrap: wrap; }
+      .avisos-banner p { flex-basis: calc(100% - 52px); }
+      .avisos-banner .btn { width: 100%; }
     }
   </style>
 </head>
@@ -204,10 +251,38 @@
   <section id="view-denied" class="hidden">
     <div class="login">
       <img src="img/logo.png" alt="El Rosal">
-      <h1>Esta cuenta no es de administrador</h1>
+      <h1>No puedes entrar al panel</h1>
       <p id="denied-email"></p>
-      <p style="margin-top:14px">Pide que la den de alta como administrador (ver supabase/LEEME.md).</p>
+      <p style="margin-top:14px">Si es un error, revisa supabase/LEEME.md.</p>
       <button class="btn btn-soft" style="margin-top:20px" onclick="salir()">Usar otra cuenta</button>
+    </div>
+  </section>
+
+  <!-- Verificación en dos pasos -->
+  <section id="view-mfa" class="hidden">
+    <div class="login">
+      <img src="img/logo.png" alt="El Rosal">
+      <span class="mfa-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
+      <h1 id="mfa-title">Verificación en dos pasos</h1>
+      <p id="mfa-sub"></p>
+
+      <ol class="mfa-setup hidden" id="mfa-setup">
+        <li>Instala en tu celular <strong>Google Authenticator</strong> o <strong>Microsoft Authenticator</strong> (gratis).</li>
+        <li>En la app toca <strong>+</strong> y escanea este código:
+          <img class="mfa-qr" id="mfa-qr" alt="Código QR para la app de autenticación">
+          <span class="mfa-secret-label">¿No puedes escanear? Escribe esta clave:</span>
+          <code class="mfa-secret" id="mfa-secret"></code>
+        </li>
+        <li>Escribe abajo el código de 6 dígitos que muestra la app.</li>
+      </ol>
+
+      <form id="mfa-form" novalidate>
+        <div id="mfa-error" class="msg-error hidden" role="alert"></div>
+        <input class="input mfa-code" id="mfa-code" inputmode="numeric" autocomplete="one-time-code"
+          maxlength="6" placeholder="000000" aria-label="Código de 6 dígitos">
+        <button class="btn" type="submit" id="mfa-btn">Verificar</button>
+      </form>
+      <button class="link-btn" style="margin-top:16px" onclick="salir()">Usar otra cuenta</button>
     </div>
   </section>
 
@@ -217,13 +292,24 @@
       <img src="img/logo.png" alt="El Rosal">
       <span class="top-title">Panel de la tienda</span>
       <div class="top-right">
+        <span class="live" id="live" title="Los pedidos nuevos llegan solos"><span class="live-dot"></span><span id="live-text">Conectando…</span></span>
+        <button class="avisos-btn" id="avisos-btn" onclick="activarAvisos()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span id="avisos-text">Activar avisos</span>
+        </button>
         <span class="top-user" id="top-user"></span>
-        <a class="link-btn" href="index.html" target="_blank">Ver tienda</a>
+        <a class="link-btn" id="ver-tienda" href="https://abarroteselrosal.vercel.app/" target="_blank" rel="noopener">Ver tienda</a>
         <button class="link-btn" onclick="salir()">Salir</button>
       </div>
     </header>
 
     <main class="wrap">
+      <div class="avisos-banner hidden" id="avisos-banner">
+        <span class="toast-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+        <p><strong>Activa los avisos de pedidos.</strong> Cuando llegue un pedido sonará una campana y verás una notificación, aunque estés en otra pestaña.</p>
+        <button class="btn btn-sm" onclick="activarAvisos()">Activar avisos</button>
+      </div>
+
       <div class="tabs" role="tablist">
         <button class="tab active" id="tab-productos" onclick="mostrarTab('productos')">Productos</button>
         <button class="tab" id="tab-pedidos" onclick="mostrarTab('pedidos')">Pedidos <span class="count hidden" id="pend-count"></span></button>
@@ -270,10 +356,12 @@
     </main>
   </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js"></script>
-  <script src="data/productos.js?v=7"></script>
-  <script src="js/admin.js?v=2"></script>
+  <!-- Avisos de pedidos nuevos -->
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="js/config.js?v=1"></script>
+  <script src="js/admin.js?v=4"></script>
 </body>
 
 </html>

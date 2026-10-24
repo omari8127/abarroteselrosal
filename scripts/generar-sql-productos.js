@@ -7,7 +7,7 @@
 //  Productos nuevos: se agregan con el precio de data/productos.js.
 //  Productos que ya existen: solo se actualiza nombre, categoría y unidad.
 //  El precio, la oferta y la disponibilidad se manejan desde el panel
-//  (admin.html), así que este script nunca los sobrescribe.
+//  (panel de administrador), así que este script nunca los sobrescribe.
 // ================================================================
 
 const fs = require('fs');

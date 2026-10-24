@@ -1,7 +1,7 @@
 -- ================================================================
 --  GENERADO AUTOMÁTICAMENTE por scripts/generar-sql-productos.js
 --  No editar a mano: cambia data/productos.js y vuelve a generar.
---  571 productos.
+--  649 productos.
 -- ================================================================
 
 begin;
@@ -577,7 +577,85 @@ insert into public.products (id, category, name, unit, price, old_price, active)
   (1217, 'limpieza', 'Agua Oxigenada Jaloma 224ml', '224 ml', 21.60, null, true),
   (1218, 'limpieza', 'Spray para Cabello Caprice Algas 285g', '285 g', 77.50, null, true),
   (1219, 'limpieza', 'Shampoo Pantene Rizos Definidos 200ml', '200 ml', 50.50, null, true),
-  (1220, 'limpieza', 'Acondicionador Wildroot Clásico 250ml', '250 ml', 84.90, null, true)
+  (1220, 'limpieza', 'Acondicionador Wildroot Clásico 250ml', '250 ml', 84.90, null, true),
+  (542, 'botanas', 'Sabritones Chile y Limón 160g', '160 g', 44.90, null, true),
+  (543, 'botanas', 'Fritos Chile y Limón 170g', '170 g', 44.90, null, true),
+  (544, 'botanas', 'Fritos Sal y Limón 170g', '170 g', 44.90, null, true),
+  (545, 'botanas', 'Tostitos Salsa Verde 240g', '240 g', 62.90, null, true),
+  (546, 'botanas', 'Paketaxo Xtra Flamin Hot 228g', '228 g', 52.90, null, true),
+  (547, 'botanas', 'Cheetos Torciditos 145g', '145 g', 44.90, null, true),
+  (548, 'botanas', 'Cacahuates Kacang Flamin Hot 185g', '185 g', 46.90, null, true),
+  (549, 'botanas', 'Takis Huakamole 240g', '240 g', 61.90, null, true),
+  (550, 'botanas', 'Chip''s Jalapeño Barcel 150g', '150 g', 61.90, null, true),
+  (551, 'botanas', 'Chip''s Fuego Barcel 150g', '150 g', 61.90, null, true),
+  (552, 'botanas', 'Chip''s Sal Barcel 150g', '150 g', 61.90, null, true),
+  (553, 'botanas', 'Cacahuates Hot Nuts Original 100g', '100 g', 30.90, null, true),
+  (554, 'botanas', 'Palomitas Pop Karameladas 120g', '120 g', 33.90, null, true),
+  (555, 'botanas', 'Runners Chile Limón Barcel 280g', '280 g', 60.00, null, true),
+  (556, 'botanas', 'Runners Fuego 58g', '58 g', 11.90, null, true),
+  (557, 'botanas', 'Doritos Mix 205g', '205 g', 55.00, null, true),
+  (558, 'botanas', 'Doritos Chipotle Ahumado 50g', '50 g', 15.00, null, true),
+  (559, 'botanas', 'Takis Original 94g', '94 g', 25.00, null, true),
+  (560, 'botanas', 'Takis Blue Heat 240g', '240 g', 50.00, null, true),
+  (561, 'botanas', 'Valentones Barcel 175g', '175 g', 36.00, null, true),
+  (562, 'botanas', 'Papatinas Chilix Chip''s 200g', '200 g', 57.00, null, true),
+  (563, 'botanas', 'Palomitas Pop Queso Cheddar 110g', '110 g', 40.00, null, true),
+  (564, 'botanas', 'Papas Barcel Toreadas Habanero 170g', '170 g', 59.00, null, true),
+  (886, 'panaderia', 'Marinela Plativolos 90g', '90 g', 10.00, null, true),
+  (887, 'panaderia', 'Marinela Lors 98g', '98 g', 11.90, null, true),
+  (888, 'panaderia', 'Pastelito Hershey''s Marinela 40g', '40 g', 15.50, null, true),
+  (889, 'panaderia', 'Marinela Mini Barritas Fresa 222g', '222 g', 37.90, null, true),
+  (890, 'panaderia', 'Marinela Mini Barritas Piña 222g', '222 g', 37.90, null, true),
+  (891, 'panaderia', 'Madalenas Cuadradas Tía Rosa 44g', '44 g', 10.50, null, true),
+  (892, 'panaderia', 'Marinela Príncipe Reese''s 84g', '84 g', 10.00, null, true),
+  (893, 'panaderia', 'Galletas Marianitas La Moderna 185g', '185 g', 18.90, null, true),
+  (1301, 'despensa', 'Cóctel de Frutas en Almíbar La Costeña 850g', '850 g', 82.50, null, true),
+  (1302, 'despensa', 'Duraznos en Almíbar La Costeña 820g', '820 g', 70.90, null, true),
+  (1303, 'despensa', 'Coffee Mate Líquido Avellana 530g', '530 g', 48.50, null, true),
+  (1304, 'despensa', 'Coffee Mate Líquido Canela 530g', '530 g', 48.50, null, true),
+  (1305, 'despensa', 'Fécula de Maíz Maizena 95g', '95 g', 21.90, null, true),
+  (1306, 'despensa', 'Ensalada Campesina Del Monte 400g', '400 g', 18.50, null, true),
+  (1307, 'despensa', 'Elote Dorado Del Monte 225g', '225 g', 12.50, null, true),
+  (1308, 'despensa', 'Rajas Verdes de Jalapeño La Costeña 380g', '380 g', 34.90, null, true),
+  (1309, 'despensa', 'Chiles Jalapeños Enteros La Costeña 220g', '220 g', 17.50, null, true),
+  (1310, 'despensa', 'Zanahorias en Escabeche La Costeña 220g', '220 g', 15.50, null, true),
+  (1311, 'despensa', 'Salsa Verde Herdez 210g', '210 g', 20.90, null, true),
+  (1312, 'despensa', 'Salsa Ranchera Herdez 220g', '220 g', 23.00, null, true),
+  (1313, 'despensa', 'Chilorio de Cerdo Chata 215g', '215 g', 71.90, null, true),
+  (1314, 'despensa', 'Salsa de Chile Colorado Del Campo 287g', '287 g', 21.50, null, true),
+  (1315, 'despensa', 'Salsa de Chile Fresco El Pato 220g', '220 g', 24.50, null, true),
+  (1316, 'despensa', 'Harina para Hot Cakes Pearl Milling Company 500g', '500 g', 66.50, null, true),
+  (1317, 'despensa', 'Cereal Choco Krispis Kellogg''s 290g', '290 g', 61.50, null, true),
+  (1318, 'despensa', 'Cereal Zucaritas Kellogg''s 300g', '300 g', 59.90, null, true),
+  (1319, 'despensa', 'Cereal Froot Loops Kellogg''s 180g', '180 g', 63.50, null, true),
+  (1320, 'despensa', 'Cereal Corn Flakes Kellogg''s 370g', '370 g', 63.50, null, true),
+  (1321, 'despensa', 'Jarabe Sabor Maple Log Cabin 469g', '469 g', 75.90, null, true),
+  (1322, 'despensa', 'Cajeta Quemada Coronado 220g', '220 g', 43.00, null, true),
+  (1323, 'despensa', 'Mermelada de Fresa McCormick 450g', '450 g', 51.90, null, true),
+  (1324, 'despensa', 'Miel Maple Karo 510ml', '510 ml', 78.90, null, true),
+  (141, 'lacteos', 'Media Crema Nestlé 225g', '225 g', 23.50, null, true),
+  (142, 'lacteos', 'Media Crema Nestlé 190ml', '190 ml', 15.90, null, true),
+  (143, 'lacteos', 'Nutri Leche Clásica 1L', '1 litro', 20.00, null, true),
+  (144, 'lacteos', 'Lechita Santa Clara Fresa 180ml', '180 ml', 13.50, null, true),
+  (145, 'lacteos', 'Lechita Santa Clara Chocolate 180ml', '180 ml', 13.50, null, true),
+  (894, 'panaderia', 'Donas Azucaradas Bimbo 158g', '158 g', 29.90, null, true),
+  (895, 'panaderia', 'Mantecadas Chispas de Chocolate Bimbo 190g', '190 g', 38.00, null, true),
+  (896, 'panaderia', 'Pan Molido Bimbo 210g', '210 g', 31.90, null, true),
+  (897, 'panaderia', 'Bran Frut Fresa Bimbo 240g', '240 g', 53.90, null, true),
+  (898, 'panaderia', 'Bimbollos Súper Bimbo 6 piezas 480g', '480 g', 45.90, null, true),
+  (1062, 'bebidas', 'Jumex Único Fresco Arándano 475ml', '475 ml', 21.00, null, true),
+  (1063, 'bebidas', 'Jumex Néctar Manzana 475ml', '475 ml', 17.00, null, true),
+  (1064, 'bebidas', 'Jumex Néctar Durazno 475ml', '475 ml', 18.70, null, true),
+  (1065, 'bebidas', 'Jumex Néctar Mango 475ml', '475 ml', 17.00, null, true),
+  (1066, 'bebidas', 'Bebida Energética Volt Yellow Guaraná 473ml', '473 ml', 22.90, null, true),
+  (1067, 'bebidas', 'Amper Icee Mora Azul 473ml', '473 ml', 18.50, null, true),
+  (1068, 'bebidas', 'Amper Blueberry 473ml', '473 ml', 22.50, null, true),
+  (1069, 'bebidas', 'Jumex Bida Mango 237ml', '237 ml', 10.50, null, true),
+  (1070, 'bebidas', 'Jumex Único Fresco Naranja 200ml', '200 ml', 14.50, null, true),
+  (1071, 'bebidas', 'Del Valle Mango Lata 340ml', '340 ml', 14.00, null, true),
+  (1072, 'bebidas', 'Jumexito Frutas Tropicales 200ml', '200 ml', 10.90, null, true),
+  (1073, 'bebidas', 'Jumexito Mix de Manzanas 200ml', '200 ml', 10.90, null, true),
+  (1074, 'bebidas', 'Jumexito Mango Manzana 200ml', '200 ml', 10.90, null, true)
 on conflict (id) do update set
   category = excluded.category,
   name     = excluded.name,
@@ -586,6 +664,6 @@ on conflict (id) do update set
 
 -- Productos que ya no están en data/productos.js dejan de venderse
 update public.products set active = false
-where active and id not in (101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020, 1021, 1022, 1023, 1024, 1025, 1026, 1027, 1028, 1029, 1030, 1031, 1032, 1033, 1034, 1035, 1037, 1038, 1039, 1040, 1041, 1042, 1043, 1044, 1045, 1046, 1047, 1048, 1049, 1050, 1051, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 1201, 1202, 1203, 1204, 1205, 1206, 501, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 601, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619, 620, 621, 622, 623, 624, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 801, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831, 832, 833, 834, 835, 836, 837, 838, 839, 840, 841, 842, 843, 844, 845, 846, 847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 857, 858, 859, 860, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879, 880, 881, 882, 883, 884, 885, 901, 902, 903, 904, 905, 906, 907, 908, 909, 910, 911, 912, 913, 914, 915, 916, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1119, 1120, 1121, 1122, 1123, 1124, 1052, 1053, 1054, 1055, 1056, 1057, 1058, 1059, 1060, 1061, 396, 397, 1207, 1208, 1209, 1210, 1211, 1212, 1213, 1214, 1215, 1216, 1217, 1218, 1219, 1220);
+where active and id not in (101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 1020, 1021, 1022, 1023, 1024, 1025, 1026, 1027, 1028, 1029, 1030, 1031, 1032, 1033, 1034, 1035, 1037, 1038, 1039, 1040, 1041, 1042, 1043, 1044, 1045, 1046, 1047, 1048, 1049, 1050, 1051, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 1201, 1202, 1203, 1204, 1205, 1206, 501, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 601, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619, 620, 621, 622, 623, 624, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 801, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831, 832, 833, 834, 835, 836, 837, 838, 839, 840, 841, 842, 843, 844, 845, 846, 847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 857, 858, 859, 860, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879, 880, 881, 882, 883, 884, 885, 901, 902, 903, 904, 905, 906, 907, 908, 909, 910, 911, 912, 913, 914, 915, 916, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1119, 1120, 1121, 1122, 1123, 1124, 1052, 1053, 1054, 1055, 1056, 1057, 1058, 1059, 1060, 1061, 396, 397, 1207, 1208, 1209, 1210, 1211, 1212, 1213, 1214, 1215, 1216, 1217, 1218, 1219, 1220, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 886, 887, 888, 889, 890, 891, 892, 893, 1301, 1302, 1303, 1304, 1305, 1306, 1307, 1308, 1309, 1310, 1311, 1312, 1313, 1314, 1315, 1316, 1317, 1318, 1319, 1320, 1321, 1322, 1323, 1324, 141, 142, 143, 144, 145, 894, 895, 896, 897, 898, 1062, 1063, 1064, 1065, 1066, 1067, 1068, 1069, 1070, 1071, 1072, 1073, 1074);
 
 commit;

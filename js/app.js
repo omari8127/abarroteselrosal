@@ -6,7 +6,7 @@ let cart = syncCartWithCatalog(JSON.parse(localStorage.getItem('cart')) || {});
 let favs = [];
 try { favs = JSON.parse(localStorage.getItem('favs')) || []; } catch (e) { favs = []; }
 let qtys = {};
-// State for frutas: { [id]: { mode: 'kg'|'unit', val: number } }
+// Cantidad elegida en frutas y verduras: { [id]: { mode: 'kg'|'pzas', val } } (ver estadoFruta)
 let frutaModes = {};
 let activeFilters = {
   cats: [],
@@ -801,12 +801,8 @@ function cardHTML(p) {
     ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="prod-emoji" style="display:none">${p.emoji}</span>`
     : `<span class="prod-emoji">${p.emoji}</span>`;
 
-  // ── Frutas y Verduras: segmented control de Kg/Unidades ──
+  // ── Frutas y Verduras: por kilo o por pieza (ver data/productos.js) ──
   if (p.cat === 'frutas') {
-    if (!frutaModes[p.id]) frutaModes[p.id] = { mode: 'kg', val: 0.5 };
-    const fm = frutaModes[p.id];
-    const displayVal = fm.mode === 'kg' ? fm.val.toFixed(1) : fm.val;
-    const suffix = fm.mode === 'kg' ? 'kg' : 'pzas';
     return `
     <div class="prod-card">
       ${badge}
@@ -814,33 +810,24 @@ function cardHTML(p) {
       <a href="producto-detalle.html?id=${p.id}" class="prod-img-wrap">${imgPart}</a>
 
       <div class="frutas-qty-row">
-        <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},-1)">-</button>
-        <span class="frutas-qty-val" id="frutas-qty-${p.id}">${displayVal}</span>
-        <span class="frutas-qty-sfx" id="frutas-sfx-${p.id}">${suffix}</span>
-        <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},1)">+</button>
+        <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},-1)" aria-label="Menos">-</button>
+        <span class="frutas-qty-val" data-fruta-qty="${p.id}">${textoFrutaElegida(p)}</span>
+        <button class="frutas-qty-btn" onclick="changeFrutaQty(${p.id},1)" aria-label="Más">+</button>
       </div>
 
       <button class="add-btn${inCart(p.id) ? ' added' : ''}" id="abtn-${p.id}" onclick="toggleAddBtn(${p.id})"${inCart(p.id) ? ' title="Quitar del carrito"' : ''}>${addBtnLabel(inCart(p.id))}</button>
-      
-      <div class="frutas-seg-ctrl" id="seg-${p.id}">
-        <button class="seg-btn${fm.mode === 'kg' ? ' seg-active' : ''}" onclick="setFrutaMode(${p.id},'kg')">Kilogramos</button>
-        <button class="seg-btn${fm.mode === 'unit' ? ' seg-active' : ''}" onclick="setFrutaMode(${p.id},'unit')">Unidades</button>
-      </div>
+
+      ${segFrutaHTML(p)}
 
       <a href="producto-detalle.html?id=${p.id}" class="prod-name">${p.name}</a>
 
       <div class="prod-price-area">
-        ${p.oldPrice ? `
-          <div class="prod-price-row">
-            <span class="prod-price promo">$${p.price.toFixed(2)}</span>
-            <span class="prod-price-old">$${p.oldPrice.toFixed(2)}</span>
-          </div>
-          <div class="prod-savings-badge">Ahorras $${(p.oldPrice - p.price).toFixed(2)}</div>
-        ` : `
-          <div class="prod-price-row">
-            <span class="prod-price">$${p.price.toFixed(2)}</span>
-          </div>
-        `}
+        <div class="prod-price-row">
+          <span class="prod-price${p.oldPrice ? ' promo' : ''}">$${p.price.toFixed(2)}</span>
+          <span class="prod-unit">/${p.venta === 'pza' ? 'pza' : 'kg'}</span>
+          ${p.oldPrice ? `<span class="prod-price-old">$${p.oldPrice.toFixed(2)}</span>` : ''}
+        </div>
+        <div class="prod-piece-note">${notaFruta(p)}</div>
       </div>
     </div>`;
   }
@@ -886,52 +873,68 @@ function setUnitType(id, type, el) {
   el.classList.add('active');
 }
 
-// ÔöÇÔöÇ FRUTAS Y VERDURAS: segmented control logic ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+// ── FRUTAS Y VERDURAS: cantidad elegida antes de agregar ─────────────
+// frutaModes[id] = { mode: 'kg' | 'pzas', val }. Empieza en ½ kg (200 g los
+// chiles) o en 1 pieza para lo que se vende por pieza.
+function estadoFruta(p) {
+  if (!frutaModes[p.id]) {
+    frutaModes[p.id] = p.venta === 'pza'
+      ? { mode: 'pzas', val: 1 }
+      : { mode: 'kg', val: pasoKg(p) === 0.25 ? 0.5 : ajustarCantidadFruta(p, 'kg', pasoKg(p) * 2) };
+  }
+  return frutaModes[p.id];
+}
+
+function textoFrutaElegida(p) {
+  const fm = estadoFruta(p);
+  return textoCantidadFruta(fm.val, fm.mode);
+}
+
+function segFrutaHTML(p) {
+  if (unidadesFruta(p).length < 2) return '';
+  const fm = estadoFruta(p);
+  return `
+      <div class="frutas-seg-ctrl" data-fruta-seg="${p.id}">
+        <button class="seg-btn${fm.mode === 'kg' ? ' seg-active' : ''}" data-modo="kg" onclick="setFrutaMode(${p.id},'kg')">Por kilo</button>
+        <button class="seg-btn${fm.mode === 'pzas' ? ' seg-active' : ''}" data-modo="pzas" onclick="setFrutaMode(${p.id},'pzas')">Por pieza</button>
+      </div>`;
+}
+
+// "1 pza ≈ 120 g · $6.99 aprox." o "Se pesa al surtir tu pedido"
+function notaFruta(p) {
+  if (p.venta === 'pza') return 'Precio por pieza';
+  if (!p.pesoPza) return 'Se pesa al surtir tu pedido';
+  return `1 pza ≈ ${Math.round(p.pesoPza * 1000)} g · $${precioFruta(p, 'pzas').precio.toFixed(2)} aprox.`;
+}
+
 function setFrutaMode(id, mode) {
-  if (!frutaModes[id]) frutaModes[id] = { mode: 'kg', val: 0.5 };
-  const prev = frutaModes[id];
-
-  if (mode === 'kg' && prev.mode === 'unit') {
-    // Convert units ÔåÆ kg (1 pza Ôëê 0.1 kg, minimum 0.1)
-    frutaModes[id] = { mode: 'kg', val: Math.max(0.1, Math.round(prev.val * 0.1 * 10) / 10) };
-  } else if (mode === 'unit' && prev.mode === 'kg') {
-    // Convert kg ÔåÆ units (round, minimum 1)
-    frutaModes[id] = { mode: 'unit', val: Math.max(1, Math.round(prev.val * 10)) };
-  } else {
-    frutaModes[id].mode = mode;
-  }
-
-  // Update segmented buttons
-  const seg = document.getElementById('seg-' + id);
-  if (seg) {
-    seg.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('seg-active'));
-    const idx = mode === 'kg' ? 0 : 1;
-    seg.querySelectorAll('.seg-btn')[idx].classList.add('seg-active');
-  }
-
-  // Update display
+  const p = allProducts.find(x => x.id === id);
+  const fm = estadoFruta(p);
+  if (fm.mode === mode || !unidadesFruta(p).includes(mode)) return;
+  // Se conserva más o menos la misma cantidad: ½ kg de tomate ≈ 4 piezas
+  fm.val = mode === 'pzas'
+    ? Math.max(1, Math.round(fm.val / p.pesoPza))
+    : ajustarCantidadFruta(p, 'kg', fm.val * p.pesoPza);
+  fm.mode = mode;
+  document.querySelectorAll(`[data-fruta-seg="${id}"] .seg-btn`).forEach(b =>
+    b.classList.toggle('seg-active', b.dataset.modo === mode));
   _updateFrutaDisplay(id);
 }
 
 function changeFrutaQty(id, dir) {
-  if (!frutaModes[id]) frutaModes[id] = { mode: 'kg', val: 0.5 };
-  const fm = frutaModes[id];
-
-  if (fm.mode === 'kg') {
-    fm.val = Math.max(0.1, Math.round((fm.val + dir * 0.1) * 10) / 10);
-  } else {
-    fm.val = Math.max(1, fm.val + dir);
-  }
-
+  const p = allProducts.find(x => x.id === id);
+  const fm = estadoFruta(p);
+  fm.val = fm.mode === 'kg'
+    ? ajustarCantidadFruta(p, 'kg', fm.val + dir * pasoKg(p))
+    : Math.max(1, fm.val + dir);
   _updateFrutaDisplay(id);
 }
 
 function _updateFrutaDisplay(id) {
   const fm = frutaModes[id];
-  const valEl = document.getElementById('frutas-qty-' + id);
-  const sfxEl = document.getElementById('frutas-sfx-' + id);
-  if (valEl) valEl.textContent = fm.mode === 'kg' ? fm.val.toFixed(1) : fm.val;
-  if (sfxEl) sfxEl.textContent = fm.mode === 'kg' ? 'kg' : 'pzas';
+  document.querySelectorAll(`[data-fruta-qty="${id}"]`).forEach(el => {
+    el.textContent = textoCantidadFruta(fm.val, fm.mode);
+  });
 }
 
 // --- PRODUCT DETAIL LOGIC ---
@@ -997,14 +1000,26 @@ function renderDetalle(id) {
           <div class="detalle-price-area">
             ${p.oldPrice ? `
               <div class="detalle-price-row">
-                <span class="detalle-main-price promo">$${p.price.toFixed(2)}</span>
+                <span class="detalle-main-price promo">$${p.price.toFixed(2)}${p.cat === 'frutas' ? `<span class="detalle-unit">/${p.venta === 'pza' ? 'pza' : 'kg'}</span>` : ''}</span>
                 <span class="detalle-price-old">$${p.oldPrice.toFixed(2)}</span>
               </div>
               <div class="prod-savings-badge" style="margin-bottom: 1.5rem; font-size: 0.95rem; padding: 4px 10px;">Ahorras $${(p.oldPrice - p.price).toFixed(2)}</div>
             ` : `
-              <div class="detalle-main-price">$${p.price.toFixed(2)}</div>
+              <div class="detalle-main-price">$${p.price.toFixed(2)}${p.cat === 'frutas' ? `<span class="detalle-unit">/${p.venta === 'pza' ? 'pza' : 'kg'}</span>` : ''}</div>
             `}
+            ${p.cat === 'frutas' ? `<p class="detalle-fruta-nota">${notaFruta(p)}</p>` : ''}
           </div>
+
+          ${p.cat === 'frutas' ? `
+          ${segFrutaHTML(p)}
+          <div class="detalle-qty-row">
+            <span class="detalle-qty-label">Cantidad</span>
+            <div class="detalle-qty-ctrl">
+              <button type="button" onclick="changeFrutaQty(${p.id},-1)" aria-label="Disminuir">&minus;</button>
+              <span data-fruta-qty="${p.id}" style="min-width:72px">${textoFrutaElegida(p)}</span>
+              <button type="button" onclick="changeFrutaQty(${p.id},1)" aria-label="Aumentar">+</button>
+            </div>
+          </div>` : ''}
 
           ${p.cat !== 'frutas' ? `
           <div class="detalle-qty-row">
@@ -1236,6 +1251,10 @@ window.switchDeliveryTab = (tab) => {
             </span>
           </div>
         </div>
+        <p style="font-size:0.85rem; color:#4b5563; margin:-0.75rem 0 1.25rem; line-height:1.4;">
+          Entregamos a <strong>máximo 1 km</strong> de la tienda (Calle Huatulco 13609, Anexa 20 de Noviembre).
+          Al finalizar tu pedido marcas tu casa en el mapa.
+        </p>
         ${addressContent}
         <div class="delivery-empty-state" style="${perfil?.direccion ? 'display:none' : ''}">
           <span class="delivery-empty-icon" style="color: var(--blue);">
@@ -1255,7 +1274,7 @@ window.switchDeliveryTab = (tab) => {
         </div>
         <div class="delivery-option-info">
           <strong>Anexa 20 de Noviembre</strong>
-          <p>Blvd. Díaz Ordaz, Tijuana B.C.</p>
+          <p>Calle Huatulco 13609, Tijuana B.C.</p>
           <p><small>Horario: 9:00 AM - 9:00 PM</small></p>
         </div>
       </div>
@@ -1302,9 +1321,10 @@ window.confirmDelivery = () => {
 
 function updateCartUI() {
   const items = Object.values(cart);
-  const count = items.reduce((sum, item) => sum + item.qty, 0);
-  const subtotal = items.reduce((sum, item) => sum + (item.oldPrice || item.price) * item.qty, 0);
-  const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+  // Lo que va por kilo cuenta como 1 en el contador (½ kg no son "0.5 productos")
+  const count = items.reduce((sum, item) => sum + (item.unitLabel === 'kg' ? 1 : item.qty), 0);
+  const subtotal = items.reduce((sum, item) => sum + totalLinea(item.oldPrice || item.price, item.qty), 0);
+  const total = items.reduce((sum, item) => sum + totalLinea(item.price, item.qty), 0);
   const savings = subtotal - total;
 
   const countEl = document.getElementById('hdr-count');
@@ -1335,13 +1355,15 @@ function updateCartUI() {
 
   cb.innerHTML = items.map(i => {
     const isFruta = i.unitLabel !== undefined;
-    const qtyLabel = isFruta ? `${i.qty} ${i.unitLabel}` : i.qty;
-    const brand = extractBrand(i.name);
+    const qtyLabel = isFruta ? textoCantidadFruta(i.qty, i.unitLabel) : i.qty;
+    const brand = isFruta
+      ? `$${i.price.toFixed(2)} ${i.unitLabel === 'kg' ? 'el kilo' : 'la pieza'}${i.aprox ? ' · aprox.' : ''}`
+      : extractBrand(i.name);
     const imgHtml = i.img
       ? `<img src="${i.img}" alt="${i.name}" onerror="this.style.display='none'">`
       : `<img src="img/sin-foto.svg" alt="${i.name}">`;
     const oldPriceHtml = i.oldPrice
-      ? `<span class="cr-old-price">$${(i.oldPrice * i.qty).toFixed(2)}</span>` : '';
+      ? `<span class="cr-old-price">$${totalLinea(i.oldPrice, i.qty).toFixed(2)}</span>` : '';
     return `
     <div class="cr-item">
       <div class="cr-img">${imgHtml}</div>
@@ -1355,7 +1377,7 @@ function updateCartUI() {
         </div>
         <div class="cr-prices">
           ${oldPriceHtml}
-          <span class="cr-price">$${(i.price * i.qty).toFixed(2)}</span>
+          <span class="cr-price">${i.aprox ? '≈ ' : ''}$${totalLinea(i.price, i.qty).toFixed(2)}</span>
         </div>
       </div>
       <button class="cr-delete" onclick="cartQty('${i.id}', -9999)" title="Eliminar">
@@ -1425,18 +1447,12 @@ function addToCart(id) {
   const p = allProducts.find(x => x.id === id);
 
   if (p.cat === 'frutas') {
-    // Use frutas segmented-control state
-    if (!frutaModes[id]) frutaModes[id] = { mode: 'kg', val: 0.5 };
-    const fm = frutaModes[id];
-    const qty = fm.val;
-    const suffix = fm.mode === 'kg' ? 'kg' : 'pzas';
-    const key = id + '_' + fm.mode;   // separate cart slot per mode
-
-    if (cart[key]) {
-      cart[key].qty = Math.round((cart[key].qty + qty) * 10) / 10;
-    } else {
-      cart[key] = { ...p, id: key, qty, unitLabel: suffix };
-    }
+    // Un lugar en el carrito por unidad: 'id_kg' o 'id_unit', con el precio de esa unidad
+    const fm = estadoFruta(p);
+    const key = id + (fm.mode === 'kg' ? '_kg' : '_unit');
+    const qty = ajustarCantidadFruta(p, fm.mode, (cart[key] ? cart[key].qty : 0) + fm.val);
+    const { precio, antes, aprox } = precioFruta(p, fm.mode);
+    cart[key] = { ...p, id: key, qty, unitLabel: fm.mode, price: precio, oldPrice: antes, aprox };
   } else {
     const qty = qtys[id] || 1;
     if (cart[id]) {
@@ -1453,12 +1469,20 @@ function addToCart(id) {
 }
 
 function cartQty(id, delta) {
-  if (!cart[id]) return;
+  const item = cart[id];
+  if (!item) return;
+  const p = item.unitLabel ? allProducts.find(x => x.id === parseInt(id, 10)) : null;
   if (delta <= -9999) {
     delete cart[id]; // trash button = full delete
+  } else if (p) {
+    // Frutas: los kilos suben y bajan de paso en paso (¼ kg, 100 g); las piezas de 1 en 1
+    const paso = item.unitLabel === 'kg' ? pasoKg(p) : 1;
+    const qty = Number((item.qty + delta * paso).toFixed(3));
+    if (qty < paso) delete cart[id];
+    else item.qty = ajustarCantidadFruta(p, item.unitLabel, qty);
   } else {
-    cart[id].qty += delta;
-    if (cart[id].qty <= 0) delete cart[id];
+    item.qty += delta;
+    if (item.qty <= 0) delete cart[id];
   }
   saveCart();
   updateCartUI();

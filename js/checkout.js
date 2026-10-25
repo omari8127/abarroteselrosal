@@ -46,12 +46,13 @@ function renderSummary() {
     return;
   }
 
-  const subtotal = items.reduce((s, i) => s + (i.oldPrice || i.price) * i.qty, 0);
-  let total = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const subtotal = items.reduce((s, i) => s + totalLinea(i.oldPrice || i.price, i.qty), 0);
+  let total = items.reduce((s, i) => s + totalLinea(i.price, i.qty), 0);
   const savings = subtotal - total;
 
   container.innerHTML = items.map(i => {
-    const qtyLabel = i.unitLabel ? `${i.qty} ${i.unitLabel}` : `x${i.qty}`;
+    const qtyLabel = i.unitLabel ? textoCantidadFruta(i.qty, i.unitLabel) : `x${i.qty}`;
+    const porUnidad = i.unitLabel === 'kg' ? 'el kilo' : 'c/u';
     const imgHtml = i.img
       ? `<img src="${i.img}" alt="${i.name}" onerror="this.style.display='none'">`
       : `<span style="font-size:1.5rem">${i.emoji || ''}</span>`;
@@ -60,9 +61,9 @@ function renderSummary() {
         <div class="ck-sum-img">${imgHtml}</div>
         <div class="ck-sum-info">
           <div class="ck-sum-name">${i.name}</div>
-          <div class="ck-sum-qty">${qtyLabel} · $${i.price.toFixed(2)} c/u</div>
+          <div class="ck-sum-qty">${qtyLabel} · $${i.price.toFixed(2)} ${porUnidad}${i.aprox ? ' · aprox.' : ''}</div>
         </div>
-        <div class="ck-sum-price">$${(i.price * i.qty).toFixed(2)}</div>
+        <div class="ck-sum-price">${i.aprox ? '≈ ' : ''}$${totalLinea(i.price, i.qty).toFixed(2)}</div>
       </div>`;
   }).join('');
 
@@ -104,18 +105,124 @@ function setDelivery(mode) {
 
   if (mode === 'domicilio') {
     addrBlock.classList.remove('hidden');
-    addrBlock.style.maxHeight = '600px';
+    addrBlock.style.maxHeight = '1400px';
     addrBlock.style.opacity = '1';
     pickupInfo.style.display = 'none';
+    iniciarMapa();
   } else {
     addrBlock.classList.add('hidden');
     addrBlock.style.maxHeight = '0';
     addrBlock.style.opacity = '0';
     pickupInfo.style.display = 'block';
     // Clear address errors when hiding
-    ['field-calle', 'field-num', 'field-colonia'].forEach(f => clearError(f));
+    ['field-zona', 'field-calle', 'field-num', 'field-colonia'].forEach(f => clearError(f));
   }
   renderSummary();
+}
+
+// ── ZONA DE ENTREGA ──────────────────────────────────────────────
+// A domicilio solo se entrega a máximo 1 km (en línea recta) de la tienda.
+// El cliente marca su casa en el mapa o usa su ubicación; la liga de Google
+// Maps de ese punto va en el pedido para el repartidor.
+// Las coordenadas son el centro de Calle Huatulco (OpenStreetMap); para
+// afinarlas, copia las de la tienda desde Google Maps.
+const TIENDA = { lat: 32.51251, lng: -116.97653, radioKm: 1 };
+let ckUbicacion = null;  // { lat, lng, km } de la casa del cliente
+let ckMapa = null;
+let ckPin = null;
+
+function distanciaKm(a, b) {
+  const rad = g => g * Math.PI / 180;
+  const dLat = rad(b.lat - a.lat);
+  const dLng = rad(b.lng - a.lng);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * 6371 * Math.asin(Math.sqrt(h));
+}
+
+const textoDistancia = km => km < 1 ? `${Math.round(km * 100) * 10} m` : `${km.toFixed(1)} km`;
+const ligaMapa = u => `https://maps.google.com/?q=${u.lat.toFixed(6)},${u.lng.toFixed(6)}`;
+const dentroDeZona = () => !!ckUbicacion && ckUbicacion.km <= TIENDA.radioKm;
+
+const iconoPin = clase => L.divIcon({
+  className: '',
+  html: `<svg class="ck-pin ${clase}" viewBox="0 0 24 24" fill="currentColor" stroke="#fff" stroke-width="1.5"><path d="M12 22s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="10" r="2.6" fill="#fff" stroke="none"/></svg>`,
+  iconSize: [0, 0],
+});
+
+function iniciarMapa() {
+  const el = document.getElementById('ck-mapa');
+  if (!el || typeof L === 'undefined') return;
+  if (ckMapa) {
+    setTimeout(() => ckMapa.invalidateSize(), 380); // el bloque se acaba de desplegar
+    return;
+  }
+  const tienda = L.latLng(TIENDA.lat, TIENDA.lng);
+  ckMapa = L.map(el, { scrollWheelZoom: false }).setView(tienda, 15);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap',
+  }).addTo(ckMapa);
+  L.circle(tienda, {
+    radius: TIENDA.radioKm * 1000, color: '#004795', weight: 2, fillColor: '#004795', fillOpacity: 0.07,
+  }).addTo(ckMapa);
+  L.marker(tienda, { icon: iconoPin('tienda'), keyboard: false })
+    .bindTooltip('Abarrotes El Rosal', { direction: 'top', offset: [0, -30] })
+    .addTo(ckMapa);
+  ckMapa.fitBounds(tienda.toBounds(TIENDA.radioKm * 2000), { padding: [8, 8] }); // el círculo completo
+  ckMapa.on('click', e => marcarCasa(e.latlng.lat, e.latlng.lng));
+}
+
+function marcarCasa(lat, lng) {
+  if (!ckMapa) return;
+  if (!ckPin) {
+    ckPin = L.marker([lat, lng], { icon: iconoPin('casa'), draggable: true }).addTo(ckMapa);
+    ckPin.on('dragend', () => {
+      const p = ckPin.getLatLng();
+      marcarCasa(p.lat, p.lng);
+    });
+  } else {
+    ckPin.setLatLng([lat, lng]);
+  }
+  ckUbicacion = { lat, lng, km: distanciaKm(TIENDA, { lat, lng }) };
+  clearError('field-zona');
+  pintarZona();
+}
+
+function usarMiUbicacion() {
+  const btn = document.getElementById('ck-zona-btn');
+  const estado = document.getElementById('ck-zona-estado');
+  if (!navigator.geolocation) {
+    estado.textContent = 'Tu navegador no comparte la ubicación. Toca el mapa para marcar tu casa.';
+    return;
+  }
+  btn.disabled = true;
+  estado.className = 'ck-zona-estado';
+  estado.textContent = 'Buscando tu ubicación…';
+  navigator.geolocation.getCurrentPosition(pos => {
+    btn.disabled = false;
+    const { latitude: lat, longitude: lng } = pos.coords;
+    if (ckMapa) ckMapa.setView([lat, lng], Math.max(ckMapa.getZoom(), 16));
+    marcarCasa(lat, lng);
+  }, () => {
+    btn.disabled = false;
+    estado.textContent = 'No pudimos obtener tu ubicación. Toca el mapa para marcar tu casa.';
+  }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
+}
+
+function pintarZona() {
+  const estado = document.getElementById('ck-zona-estado');
+  if (!estado) return;
+  if (!ckUbicacion) {
+    estado.className = 'ck-zona-estado';
+    estado.textContent = 'Toca el mapa para marcar tu casa o usa tu ubicación.';
+  } else if (dentroDeZona()) {
+    estado.className = 'ck-zona-estado ok';
+    estado.textContent = `Tu casa está a ${textoDistancia(ckUbicacion.km)} de la tienda: sí te lo llevamos. Puedes mover el pin si no quedó exacto.`;
+  } else {
+    estado.className = 'ck-zona-estado fuera';
+    estado.innerHTML = `Estás a ${textoDistancia(ckUbicacion.km)} de la tienda y solo entregamos a máximo 1 km.
+      <button type="button" onclick="setDelivery('tienda')">Recoger en tienda</button>`;
+  }
 }
 
 // ── PAYMENT TOGGLE ───────────────────────────────────────────────
@@ -169,6 +276,17 @@ function validateForm() {
     const colonia = getVal('inp-colonia');
     setError('field-colonia', !colonia);
     if (!colonia) ok = false;
+
+    // La casa marcada en el mapa debe estar a máximo 1 km de la tienda
+    if (!dentroDeZona()) {
+      setError('field-zona', true);
+      if (!ckUbicacion) {
+        const estado = document.getElementById('ck-zona-estado');
+        estado.className = 'ck-zona-estado fuera';
+        estado.textContent = 'Marca tu casa en el mapa para confirmar que está dentro de la zona de entrega.';
+      }
+      ok = false;
+    }
   }
 
   return ok;
@@ -180,8 +298,8 @@ function validateForm() {
 function cartToServerItems() {
   return Object.entries(ckCart).map(([key, i]) => ({
     id: parseInt(key, 10),               // '701_kg' → 701
-    qty: Math.round(i.qty * 10) / 10,    // frutas por kg van en décimas
-    unit: i.unitLabel || null
+    qty: Number(Number(i.qty).toFixed(3)), // frutas por kilo: ¼ kg, 100 g…
+    unit: i.unitLabel || null              // 'kg' | 'pzas' en frutas y verduras
   }));
 }
 
@@ -206,9 +324,9 @@ async function callServer(fn, args) {
 function localQuote() {
   const items = cartToServerItems().map(({ id, qty, unit }, n) => {
     const i = Object.values(ckCart)[n];
-    return { id, name: i.name, unit, qty, unit_price: i.price, line_total: i.price * qty, old_price: i.oldPrice };
+    return { id, name: i.name, unit, qty, unit_price: i.price, line_total: totalLinea(i.price, qty), old_price: i.oldPrice, approx: !!i.aprox };
   });
-  const subtotal = items.reduce((s, i) => s + (i.old_price || i.unit_price) * i.qty, 0);
+  const subtotal = items.reduce((s, i) => s + totalLinea(i.old_price || i.unit_price, i.qty), 0);
   const itemsTotal = items.reduce((s, i) => s + i.line_total, 0);
   const shipping = ckDelivery === 'domicilio' ? SHIPPING_FEE : 0;
   return { items, subtotal, savings: subtotal - itemsTotal, shipping, total: itemsTotal + shipping };
@@ -219,7 +337,8 @@ function escHtml(s) {
 }
 
 const money = n => `$${Number(n).toFixed(2)}`;
-const qtyLabel = i => i.unit ? `${i.qty} ${i.unit}` : `x${i.qty}`;
+const qtyLabel = i => i.unit ? textoCantidadFruta(Number(i.qty), i.unit) : `x${i.qty}`;
+const conAprox = i => i.approx ? `≈ ${money(i.line_total)}` : money(i.line_total);
 
 // ── CONFIRM ORDER ────────────────────────────────────────────────
 async function confirmOrder() {
@@ -278,37 +397,41 @@ async function confirmOrder() {
   }[ckPayment]);
   const tag = document.getElementById('modal-entrega-tag');
   if (ckDelivery === 'tienda') {
-    setText('modal-entrega', 'Abarrotes El Rosal · Anexa 20 de Noviembre');
+    setText('modal-entrega', 'Abarrotes El Rosal · Calle Huatulco 13609, Anexa 20 de Noviembre');
     tag.textContent = 'Recoger en tienda · listo en 10-20 min';
     tag.classList.add('green');
   } else {
     setText('modal-entrega', entregaLabel);
-    tag.textContent = 'Entrega a domicilio';
+    tag.textContent = `Entrega a domicilio · a ${textoDistancia(ckUbicacion.km)} de la tienda`;
     tag.classList.remove('green');
   }
 
   // Foto y precio anterior salen del carrito; el precio que cuenta es el del servidor
+  // (una fruta puede venir dos veces: por kilo y por pieza, por eso la llave lleva la unidad)
   const fromCart = {};
-  Object.entries(ckCart).forEach(([key, i]) => { fromCart[parseInt(key, 10)] = i; });
-  const piezas = quote.items.reduce((s, i) => s + (i.unit ? 1 : Number(i.qty)), 0);
+  Object.entries(ckCart).forEach(([key, i]) => { fromCart[`${parseInt(key, 10)}|${i.unitLabel || ''}`] = i; });
+  const piezas = quote.items.reduce((s, i) => s + (i.unit === 'kg' ? 1 : Number(i.qty)), 0);
   setText('modal-count', `${quote.items.length} ${quote.items.length === 1 ? 'producto' : 'productos'} · ${piezas} ${piezas === 1 ? 'pieza' : 'piezas'}`);
   document.getElementById('modal-items').innerHTML = quote.items.map(i => {
-    const c = fromCart[i.id] || {};
+    const c = fromCart[`${i.id}|${i.unit || ''}`] || {};
     const img = c.img
       ? `<img src="${escHtml(c.img)}" alt="" onerror="this.remove()">`
       : '';
     const old = Number(c.oldPrice) > Number(i.unit_price) ? `<s>${money(c.oldPrice)}</s>` : '';
-    const badge = i.unit ? `${i.qty}${i.unit}` : `x${i.qty}`;
+    const badge = i.unit ? qtyLabel(i).replace(' pzas', '').replace(' pza', '') : `x${i.qty}`;
+    const porUnidad = i.unit === 'kg' ? 'el kilo' : 'c/u';
     return `
       <div class="ck-mp">
         <div class="ck-mp-img">${img}<span class="ck-mp-qty">${escHtml(badge)}</span></div>
         <div class="ck-mp-info">
           <div class="ck-mp-name">${escHtml(i.name)}</div>
-          <div class="ck-mp-meta">${qtyLabel(i)} · ${money(i.unit_price)} c/u${old}</div>
+          <div class="ck-mp-meta">${qtyLabel(i)} · ${money(i.unit_price)} ${porUnidad}${old}</div>
         </div>
-        <div class="ck-mp-price">${money(i.line_total)}</div>
+        <div class="ck-mp-price">${conAprox(i)}</div>
       </div>`;
   }).join('');
+  // Frutas y verduras se pesan al surtir: el total puede moverse unos pesos
+  document.getElementById('modal-aprox').hidden = !quote.items.some(i => i.approx);
 
   // Productos (precio normal) − Ahorros + Envío = Total
   const row = (label, value, cls = '') =>
@@ -333,7 +456,11 @@ async function confirmOrder() {
   }
 
   // Store for WA
-  window._ckOrder = { nombre, tel, notas, entregaLabel, pagoLabel, quote, offline: !!res.offline };
+  // La dirección que se guarda lleva la liga del punto marcado en el mapa (la ve el panel)
+  const direccion = ckDelivery === 'domicilio'
+    ? `${entregaLabel} · Ubicación: ${ligaMapa(ckUbicacion)} (a ${textoDistancia(ckUbicacion.km)})`
+    : null;
+  window._ckOrder = { nombre, tel, notas, entregaLabel, direccion, pagoLabel, quote, offline: !!res.offline };
 
   // Open modal
   document.getElementById('ck-modal').classList.add('open');
@@ -359,7 +486,7 @@ async function sendWAFinal() {
       p_payment_method: ckPayment,
       p_customer_name: o.nombre,
       p_phone: o.tel,
-      p_address: ckDelivery === 'domicilio' ? o.entregaLabel : null,
+      p_address: o.direccion,
       p_notes: o.notas || null
     });
     if (res.error) {
@@ -382,8 +509,9 @@ async function sendWAFinal() {
 
   if (ckDelivery === 'domicilio') {
     msg += `*Entrega:* ${o.entregaLabel}\n`;
+    msg += `*Ubicación:* ${ligaMapa(ckUbicacion)} (a ${textoDistancia(ckUbicacion.km)} de la tienda)\n`;
   } else {
-    msg += `*Entrega:* Recoger en tienda (Anexa 20 de Noviembre)\n`;
+    msg += `*Entrega:* Recoger en tienda (Calle Huatulco 13609, Anexa 20 de Noviembre)\n`;
     msg += `*Tiempo estimado:* Pasar por el producto en 10-20 minutos.\n`;
   }
 
@@ -391,8 +519,11 @@ async function sendWAFinal() {
   msg += `*Productos*\n`;
 
   quote.items.forEach(i => {
-    msg += `• ${i.name} ${qtyLabel(i)} — ${money(i.line_total)}\n`;
+    msg += `• ${i.name} ${qtyLabel(i)} — ${conAprox(i)}\n`;
   });
+  if (quote.items.some(i => i.approx)) {
+    msg += `_Frutas y verduras: precio aproximado, se cobra lo que pese al surtir._\n`;
+  }
 
   msg += `\nProductos: ${money(quote.subtotal)}\n`;
   if (Number(quote.savings) > 0) msg += `Ahorros: -${money(quote.savings)}\n`;
@@ -426,7 +557,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Set initial max-height for transition to work
   const addrBlock = document.getElementById('address-block');
   if (addrBlock) {
-    addrBlock.style.maxHeight = '600px';
+    addrBlock.style.maxHeight = '1400px';
     addrBlock.style.opacity = '1';
   }
+  if (ckDelivery === 'domicilio') iniciarMapa();
 });

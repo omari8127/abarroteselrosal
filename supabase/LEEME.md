@@ -133,6 +133,18 @@ Eso sigue en [`data/productos.js`](../data/productos.js) (nombre, foto, descripc
 `productos.sql` agrega los productos nuevos con su precio, pero **no cambia** precios,
 ofertas ni disponibilidad de los que ya existen: eso se maneja desde el panel.
 
+## Precios en .99 y frutas y verduras
+
+Todos los precios terminan en **.99** (al .99 más cercano). Si en el panel escribes
+otro precio, se guarda en .99 (45.50 → 45.99). Las frutas y verduras se venden **por
+kilo** (y también por pieza, con el peso aproximado de una pieza) o **por pieza**:
+eso se define en `data/productos.js` (`venta`, `pesoPza`, `paso`).
+
+Si tu base es anterior a este cambio, ejecuta una vez
+[`migracion-precios-y-frutas.sql`](migracion-precios-y-frutas.sql) en el SQL Editor
+**antes** de publicar la nueva versión de la tienda. Al final debe mostrar
+`precios_sin_99 = 0`.
+
 ## Pago con tarjeta
 
 Si tu base se creó antes de que existiera el pago con tarjeta, ejecuta una vez

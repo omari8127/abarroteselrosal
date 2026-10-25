@@ -2320,3 +2320,10 @@ html.cart-open,html.cart-open body{overflow:hidden}
   .add-btn.added:hover .ab-on { display: none; }
   .add-btn.added:hover .ab-off { display: inline-flex; }
 }
+
+/* ── Frutas y verduras: precio por kilo o pieza ─────────────────── */
+.prod-unit { font-size: 0.8rem; font-weight: 700; color: #6b7280; margin-left: -2px; }
+.prod-piece-note { font-size: 0.75rem; font-weight: 600; color: #6b7280; margin-top: 2px; line-height: 1.3; }
+.detalle-unit { font-size: 0.5em; font-weight: 700; color: #6b7280; margin-left: 4px; }
+.detalle-fruta-nota { font-size: 0.9rem; font-weight: 600; color: #6b7280; margin: -0.5rem 0 1rem; }
+.prod-card .frutas-seg-ctrl .seg-btn { text-transform: none; font-size: 0.8rem; letter-spacing: 0; }

@@ -10,7 +10,9 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style-new.css?v=30">
+  <link rel="stylesheet" href="css/style-new.css?v=31">
+  <!-- Mapa de la zona de entrega (OpenStreetMap) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <style>
     /* ─── CHECKOUT LAYOUT ──────────────────────────────────── */
     .ck-page {
@@ -219,6 +221,144 @@
       #address-block {
         grid-template-columns: minmax(0, 1fr);
       }
+    }
+
+    .ck-legal {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    .ck-legal a {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    /* ─── ZONA DE ENTREGA (1 km) ───────────────────────────── */
+    .ck-zona {
+      border: 1.5px solid #e2e5ea;
+      border-radius: 14px;
+      padding: 14px;
+      background: #fafbfc;
+    }
+
+    .ck-zona-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .ck-zona-head strong {
+      display: block;
+      font-size: 0.95rem;
+      color: #26303d;
+    }
+
+    .ck-zona-head span {
+      font-size: 0.82rem;
+      color: #6b7280;
+    }
+
+    .ck-zona-ico {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+      border-radius: 10px;
+      background: #eaf2fc;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ck-zona-mapa {
+      height: 260px;
+      border-radius: 12px;
+      border: 1px solid #e2e5ea;
+      overflow: hidden;
+      z-index: 0;
+      background: #e9edf2;
+    }
+
+    .ck-zona-btn {
+      margin-top: 10px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 16px;
+      border-radius: 12px;
+      border: 1.5px solid #cfdcee;
+      background: #fff;
+      color: var(--blue);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+
+    .ck-zona-btn:hover {
+      background: #eaf2fc;
+    }
+
+    .ck-zona-btn:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .ck-zona-estado {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid #e2e5ea;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #4b5563;
+    }
+
+    .ck-zona-estado.ok {
+      background: #e8f5eb;
+      border-color: #b9e2c3;
+      color: #1a7a2e;
+    }
+
+    .ck-zona-estado.fuera {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+
+    .ck-zona-estado button {
+      margin-left: 6px;
+      border: none;
+      background: none;
+      color: var(--blue);
+      font-weight: 800;
+      text-decoration: underline;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .ck-field.has-error.ck-zona {
+      border-color: #e53935;
+    }
+
+    /* Pin de la casa y de la tienda en el mapa */
+    .ck-pin {
+      width: 30px;
+      height: 30px;
+      margin: -30px 0 0 -15px;
+      color: #e53935;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+    }
+
+    .ck-pin.tienda {
+      color: var(--blue);
     }
 
     /* ─── PAYMENT OPTIONS ──────────────────────────────────── */
@@ -931,6 +1071,31 @@
       color: #8a6d00;
     }
 
+    .ck-modal-aprox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid #e6eaf0;
+      color: #4b5563;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .ck-modal-savings[hidden],
+    .ck-modal-aprox[hidden] {
+      display: none;
+    }
+
+    .ck-modal-aprox svg {
+      flex: 0 0 18px;
+      color: var(--green);
+      margin-top: 1px;
+    }
+
     .ck-modal-totals {
       padding: 10px 14px 4px;
     }
@@ -1243,25 +1408,41 @@
         </div>
 
         <div id="address-block">
+          <!-- Zona de entrega: máximo 1 km de la tienda (ver js/checkout.js) -->
+          <div class="ck-field full ck-zona" id="field-zona">
+            <div class="ck-zona-head">
+              <span class="ck-zona-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></span>
+              <div>
+                <strong>Entregamos a máximo 1 km de la tienda</strong>
+                <span>Marca tu casa en el mapa: toca el lugar exacto o usa tu ubicación.</span>
+              </div>
+            </div>
+            <div class="ck-zona-mapa" id="ck-mapa" role="application" aria-label="Mapa de la zona de entrega"></div>
+            <button type="button" class="ck-zona-btn" id="ck-zona-btn" onclick="usarMiUbicacion()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+              Usar mi ubicación
+            </button>
+            <div class="ck-zona-estado" id="ck-zona-estado" aria-live="polite">Toca el mapa para marcar tu casa o usa tu ubicación.</div>
+          </div>
           <div class="ck-field full" id="field-calle">
             <label class="ck-label">Calle <span class="req">*</span></label>
-            <input class="ck-input" id="inp-calle" type="text" placeholder="Nombre de la calle"
+            <input class="ck-input" id="inp-calle" type="text" maxlength="60" placeholder="Nombre de la calle"
               autocomplete="address-line1">
             <span class="ck-err-msg">Ingresa el nombre de la calle.</span>
           </div>
           <div class="ck-field" id="field-num">
             <label class="ck-label">Número <span class="req">*</span></label>
-            <input class="ck-input" id="inp-num" type="text" placeholder="Ej. 123-A">
+            <input class="ck-input" id="inp-num" type="text" maxlength="10" placeholder="Ej. 123-A">
             <span class="ck-err-msg">Ingresa el número.</span>
           </div>
           <div class="ck-field" id="field-colonia">
             <label class="ck-label">Colonia <span class="req">*</span></label>
-            <input class="ck-input" id="inp-colonia" type="text" placeholder="Ej. Anexa 20 de Noviembre">
+            <input class="ck-input" id="inp-colonia" type="text" maxlength="50" placeholder="Ej. Anexa 20 de Noviembre">
             <span class="ck-err-msg">Ingresa la colonia.</span>
           </div>
           <div class="ck-field full">
             <label class="ck-label">Referencias (opcional)</label>
-            <input class="ck-input" id="inp-refs" type="text" placeholder="Ej. Casa color azul, cruce con Av. Reforma">
+            <input class="ck-input" id="inp-refs" type="text" maxlength="80" placeholder="Ej. Casa color azul, junto a la tienda">
           </div>
         </div>
 
@@ -1269,9 +1450,9 @@
           style="display:none;margin-top:1rem;background:#e8f4fd;border-radius:10px;padding:16px;font-size:0.95rem;color:#0067b1;border:1px solid rgba(0,103,177,0.15)">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-            <strong style="font-size:1.05rem">Sucursal Anexa 20 de Noviembre</strong>
+            <strong style="font-size:1.05rem">Abarrotes El Rosal</strong>
           </div>
-          <div style="margin-left:28px;opacity:0.85">Tijuana, Baja California — Lun a Dom: 9:00 am – 9:00 pm</div>
+          <div style="margin-left:28px;opacity:0.85">Calle Huatulco 13609, Anexa 20 de Noviembre, Tijuana — Lun a Dom: 9:00 am – 9:00 pm</div>
         </div>
       </div>
 
@@ -1317,6 +1498,7 @@
       <button class="ck-confirm-btn" onclick="confirmOrder()">
          Confirmar pedido
       </button>
+      <p class="ck-legal">Al confirmar tu pedido aceptas los <a href="terminos.html" target="_blank">Términos de uso</a> y el <a href="privacidad.html" target="_blank">Aviso de privacidad</a>.</p>
     </div>
 
     <!-- RIGHT: ORDER SUMMARY -->
@@ -1417,6 +1599,11 @@
         <div class="ck-modal-savings" id="modal-savings" hidden>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
           <span>Con las ofertas ahorras <strong id="modal-savings-amount">$0.00</strong> en este pedido</span>
+        </div>
+
+        <div class="ck-modal-aprox" id="modal-aprox" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+          <span>Las frutas y verduras se pesan al surtir: su precio (≈) es aproximado y se cobra lo que pesen.</span>
         </div>
 
         <div class="ck-modal-section">
@@ -1524,14 +1711,14 @@
     
     <div class="sf-sub-container">
       <div class="sf-sub-text">
-        Al continuar en esta página, usted acuerda regirse por nuestros <a href="#">Términos de uso</a>.
+        Al continuar en esta página, usted acuerda regirse por nuestros <a href="terminos.html">Términos de uso</a>.
       </div>
       <div class="sf-divider"></div>
       <div class="sf-bottom-row">
         <div class="sf-legal-links">
-          <a href="#">Política de Compra</a>
-          <a href="#">Aviso de Privacidad</a>
-          <a href="#">Política de Cookies</a>
+          <a href="terminos.html#compras">Política de Compra</a>
+          <a href="privacidad.html">Aviso de Privacidad</a>
+          <a href="privacidad.html#cookies">Política de Cookies</a>
         </div>
         <div class="sf-copyright">
           © 1999-2026 Abarrotes El Rosal. Todos los derechos reservados.
@@ -1541,9 +1728,10 @@
   </footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
-  <script src="data/productos.js?v=7"></script>
+  <script src="data/productos.js?v=8"></script>
   <script src="js/catalogo.js?v=1"></script>
-  <script src="js/checkout.js?v=6"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="js/checkout.js?v=7"></script>
 
 </body>
 

@@ -226,7 +226,9 @@ function filaProducto(p) {
       <div>
         <div class="prod-name">${esc(p.name)}</div>
         <div class="prod-meta">
-          <span>${esc(nombreCat[p.category] || p.category)}${p.unit ? ' · ' + esc(p.unit) : ''}</span>
+          <span>${esc(nombreCat[p.category] || p.category)}${p.category === 'frutas'
+            ? ` · precio por ${p.unit === 'pza' ? 'pieza' : 'kilo'}`
+            : p.unit ? ' · ' + esc(p.unit) : ''}</span>
           ${off ? `<span class="tag tag-offer">-${off}%</span>` : ''}
           ${p.active ? '' : '<span class="tag tag-out">No disponible</span>'}
         </div>
@@ -252,9 +254,13 @@ function filaProducto(p) {
     </div>`;
 }
 
+// Todos los precios terminan en .99: lo que se escriba se lleva al .99 más cercano
+// (45.50 → 45.99). La base de datos hace lo mismo al guardar.
 const leerMonto = v => {
   const t = String(v).trim().replace(',', '.').replace(/[^\d.]/g, '');
-  return t === '' ? null : Math.round(parseFloat(t) * 100) / 100;
+  if (t === '') return null;
+  const n = parseFloat(t);
+  return n > 0 ? Math.max(0.99, Math.round(Number((n + 0.01).toFixed(6))) - 0.01) : n;
 };
 
 function validar(p) {
@@ -391,6 +397,12 @@ function waCliente(o) {
   return `https://wa.me/${num}?text=${encodeURIComponent(texto)}`;
 }
 
+// La dirección trae la liga de Google Maps del punto que marcó el cliente: se vuelve botón
+function direccionConMapa(direccion) {
+  return esc(direccion).replace(/ · Ubicación: (https:\/\/maps\.google\.com\/\?q=[-\d.,]+) \(a ([^)]+)\)/,
+    (_, liga, dist) => `<br><a href="${liga}" target="_blank" rel="noopener">Ver en el mapa</a> · a ${dist} de la tienda`);
+}
+
 function tarjetaPedido(o) {
   const items = (o.order_items || []).map(i => `
     <div><span>${esc(i.product_name)} <span class="q">${i.unit_label ? `${Number(i.quantity)} ${esc(i.unit_label)}` : `x${Number(i.quantity)}`}</span></span>
@@ -411,7 +423,7 @@ function tarjetaPedido(o) {
       </div>
       <div class="order-grid">
         <div><div class="k">Cliente</div>${esc(o.customer_name)}<br><a href="${waCliente(o)}" target="_blank" rel="noopener">${esc(o.phone)}</a></div>
-        <div><div class="k">Entrega</div>${o.delivery_type === 'domicilio' ? esc(o.address) : 'Recoge en tienda'}</div>
+        <div><div class="k">Entrega</div>${o.delivery_type === 'domicilio' ? direccionConMapa(o.address) : 'Recoge en tienda'}</div>
         <div><div class="k">Pago</div>${{ efectivo: 'Efectivo', tarjeta: 'Tarjeta', transferencia: 'Transferencia' }[o.payment_method] || o.payment_method}${Number(o.shipping) > 0 ? ` · envío ${money(o.shipping)}` : ''}</div>
       </div>
       <div class="order-items">${items}</div>

@@ -145,6 +145,24 @@ Si tu base es anterior a este cambio, ejecuta una vez
 **antes** de publicar la nueva versión de la tienda. Al final debe mostrar
 `precios_sin_99 = 0`.
 
+## Programa de puntos
+
+Con cuenta, el cliente gana **1 punto por cada $10** de productos cuando en el panel
+marcas su pedido como **Entregado**, más **50 puntos** con su primer pedido entregado.
+Cada **50 puntos = $10 de descuento**, que usa al finalizar su pedido. Si cancelas un
+pedido, se le regresan los puntos que usó. Los puntos no vencen. Las reglas están en
+"PROGRAMA DE PUNTOS" de `schema.sql` y en `PUNTOS` de `js/checkout.js`.
+
+Si tu base es anterior a los puntos, ejecuta una vez
+[`migracion-puntos.sql`](migracion-puntos.sql) **antes** de publicar la nueva versión
+de la tienda y del panel.
+
+## Correos
+
+Las plantillas de los correos (confirmar cuenta, restablecer contraseña…) y cómo
+conectar un servicio de correo para que lleguen a tus clientes están en
+[`correos/LEEME.md`](correos/LEEME.md).
+
 ## Pago con tarjeta
 
 Si tu base se creó antes de que existiera el pago con tarjeta, ejecuta una vez

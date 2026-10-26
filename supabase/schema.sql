@@ -57,6 +57,9 @@ create table if not exists public.orders (
   total           numeric(10,2) not null,
   status          text not null default 'pending' check (status in ('pending', 'done', 'canceled'))
 );
+-- Puntos que el cliente usó en el pedido y el descuento que le dieron (ver PROGRAMA DE PUNTOS)
+alter table public.orders add column if not exists points_used integer not null default 0 check (points_used >= 0);
+alter table public.orders add column if not exists points_discount numeric(10,2) not null default 0 check (points_discount >= 0);
 create index if not exists orders_user_id_idx on public.orders (user_id);
 create index if not exists orders_phone_created_idx on public.orders (phone, created_at);
 
@@ -148,7 +151,9 @@ as $$
 $$;
 revoke all on function private.precio_99(numeric) from public, anon, authenticated;
 
-create or replace function private.calcular_pedido(p_items jsonb, p_delivery_type text)
+-- p_points: puntos que el cliente quiere usar (de 50 en 50; ver PROGRAMA DE PUNTOS)
+drop function if exists private.calcular_pedido(jsonb, text);
+create or replace function private.calcular_pedido(p_items jsonb, p_delivery_type text, p_points integer default 0)
 returns jsonb
 language plpgsql
 stable
@@ -156,6 +161,11 @@ set search_path = ''
 as $$
 declare
   c_envio constant numeric := 10.00;  -- costo de envío a domicilio
+  c_puntos_canje    constant integer := 50;   -- cada 50 puntos…
+  c_pesos_canje     constant numeric := 10;   -- …son $10 de descuento
+  c_pesos_por_punto constant numeric := 10;   -- se gana 1 punto por cada $10
+  v_points   integer := coalesce(p_points, 0);
+  v_discount numeric := 0;
   v_item     jsonb;
   v_prod     record;
   v_id       integer;
@@ -243,33 +253,56 @@ begin
     v_shipping := c_envio;
   end if;
 
+  -- Puntos: solo con sesión, de 50 en 50, sin pasar del saldo ni del total de productos
+  if v_points <> 0 then
+    if v_points < 0 or v_points % c_puntos_canje <> 0 then
+      raise exception 'Los puntos se usan de % en %.', c_puntos_canje, c_puntos_canje;
+    end if;
+    if auth.uid() is null then
+      raise exception 'Inicia sesión para usar tus puntos.';
+    end if;
+    if v_points > private.saldo_puntos(auth.uid()) then
+      raise exception 'No tienes suficientes puntos.';
+    end if;
+    v_discount := (v_points / c_puntos_canje) * c_pesos_canje;
+    if v_discount > v_items then
+      raise exception 'El descuento con puntos no puede ser mayor que tus productos.';
+    end if;
+  end if;
+
   return jsonb_build_object(
     'items',    v_lines,
     'subtotal', v_subtotal,
     'savings',  greatest(v_subtotal - v_items, 0),
     'shipping', v_shipping,
-    'total',    v_items + v_shipping
+    'points_used',     v_points,
+    'points_discount', v_discount,
+    'points_earned',   floor((v_items - v_discount) / c_pesos_por_punto),  -- al entregarlo (con cuenta)
+    'total',    v_items - v_discount + v_shipping
   );
 end;
 $$;
-revoke all on function private.calcular_pedido(jsonb, text) from public, anon, authenticated;
+revoke all on function private.calcular_pedido(jsonb, text, integer) from public, anon, authenticated;
 
 -- ── COTIZAR (público) ────────────────────────────────────────────
 -- Para mostrar el total real antes de confirmar. No guarda nada.
-create or replace function public.cotizar_pedido(p_items jsonb, p_delivery_type text)
+drop function if exists public.cotizar_pedido(jsonb, text);
+create or replace function public.cotizar_pedido(p_items jsonb, p_delivery_type text, p_points integer default 0)
 returns jsonb
 language sql
 stable
 security definer
 set search_path = ''
 as $$
-  select private.calcular_pedido(p_items, p_delivery_type);
+  select private.calcular_pedido(p_items, p_delivery_type, p_points);
 $$;
-revoke all on function public.cotizar_pedido(jsonb, text) from public;
-grant execute on function public.cotizar_pedido(jsonb, text) to anon, authenticated;
+revoke all on function public.cotizar_pedido(jsonb, text, integer) from public;
+grant execute on function public.cotizar_pedido(jsonb, text, integer) to anon, authenticated;
 
 -- ── CREAR PEDIDO (público) ───────────────────────────────────────
 -- Única forma de guardar un pedido. Devuelve la cotización + order_id (folio).
+-- p_points: puntos que el cliente usa en este pedido (se descuentan de su saldo).
+drop function if exists public.crear_pedido(jsonb, text, text, text, text, text, text);
 create or replace function public.crear_pedido(
   p_items          jsonb,
   p_delivery_type  text,
@@ -277,7 +310,8 @@ create or replace function public.crear_pedido(
   p_customer_name  text,
   p_phone          text,
   p_address        text default null,
-  p_notes          text default null
+  p_notes          text default null,
+  p_points         integer default 0
 )
 returns jsonb
 language plpgsql
@@ -318,15 +352,21 @@ begin
     raise exception 'Recibimos varios pedidos seguidos de este teléfono. Escríbenos por WhatsApp para ayudarte.';
   end if;
 
-  v_calc := private.calcular_pedido(p_items, p_delivery_type);
+  -- Dos pedidos al mismo tiempo no pueden gastar los mismos puntos
+  if coalesce(p_points, 0) > 0 and auth.uid() is not null then
+    perform pg_advisory_xact_lock(hashtext('puntos:' || auth.uid()::text));
+  end if;
+
+  v_calc := private.calcular_pedido(p_items, p_delivery_type, p_points);
 
   insert into public.orders (
     user_id, customer_name, phone, delivery_type, address, payment_method, notes,
-    subtotal, savings, shipping, total
+    subtotal, savings, shipping, total, points_used, points_discount
   ) values (
     auth.uid(), v_name, v_phone, p_delivery_type, v_address, p_payment_method, v_notes,
     (v_calc ->> 'subtotal')::numeric, (v_calc ->> 'savings')::numeric,
-    (v_calc ->> 'shipping')::numeric, (v_calc ->> 'total')::numeric
+    (v_calc ->> 'shipping')::numeric, (v_calc ->> 'total')::numeric,
+    (v_calc ->> 'points_used')::integer, (v_calc ->> 'points_discount')::numeric
   )
   returning id into v_order_id;
 
@@ -335,11 +375,133 @@ begin
   from jsonb_to_recordset(v_calc -> 'items')
     as i(id integer, name text, unit text, qty numeric, unit_price numeric, line_total numeric);
 
+  -- Los puntos usados se descuentan del saldo (si se cancela el pedido, se regresan)
+  if (v_calc ->> 'points_used')::integer > 0 then
+    insert into public.puntos_movimientos (user_id, order_id, tipo, puntos)
+    values (auth.uid(), v_order_id, 'canje', -(v_calc ->> 'points_used')::integer);
+  end if;
+
   return v_calc || jsonb_build_object('order_id', v_order_id);
 end;
 $$;
-revoke all on function public.crear_pedido(jsonb, text, text, text, text, text, text) from public;
-grant execute on function public.crear_pedido(jsonb, text, text, text, text, text, text) to anon, authenticated;
+revoke all on function public.crear_pedido(jsonb, text, text, text, text, text, text, integer) from public;
+grant execute on function public.crear_pedido(jsonb, text, text, text, text, text, text, integer) to anon, authenticated;
+
+-- ================================================================
+--  PROGRAMA DE PUNTOS
+--  • Con cuenta, se gana 1 punto por cada $10 de productos (sin envío)
+--    cuando la tienda marca el pedido como Entregado.
+--  • 50 puntos extra cuando se entrega su primer pedido.
+--  • Cada 50 puntos = $10 de descuento (se usan al hacer el pedido).
+--  • Si un pedido se cancela, se regresan los puntos que usó; si un
+--    pedido entregado vuelve a pendiente, se quitan los que ganó.
+--  • Los puntos no vencen. Mismas reglas en js/checkout.js (PUNTOS).
+-- ================================================================
+create table if not exists public.puntos_movimientos (
+  id          bigint generated always as identity primary key,
+  user_id     uuid not null references auth.users(id) on delete cascade,
+  order_id    bigint references public.orders(id) on delete set null,
+  tipo        text not null check (tipo in ('compra', 'bono_primer_pedido', 'canje', 'devolucion_canje')),
+  puntos      integer not null,
+  created_at  timestamptz not null default now()
+);
+create index if not exists puntos_movimientos_user_idx on public.puntos_movimientos (user_id, created_at desc);
+-- Un movimiento de cada tipo por pedido, y un solo bono de primer pedido por cliente
+create unique index if not exists puntos_un_tipo_por_pedido on public.puntos_movimientos (order_id, tipo) where order_id is not null;
+create unique index if not exists puntos_un_bono_por_cliente on public.puntos_movimientos (user_id) where tipo = 'bono_primer_pedido';
+
+-- Nadie escribe aquí desde la página: solo las funciones de abajo
+alter table public.puntos_movimientos enable row level security;
+revoke all on public.puntos_movimientos from anon, authenticated;
+grant select on public.puntos_movimientos to authenticated;
+drop policy if exists "Ver mis puntos" on public.puntos_movimientos;
+create policy "Ver mis puntos" on public.puntos_movimientos
+  for select to authenticated using ((select auth.uid()) = user_id);
+
+create or replace function private.saldo_puntos(p_user uuid)
+returns integer
+language sql
+stable
+set search_path = ''
+as $$
+  select coalesce(sum(puntos), 0)::integer from public.puntos_movimientos where user_id = p_user;
+$$;
+revoke all on function private.saldo_puntos(uuid) from public, anon, authenticated;
+
+-- Saldo e historial del cliente con sesión (Mi cuenta y checkout)
+create or replace function public.mis_puntos()
+returns jsonb
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select jsonb_build_object(
+    'saldo', private.saldo_puntos(auth.uid()),
+    'tiene_bono', exists (select 1 from public.puntos_movimientos
+                          where user_id = auth.uid() and tipo = 'bono_primer_pedido'),
+    'movimientos', coalesce((
+      select jsonb_agg(jsonb_build_object('tipo', m.tipo, 'puntos', m.puntos, 'pedido', m.order_id, 'fecha', m.created_at)
+                       order by m.created_at desc, m.id desc)
+      from (select * from public.puntos_movimientos where user_id = auth.uid()
+            order by created_at desc, id desc limit 50) m
+    ), '[]'::jsonb)
+  );
+$$;
+revoke all on function public.mis_puntos() from public;
+grant execute on function public.mis_puntos() to authenticated;
+
+-- Al cambiar el estado de un pedido (panel de administrador) se suman o regresan puntos
+create or replace function private.puntos_por_estado()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  c_pesos_por_punto constant numeric := 10;
+  c_bono            constant integer := 50;
+  v_ganados integer;
+begin
+  if new.user_id is null or new.status = old.status then
+    return new;
+  end if;
+
+  if new.status = 'done' then
+    -- Entregado: puntos de la compra y, si es su primer pedido entregado, el bono
+    v_ganados := floor((new.total - new.shipping) / c_pesos_por_punto);
+    if v_ganados > 0 then
+      insert into public.puntos_movimientos (user_id, order_id, tipo, puntos)
+      values (new.user_id, new.id, 'compra', v_ganados)
+      on conflict do nothing;
+    end if;
+    insert into public.puntos_movimientos (user_id, order_id, tipo, puntos)
+    values (new.user_id, new.id, 'bono_primer_pedido', c_bono)
+    on conflict do nothing;  -- solo hay un bono por cliente
+  elsif old.status = 'done' then
+    -- Dejó de estar entregado: se quitan los puntos que ganó con este pedido
+    delete from public.puntos_movimientos
+    where order_id = new.id and tipo in ('compra', 'bono_primer_pedido');
+  end if;
+
+  if new.status = 'canceled' and new.points_used > 0 then
+    -- Cancelado: se regresan los puntos que usó
+    insert into public.puntos_movimientos (user_id, order_id, tipo, puntos)
+    values (new.user_id, new.id, 'devolucion_canje', new.points_used)
+    on conflict do nothing;
+  elsif old.status = 'canceled' then
+    -- Se reactivó un pedido cancelado: los puntos vuelven a estar usados
+    delete from public.puntos_movimientos where order_id = new.id and tipo = 'devolucion_canje';
+  end if;
+
+  return new;
+end;
+$$;
+revoke all on function private.puntos_por_estado() from public, anon, authenticated;
+drop trigger if exists puntos_por_estado on public.orders;
+create trigger puntos_por_estado
+  after update of status on public.orders
+  for each row execute function private.puntos_por_estado();
 
 -- ================================================================
 --  PANEL DE ADMINISTRACIÓN (sitio aparte: carpeta admin/)

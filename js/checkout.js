@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   ckCart = syncCartWithCatalog(JSON.parse(localStorage.getItem('cart')) || {});
   renderSummary();
   if (Object.keys(ckCart).length === 0) showEmptyPage();
+  cargarPuntos();
 });
 
 // ── EMPTY STATE ──────────────────────────────────────────────────
@@ -43,12 +44,26 @@ function renderSummary() {
   if (!items.length) {
     container.innerHTML = '<div class="ck-empty-cart">Tu carrito está vacío</div>';
     if (totals) totals.style.display = 'none';
+    document.getElementById('ck-puntos').hidden = true;
     return;
   }
 
   const subtotal = items.reduce((s, i) => s + totalLinea(i.oldPrice || i.price, i.qty), 0);
   let total = items.reduce((s, i) => s + totalLinea(i.price, i.qty), 0);
   const savings = subtotal - total;
+
+  // Puntos: no se pueden usar más de los que tiene ni más que el total de productos
+  ckProductos = total;
+  ckPuntos = Math.min(ckPuntos, puntosMaximos());
+  const descuentoPuntos = descuentoDePuntos(ckPuntos);
+  total -= descuentoPuntos;
+  const ptsRow = document.getElementById('ck-points-row');
+  if (ptsRow) {
+    ptsRow.style.display = descuentoPuntos > 0 ? 'flex' : 'none';
+    document.getElementById('ck-points-label').textContent = `Puntos (${ckPuntos})`;
+    document.getElementById('ck-points').textContent = `-$${descuentoPuntos.toFixed(2)}`;
+  }
+  pintarPuntos();
 
   container.innerHTML = items.map(i => {
     const qtyLabel = i.unitLabel ? textoCantidadFruta(i.qty, i.unitLabel) : `x${i.qty}`;
@@ -92,6 +107,79 @@ function renderSummary() {
       savRow.style.display = 'none';
     }
   }
+}
+
+// ── PUNTOS ───────────────────────────────────────────────────────
+// Mismas reglas que "PROGRAMA DE PUNTOS" en supabase/schema.sql: con cuenta se
+// gana 1 punto por cada $10 al recibir el pedido (+50 el primer pedido) y cada
+// 50 puntos son $10 de descuento. El servidor valida el saldo al crear el pedido.
+const PUNTOS = { porCanje: 50, pesosPorCanje: 10, pesosPorPunto: 10, bono: 50 };
+let ckSesion = false;   // ¿el cliente entró a su cuenta?
+let ckSaldo = 0;        // puntos que tiene
+let ckTieneBono = false;
+let ckPuntos = 0;       // puntos que quiere usar en este pedido
+let ckProductos = 0;    // total de productos (después de ofertas)
+
+const descuentoDePuntos = puntos => (puntos / PUNTOS.porCanje) * PUNTOS.pesosPorCanje;
+const puntosMaximos = () => Math.min(
+  Math.floor(ckSaldo / PUNTOS.porCanje),
+  Math.floor(ckProductos / PUNTOS.pesosPorCanje)
+) * PUNTOS.porCanje;
+const puntosQueGana = () => Math.floor((ckProductos - descuentoDePuntos(ckPuntos)) / PUNTOS.pesosPorPunto);
+
+async function cargarPuntos() {
+  if (!window.supabaseClient) return;
+  try {
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
+    ckSesion = !!session;
+    if (ckSesion) {
+      const { data } = await window.supabaseClient.rpc('mis_puntos');
+      if (data) {
+        ckSaldo = data.saldo;
+        ckTieneBono = data.tiene_bono;
+      }
+    }
+  } catch (err) {
+    console.warn('Puntos: no se pudo consultar el saldo.', err);
+  }
+  renderSummary();
+}
+
+function pintarPuntos() {
+  const el = document.getElementById('ck-puntos');
+  if (!el || !Object.keys(ckCart).length || !window.supabaseClient) return;
+  el.hidden = false;
+  const gana = puntosQueGana();
+  const bono = ckSesion && !ckTieneBono ? ` + ${PUNTOS.bono} de regalo por tu primer pedido` : '';
+
+  if (!ckSesion) {
+    el.innerHTML = `
+      <div class="ck-puntos-top"><strong>Gana ${gana + PUNTOS.bono} puntos con este pedido</strong></div>
+      <p><a href="mi-cuenta.html">Inicia sesión o crea tu cuenta</a> para juntarlos: 1 punto por cada $10 y 50 de regalo en tu primer pedido. Cada 50 puntos son $10 de descuento.</p>`;
+    return;
+  }
+
+  const max = puntosMaximos();
+  const usar = max > 0 ? `
+      <div class="ck-puntos-usar">
+        <span>Usar en este pedido</span>
+        <span class="ck-puntos-ctrl">
+          <button type="button" onclick="cambiarPuntos(-1)" aria-label="Usar menos puntos" ${ckPuntos <= 0 ? 'disabled' : ''}>−</button>
+          <span>${ckPuntos ? `${ckPuntos} · −$${descuentoDePuntos(ckPuntos).toFixed(2)}` : 'Ninguno'}</span>
+          <button type="button" onclick="cambiarPuntos(1)" aria-label="Usar más puntos" ${ckPuntos >= max ? 'disabled' : ''}>+</button>
+        </span>
+      </div>` : '';
+  const faltan = PUNTOS.porCanje - (ckSaldo % PUNTOS.porCanje);
+  el.innerHTML = `
+      <div class="ck-puntos-top"><strong>Tus puntos</strong><span class="ck-puntos-saldo">${ckSaldo} pts</span></div>
+      ${ckSaldo < PUNTOS.porCanje ? `<p>Te faltan ${faltan} para tu primer descuento de $10.</p>` : ''}
+      ${usar}
+      <p class="ck-puntos-gana">Al recibir este pedido ganas ${gana} puntos${bono}.</p>`;
+}
+
+function cambiarPuntos(dir) {
+  ckPuntos = Math.max(0, Math.min(puntosMaximos(), ckPuntos + dir * PUNTOS.porCanje));
+  renderSummary();
 }
 
 // ── DELIVERY TOGGLE ──────────────────────────────────────────────
@@ -329,7 +417,13 @@ function localQuote() {
   const subtotal = items.reduce((s, i) => s + totalLinea(i.old_price || i.unit_price, i.qty), 0);
   const itemsTotal = items.reduce((s, i) => s + i.line_total, 0);
   const shipping = ckDelivery === 'domicilio' ? SHIPPING_FEE : 0;
-  return { items, subtotal, savings: subtotal - itemsTotal, shipping, total: itemsTotal + shipping };
+  const pointsDiscount = descuentoDePuntos(ckPuntos);
+  return {
+    items, subtotal, savings: subtotal - itemsTotal, shipping,
+    points_used: ckPuntos, points_discount: pointsDiscount,
+    points_earned: Math.floor((itemsTotal - pointsDiscount) / PUNTOS.pesosPorPunto),
+    total: itemsTotal - pointsDiscount + shipping,
+  };
 }
 
 function escHtml(s) {
@@ -373,7 +467,7 @@ async function confirmOrder() {
   const btn = document.querySelector('.ck-confirm-btn');
   const btnText = btn ? btn.innerHTML : '';
   if (btn) { btn.disabled = true; btn.innerHTML = 'Calculando total...'; }
-  const res = await callServer('cotizar_pedido', { p_items: cartToServerItems(), p_delivery_type: ckDelivery });
+  const res = await callServer('cotizar_pedido', { p_items: cartToServerItems(), p_delivery_type: ckDelivery, p_points: ckPuntos });
   if (btn) { btn.disabled = false; btn.innerHTML = btnText; }
 
   if (res.error) {
@@ -440,7 +534,9 @@ async function confirmOrder() {
   document.getElementById('modal-totals').innerHTML =
     row('Productos', money(quote.subtotal))
     + (hasSavings ? row('Ahorros', `-${money(quote.savings)}`, 'savings') : '')
-    + (Number(quote.shipping) > 0 ? row('Envío', money(quote.shipping)) : row('Envío', 'Sin costo'));
+    + (Number(quote.points_discount) > 0 ? row(`Puntos (${quote.points_used})`, `-${money(quote.points_discount)}`, 'savings') : '')
+    + (Number(quote.shipping) > 0 ? row('Envío', money(quote.shipping)) : row('Envío', 'Sin costo'))
+    + (ckSesion ? row('Puntos que ganas al recibirlo', `+${Number(quote.points_earned) + (ckTieneBono ? 0 : PUNTOS.bono)}`, 'earn') : '');
   document.getElementById('modal-savings').hidden = !hasSavings;
   setText('modal-savings-amount', money(quote.savings));
   setText('modal-total', money(quote.total));
@@ -487,7 +583,8 @@ async function sendWAFinal() {
       p_customer_name: o.nombre,
       p_phone: o.tel,
       p_address: o.direccion,
-      p_notes: o.notas || null
+      p_notes: o.notas || null,
+      p_points: Number(o.quote.points_used) || 0
     });
     if (res.error) {
       alert(res.error);
@@ -527,6 +624,7 @@ async function sendWAFinal() {
 
   msg += `\nProductos: ${money(quote.subtotal)}\n`;
   if (Number(quote.savings) > 0) msg += `Ahorros: -${money(quote.savings)}\n`;
+  if (Number(quote.points_discount) > 0) msg += `Puntos usados: ${quote.points_used} (-${money(quote.points_discount)})\n`;
   if (Number(quote.shipping) > 0) msg += `Envío: ${money(quote.shipping)}\n`;
   msg += `*TOTAL: ${money(quote.total)}*\n`;
 

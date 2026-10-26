@@ -223,6 +223,97 @@
       }
     }
 
+    /* ─── PUNTOS ───────────────────────────────────────────── */
+    .ck-puntos {
+      margin: 0 1.25rem 1.25rem;
+      padding: 14px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #fafbfc;
+      font-size: 0.88rem;
+      color: #4b5563;
+    }
+
+    .ck-puntos[hidden] {
+      display: none;
+    }
+
+    .ck-puntos-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+    }
+
+    .ck-puntos-top strong {
+      font-size: 0.95rem;
+      color: #1f2937;
+    }
+
+    .ck-puntos-saldo {
+      font-weight: 800;
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    .ck-puntos p {
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .ck-puntos a {
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .ck-puntos-usar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .ck-puntos-ctrl {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid #cfdcee;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .ck-puntos-ctrl button {
+      width: 34px;
+      height: 34px;
+      border: none;
+      background: #fff;
+      color: var(--blue);
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .ck-puntos-ctrl button:disabled {
+      color: #c3c9d2;
+      cursor: default;
+    }
+
+    .ck-puntos-ctrl span {
+      min-width: 92px;
+      text-align: center;
+      font-weight: 800;
+      color: #1f2937;
+      font-size: 0.85rem;
+    }
+
+    .ck-puntos-gana {
+      color: #1a7a2e;
+      font-weight: 700;
+    }
+
     .ck-legal {
       margin-top: 10px;
       text-align: center;
@@ -1117,6 +1208,12 @@
       white-space: nowrap;
     }
 
+    .ck-mi.earn,
+    .ck-mi.earn .ck-mi-price {
+      color: #6b7280;
+      font-weight: 700;
+    }
+
     .ck-mi.savings,
     .ck-mi.savings .ck-mi-price {
       color: var(--green);
@@ -1517,6 +1614,10 @@
             <span>Ahorros</span>
             <span id="ck-savings">-$0.00</span>
           </div>
+          <div class="ck-sum-row savings" id="ck-points-row" style="display:none">
+            <span id="ck-points-label">Puntos</span>
+            <span id="ck-points">-$0.00</span>
+          </div>
           <div class="ck-sum-row" id="ck-shipping-row">
             <span>Envío</span>
             <span id="ck-shipping">$10.00</span>
@@ -1527,6 +1628,8 @@
             <span id="ck-total">$0.00</span>
           </div>
         </div>
+        <!-- Puntos El Rosal (ver js/checkout.js) -->
+        <div class="ck-puntos" id="ck-puntos" hidden></div>
       </div>
       <a href="productos.html" class="ck-back-link" style="margin-top:12px">
         ← Seguir comprando
@@ -1731,7 +1834,7 @@
   <script src="data/productos.js?v=8"></script>
   <script src="js/catalogo.js?v=1"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-  <script src="js/checkout.js?v=7"></script>
+  <script src="js/checkout.js?v=8"></script>
 
 </body>
 

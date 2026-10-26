@@ -365,7 +365,7 @@ async function cargarPedidos() {
 async function traerPedidos() {
   const { data, error } = await sb
     .from('orders')
-    .select('id, created_at, customer_name, phone, delivery_type, address, payment_method, notes, subtotal, savings, shipping, total, status, order_items(product_name, quantity, unit_label, total_price)')
+    .select('id, created_at, user_id, customer_name, phone, delivery_type, address, payment_method, notes, subtotal, savings, shipping, total, status, points_used, points_discount, order_items(product_name, quantity, unit_label, total_price)')
     .order('created_at', { ascending: false })
     .limit(200);
   if (error) {
@@ -395,6 +395,19 @@ function waCliente(o) {
   const num = tel.length === 10 ? '52' + tel : tel;
   const texto = `Hola ${o.customer_name}, te escribimos de Abarrotes El Rosal sobre tu pedido #${o.id}.`;
   return `https://wa.me/${num}?text=${encodeURIComponent(texto)}`;
+}
+
+// Puntos del cliente (solo pedidos hechos con cuenta). Los suma la base de datos al
+// marcar Entregado: 1 por cada $10 de productos (+50 si es su primer pedido entregado).
+function puntosPedido(o) {
+  if (!o.user_id) return '';
+  const partes = [];
+  if (o.points_used > 0) partes.push(`Usó <strong>${o.points_used} puntos</strong> (−${money(o.points_discount)})`);
+  const gana = Math.floor((Number(o.total) - Number(o.shipping)) / 10);
+  if (o.status === 'done') partes.push(`Ganó <strong>${gana} puntos</strong>`);
+  else if (o.status === 'pending') partes.push(`Gana <strong>${gana} puntos</strong> al marcarlo entregado`);
+  else if (o.points_used > 0) partes.push('Sus puntos usados ya se le regresaron');
+  return partes.length ? `<div class="order-puntos">${partes.join(' · ')}</div>` : '';
 }
 
 // La dirección trae la liga de Google Maps del punto que marcó el cliente: se vuelve botón
@@ -427,6 +440,7 @@ function tarjetaPedido(o) {
         <div><div class="k">Pago</div>${{ efectivo: 'Efectivo', tarjeta: 'Tarjeta', transferencia: 'Transferencia' }[o.payment_method] || o.payment_method}${Number(o.shipping) > 0 ? ` · envío ${money(o.shipping)}` : ''}</div>
       </div>
       <div class="order-items">${items}</div>
+      ${puntosPedido(o)}
       ${o.notes ? `<div class="order-notes"><strong>Notas:</strong> ${esc(o.notes)}</div>` : ''}
       <div class="order-actions">
         ${acciones}

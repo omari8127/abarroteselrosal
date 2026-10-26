@@ -198,6 +198,48 @@
         letter-spacing: -0.5px;
       }
 
+      /* ── Mis puntos ─────────────────────────────── */
+      .pt-saldo {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 1.5rem;
+        align-items: end;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #fafbfc;
+      }
+      .pt-label { font-size: .8rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #6b7280; }
+      .pt-numero { font-size: 2.6rem; font-weight: 900; color: var(--blue); line-height: 1.1; margin-top: 4px; }
+      .pt-numero small { font-size: 1rem; font-weight: 800; color: #4b5563; white-space: nowrap; }
+      .pt-equivale { font-size: .95rem; font-weight: 700; color: #1a7a2e; margin-top: 4px; }
+      .pt-meta-texto { font-size: .9rem; font-weight: 600; color: #4b5563; margin-bottom: 8px; }
+      .pt-barra { height: 8px; border-radius: 999px; background: #e5e7eb; overflow: hidden; }
+      .pt-barra span { display: block; height: 100%; width: 0; background: var(--blue); border-radius: 999px; transition: width .4s ease; }
+      .pt-reglas { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 1.25rem 0 0; padding: 0; }
+      .pt-reglas li { border: 1px solid #eef0f3; border-radius: 12px; padding: 14px; font-size: .9rem; color: #4b5563; line-height: 1.45; }
+      .pt-reglas strong { display: block; color: #1f2937; margin-bottom: 2px; }
+      .pt-nota { font-size: .85rem; color: #6b7280; margin: 1rem 0 0; }
+      .pt-nota a { color: var(--blue); font-weight: 700; }
+      .pt-subtitulo { font-size: 1.1rem; font-weight: 800; color: #1f2937; margin: 2rem 0 .75rem; }
+      .pt-tabla { width: 100%; border-collapse: collapse; font-size: .92rem; }
+      .pt-tabla th { text-align: left; font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #6b7280; padding: 0 0 8px; border-bottom: 1px solid #e5e7eb; }
+      .pt-tabla td { padding: 12px 12px 12px 0; border-bottom: 1px solid #f1f3f5; color: #374151; }
+      .pt-tabla th { padding-right: 12px; }
+      .pt-tabla td:last-child, .pt-tabla th:last-child { padding-right: 0; }
+      .pt-tabla td:last-child, .pt-tabla th:last-child { text-align: right; }
+      .pt-tabla .pt-mas { color: #1a7a2e; font-weight: 800; }
+      .pt-tabla .pt-menos { color: #b91c1c; font-weight: 800; }
+      .pt-vacio { padding: 1.5rem; text-align: center; color: #6b7280; border: 1px dashed #e5e7eb; border-radius: 12px; font-size: .92rem; }
+      /* Con el menú lateral al lado, el espacio se acaba antes: se apila desde 1100px */
+      @media (max-width: 1100px) {
+        .pt-saldo { grid-template-columns: minmax(0, 1fr); align-items: start; }
+        .pt-reglas { grid-template-columns: minmax(0, 1fr); }
+      }
+      @media (max-width: 640px) {
+        .pt-tabla .pt-col-pedido { display: none; }
+      }
+
       /* ── Formulario de perfil ─────────────────────── */
       .mc-form {
         display: flex;
@@ -424,6 +466,14 @@
               <path d="M16 10a4 4 0 0 1-8 0"></path>
             </svg> Mis Pedidos
           </a>
+          <a href="#puntos" class="mc-nav-link" onclick="showSection('puntos', this)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M14.5 9.5c-.4-.9-1.3-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1.2 0-2.1-.6-2.5-1.5"></path>
+              <path d="M12 6.5v1.5M12 16v1.5"></path>
+            </svg> Mis Puntos
+          </a>
           <div style="height:1px;background:#f0f0f0;margin:6px 0"></div>
           <button class="mc-nav-link signout" onclick="signOut()" style="color: #ec1d25;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -501,6 +551,42 @@
           <div id="pedidos-container">
             <div style="text-align:center;padding:2rem;color:#888">Cargando pedidos...</div>
           </div>
+        </section>
+
+        <!-- ╔══ SECCIÓN PUNTOS ══╗ -->
+        <section class="mc-section" id="section-puntos" style="display:none">
+          <h2 class="mc-section-title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M14.5 9.5c-.4-.9-1.3-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2s1 1.7 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1.2 0-2.1-.6-2.5-1.5"></path>
+              <path d="M12 6.5v1.5M12 16v1.5"></path>
+            </svg>
+            Mis Puntos
+          </h2>
+
+          <div class="pt-saldo">
+            <div>
+              <div class="pt-label">Tu saldo</div>
+              <div class="pt-numero"><span id="pt-saldo">—</span> <small>puntos</small></div>
+              <div class="pt-equivale" id="pt-equivale">Cargando…</div>
+            </div>
+            <div class="pt-meta">
+              <div class="pt-meta-texto" id="pt-meta-texto"></div>
+              <div class="pt-barra"><span id="pt-barra"></span></div>
+            </div>
+          </div>
+
+          <ol class="pt-reglas">
+            <li><strong>1 punto por cada $10</strong> de productos, cuando recibes tu pedido.</li>
+            <li><strong>50 puntos = $10 de descuento.</strong> Úsalos al finalizar tu pedido.</li>
+            <li><strong>50 puntos de regalo</strong> cuando te entregamos tu primer pedido.</li>
+          </ol>
+          <p class="pt-nota">Los puntos no vencen. Si cancelas un pedido en el que usaste puntos, te los regresamos.
+            Consulta los <a href="terminos.html#puntos">términos del programa</a>.</p>
+
+          <h3 class="pt-subtitulo">Movimientos</h3>
+          <div id="pt-historial"><div class="pt-vacio">Cargando…</div></div>
         </section>
 
       </div>
@@ -609,8 +695,8 @@
     document.addEventListener('DOMContentLoaded', async () => {
       await _waitForSession();
       const hash = window.location.hash.replace('#', '');
-      if (hash === 'pedidos') {
-        showSection('pedidos', document.querySelector('.mc-nav-link:nth-child(2)'));
+      if (hash === 'pedidos' || hash === 'puntos') {
+        showSection(hash, document.querySelector(`.mc-nav-link[href="#${hash}"]`));
       }
     });
 
@@ -695,11 +781,58 @@
     }
 
     function showSection(section, linkEl) {
-      document.getElementById('section-perfil').style.display = section === 'perfil' ? '' : 'none';
-      document.getElementById('section-pedidos').style.display = section === 'pedidos' ? '' : 'none';
+      ['perfil', 'pedidos', 'puntos'].forEach(s => {
+        document.getElementById('section-' + s).style.display = section === s ? '' : 'none';
+      });
       document.querySelectorAll('.mc-nav-link').forEach(l => l.classList.remove('active'));
       if (linkEl) linkEl.classList.add('active');
       if (section === 'pedidos') loadPedidos();
+      if (section === 'puntos') loadPuntos();
+    }
+
+    // ── Mis puntos: 1 punto por cada $10, 50 puntos = $10 (ver PROGRAMA DE PUNTOS en schema.sql)
+    const CONCEPTO_PUNTOS = {
+      compra: 'Compra entregada',
+      bono_primer_pedido: 'Regalo por tu primer pedido',
+      canje: 'Usados en un pedido',
+      devolucion_canje: 'Regresados (pedido cancelado)',
+    };
+
+    async function loadPuntos() {
+      const { data, error } = await window.supabaseClient.rpc('mis_puntos');
+      const historial = document.getElementById('pt-historial');
+      if (error || !data) {
+        document.getElementById('pt-equivale').textContent = 'No se pudo cargar tu saldo. Intenta de nuevo más tarde.';
+        historial.innerHTML = '';
+        return;
+      }
+      const saldo = data.saldo;
+      const descuento = Math.floor(saldo / 50) * 10;
+      const faltan = 50 - (saldo % 50);
+      document.getElementById('pt-saldo').textContent = saldo.toLocaleString('es-MX');
+      document.getElementById('pt-equivale').textContent = descuento > 0
+        ? `Equivalen a $${descuento.toFixed(2)} de descuento`
+        : 'Aún no alcanzan para un descuento';
+      document.getElementById('pt-meta-texto').textContent = `Te faltan ${faltan} ${faltan === 1 ? 'punto' : 'puntos'} para tus ${descuento > 0 ? 'siguientes' : 'primeros'} $10`;
+      document.getElementById('pt-barra').style.width = `${((saldo % 50) / 50) * 100}%`;
+
+      if (!data.movimientos.length) {
+        historial.innerHTML = `<div class="pt-vacio">Todavía no tienes movimientos. Haz tu primer pedido con tu cuenta y
+          recibe ${data.tiene_bono ? '' : '50 puntos de regalo más '}1 punto por cada $10.</div>`;
+        return;
+      }
+      historial.innerHTML = `
+        <table class="pt-tabla">
+          <thead><tr><th>Fecha</th><th>Concepto</th><th class="pt-col-pedido">Pedido</th><th>Puntos</th></tr></thead>
+          <tbody>${data.movimientos.map(m => `
+            <tr>
+              <td>${new Date(m.fecha).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+              <td>${CONCEPTO_PUNTOS[m.tipo] || m.tipo}</td>
+              <td class="pt-col-pedido">${m.pedido ? '#' + m.pedido : '—'}</td>
+              <td class="${m.puntos > 0 ? 'pt-mas' : 'pt-menos'}">${m.puntos > 0 ? '+' : ''}${m.puntos}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>`;
     }
 
     async function loadPedidos() {
